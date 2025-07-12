@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Press Start 2P', monospace;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  color: #ffffff;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a4a4a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6a6a6a;
+}
+
+/* Animações */
+@keyframes pixelate {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); }
+  100% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Classes utilitárias */
+.pixel-art {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.pixelate {
+  animation: pixelate 0.3s ease-in-out;
+}
+
+/* Botões */
+.btn {
+  font-family: 'Press Start 2P', monospace;
+  padding: 12px 24px;
+  border: 2px solid #4a4a4a;
+  background: #1a1a1a;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.btn:hover {
+  background: #4a4a4a;
+  border-color: #6a6a6a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: #2a4a6a;
+  border-color: #4a6a8a;
+}
+
+.btn-primary:hover {
+  background: #4a6a8a;
+  border-color: #6a8aaa;
+}
+
+.btn-success {
+  background: #2a6a2a;
+  border-color: #4a8a4a;
+}
+
+.btn-success:hover {
+  background: #4a8a4a;
+  border-color: #6aaa6a;
+}
+
+.btn-danger {
+  background: #6a2a2a;
+  border-color: #8a4a4a;
+}
+
+.btn-danger:hover {
+  background: #8a4a4a;
+  border-color: #aa6a6a;
+}
+
+/* Inputs */
+.input {
+  font-family: 'Press Start 2P', monospace;
+  padding: 12px;
+  border: 2px solid #4a4a4a;
+  background: #1a1a1a;
+  color: #ffffff;
+  font-size: 14px;
+  width: 100%;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #6a6a6a;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Cards */
+.card {
+  background: rgba(26, 26, 26, 0.9);
+  border: 2px solid #4a4a4a;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 10px 0;
+  backdrop-filter: blur(10px);
+}
+
+.card:hover {
+  border-color: #6a6a6a;
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  gap: 20px;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid-4 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+  
+  .btn {
+    font-size: 10px;
+    padding: 10px 20px;
+  }
+  
+  .input {
+    font-size: 12px;
+    padding: 10px;
+  }
+} 

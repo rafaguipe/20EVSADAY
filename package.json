@@ -1,0 +1,22 @@
+{
+  "name": "evsaday",
+  "version": "1.0.0",
+  "description": "Site gamificado para registro de Estados Vibracionais (EVs)",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "build:all": "npm run build && npm run build:server",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install",
+    "start": "cd server && npm start"
+  },
+  "keywords": ["conscienciologia", "ev", "gamification", "pixel-art"],
+  "author": "EVSADAY Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 
