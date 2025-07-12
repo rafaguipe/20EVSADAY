@@ -42,6 +42,14 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'EVSADAY API funcionando!' });
 });
 
+// Servir arquivos estáticos do React
+app.use(express.static(path.join(__dirname, '../client/build')));
+
+// Rota para todas as outras requisições (SPA)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+
 // Inicializar banco de dados e depois iniciar o servidor
 async function startServer() {
   try {
