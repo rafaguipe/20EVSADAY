@@ -219,7 +219,6 @@ const Leaderboard = () => {
   }, [loadLeaderboard]);
 
   const getTabInfo = () => {
-    const tab = tabs.find(t => t.key === activeTab);
     if (!leaderboardData) return '';
     
     switch (activeTab) {
