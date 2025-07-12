@@ -7,11 +7,12 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && npm run dev",
     "client": "cd client && npm start",
-    "build": "cd client && npm run build",
+    "build": "cd client && npm run build && cp -r build/* ../public/",
     "build:server": "cd server && npm run build",
     "build:all": "npm run build && npm run build:server",
     "install-all": "npm install && cd server && npm install && cd ../client && npm install",
-    "start": "cd server && npm start"
+    "start": "cd server && npm start",
+    "vercel-build": "npm run install-all && npm run build"
   },
   "keywords": ["conscienciologia", "ev", "gamification", "pixel-art"],
   "author": "EVSADAY Team",
