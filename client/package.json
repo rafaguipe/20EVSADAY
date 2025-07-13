@@ -1,6 +1,6 @@
 {
   "name": "evsaday-client",
-  "version": 2,
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@supabase/supabase-js": "^2.50.5",
@@ -45,14 +45,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000",
-  "builds": [
-    {
-      "src": "client/package.json",
-      "use": "@vercel/static-build"
-    }
-  ],
-  "routes": [
-    { "src": "/(.*)", "dest": "/client/build/index.html" }
-  ]
+  "proxy": "http://localhost:5000"
 }
