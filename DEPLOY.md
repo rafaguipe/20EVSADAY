@@ -46,7 +46,7 @@ git push -u origin main
   - `NODE_ENV`: production
 - Clique em "Deploy"
 
-## 🌐 URLs após deploy
+## 🌐 URLs após deploy -teste Rafael
 - **Frontend**: https://20evsaday.vercel.app
 - **API**: https://20evsaday.vercel.app/api
 
