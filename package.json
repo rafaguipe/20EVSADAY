@@ -14,10 +14,18 @@
     "start": "cd server && npm start",
     "vercel-build": "npm run install-all && npm run build"
   },
-  "keywords": ["conscienciologia", "ev", "gamification", "pixel-art"],
+  "keywords": [
+    "conscienciologia",
+    "ev",
+    "gamification",
+    "pixel-art"
+  ],
   "author": "EVSADAY Team",
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "react-scripts": "^5.0.1"
   }
-} 
+}

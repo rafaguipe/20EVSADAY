@@ -320,3 +320,68 @@ Substitua o conteúdo do `vercel.json` por:
 
 Se quiser, posso te passar exatamente o que remover/alterar no seu projeto para garantir que só o frontend seja deployado!  
 Me avise se quer um passo a passo detalhado para isso. 
+
+---
+
+## **Checklist para resolver o 404 na Vercel (deploy só do frontend)**
+
+### 1. **vercel.json correto**
+O arquivo deve estar assim:
+
+```json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build"
+    }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/client/build/index.html" }
+  ]
+}
+```
+
+### 2. **Comandos de build na Vercel**
+No painel da Vercel, em **Settings > Build & Development Settings**:
+- **Build Command:**  
+  ```
+  cd client && npm install && npm run build
+  ```
+- **Output Directory:**  
+  ```
+  client/build
+  ```
+- **Install Command:**  
+  ```
+  cd client && npm install
+  ```
+
+### 3. **Estrutura do projeto**
+- O React deve estar em `/client`
+- O build deve ser gerado em `/client/build` (após rodar `npm run build` dentro de `client`)
+
+### 4. **Variáveis de ambiente**
+- `REACT_APP_SUPABASE_URL`
+- `REACT_APP_SUPABASE_ANON_KEY`
+
+### 5. **Faça o push para o GitHub**
+Depois de garantir tudo acima, rode:
+```bash
+git add .
+git commit -m "Fix static deploy for Vercel"
+git push
+```
+
+### 6. **Redeploy na Vercel**
+- Acesse o painel do projeto na Vercel e clique em **Redeploy**.
+
+---
+
+## **Resumo**
+- O erro 404 é porque o build do React não está sendo encontrado.
+- Garanta que o build está em `client/build` e que o `vercel.json` está correto.
+- Faça push para o GitHub e redeploy na Vercel.
+
+Se continuar o erro, me envie o conteúdo atual do seu `vercel.json` e os comandos de build configurados na Vercel! 
