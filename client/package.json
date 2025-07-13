@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@supabase/supabase-js": "^2.50.5",
+    "axios": "^1.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
+    "react-hot-toast": "^2.5.2",
     "react-router-dom": "^6.11.2",
-    "styled-components": "^5.3.10",
-    "axios": "^1.4.0",
-    "@supabase/supabase-js": "^2.50.5"
+    "react-scripts": "5.0.1",
+    "styled-components": "^5.3.10"
   },
   "scripts": {
     "start": "react-scripts start",
