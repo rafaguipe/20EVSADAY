@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { supabase } from '../supabaseClient';
+import { useAuth } from '../contexts/AuthContext';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -203,23 +204,146 @@ const ErrorText = styled.div`
 `;
 
 const Badges = () => {
-  const [badgesData, setBadgesData] = useState(null);
-  const [recentBadges, setRecentBadges] = useState([]);
+  const { user } = useAuth();
+  const [badges, setBadges] = useState([]);
+  const [userBadges, setUserBadges] = useState([]);
+  const [userStats, setUserStats] = useState({
+    total_badges: 0,
+    total_evs: 0,
+    average_score: 0,
+    max_score: 0
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    loadBadges();
-    loadRecentBadges();
-  }, []);
-
   const loadBadges = async () => {
+    if (!user) return;
+    
     setLoading(true);
     setError(null);
     
     try {
-      const response = await axios.get('/api/badges/my');
-      setBadgesData(response.data);
+      // Carregar todos os badges disponíveis
+      const { data: allBadges, error: badgesError } = await supabase
+        .from('badges')
+        .select('*')
+        .order('id');
+
+      if (badgesError) throw badgesError;
+
+      // Carregar badges do usuário
+      const { data: userBadgesData, error: userBadgesError } = await supabase
+        .from('user_badges')
+        .select(`
+          awarded_at,
+          badges!inner(*)
+        `)
+        .eq('user_id', user.id);
+
+      if (userBadgesError) throw userBadgesError;
+
+      // Carregar estatísticas do usuário
+      const { data: userEVs, error: evsError } = await supabase
+        .from('evs')
+        .select('score, created_at')
+        .eq('user_id', user.id);
+
+      if (evsError) throw evsError;
+
+      // Calcular estatísticas
+      const total_evs = userEVs?.length || 0;
+      const average_score = total_evs > 0 ? (userEVs.reduce((sum, ev) => sum + ev.score, 0) / total_evs).toFixed(1) : 0;
+      const max_score = total_evs > 0 ? Math.max(...userEVs.map(ev => ev.score)) : 0;
+
+      // Verificar quais badges o usuário conquistou
+      const earnedBadges = userBadgesData?.map(ub => ub.badges.id) || [];
+      
+      const badgesWithProgress = allBadges?.map(badge => {
+        let progress = 0;
+        let current = 0;
+        let target = 0;
+        let earned = earnedBadges.includes(badge.id);
+
+        switch (badge.name) {
+          case 'Iniciante Consciencial':
+            progress = total_evs > 0 ? 100 : 0;
+            current = total_evs;
+            target = 1;
+            earned = total_evs > 0;
+            break;
+          case 'Persistente':
+            // Verificar 7 dias consecutivos
+            const consecutiveDays = calculateConsecutiveDays(userEVs);
+            progress = Math.min((consecutiveDays / 7) * 100, 100);
+            current = consecutiveDays;
+            target = 7;
+            earned = consecutiveDays >= 7;
+            break;
+          case 'Dedicado':
+            // Verificar 30 dias consecutivos
+            const consecutiveDays30 = calculateConsecutiveDays(userEVs);
+            progress = Math.min((consecutiveDays30 / 30) * 100, 100);
+            current = consecutiveDays30;
+            target = 30;
+            earned = consecutiveDays30 >= 30;
+            break;
+          case 'Mestre EV':
+            progress = Math.min((total_evs / 100) * 100, 100);
+            current = total_evs;
+            target = 100;
+            earned = total_evs >= 100;
+            break;
+          case 'Alto Vibracional':
+            const maxScoreEVs = userEVs?.filter(ev => ev.score === 4).length || 0;
+            progress = maxScoreEVs > 0 ? 100 : 0;
+            current = maxScoreEVs;
+            target = 1;
+            earned = maxScoreEVs > 0;
+            break;
+          case 'Consistente':
+            const avgScore = parseFloat(average_score);
+            progress = avgScore >= 3 ? 100 : (avgScore / 3) * 100;
+            current = avgScore;
+            target = 3;
+            earned = avgScore >= 3 && total_evs >= 10;
+            break;
+          case 'Pesquisador Consciencial':
+            progress = Math.min((total_evs / 500) * 100, 100);
+            current = total_evs;
+            target = 500;
+            earned = total_evs >= 500;
+            break;
+          case 'Líder Vibracional':
+            // Simplificado - considerar como conquistado se for top 1 em qualquer período
+            progress = 50; // Placeholder
+            current = 1;
+            target = 1;
+            earned = false; // Será calculado dinamicamente
+            break;
+          default:
+            progress = 0;
+            current = 0;
+            target = 1;
+        }
+
+        return {
+          ...badge,
+          progress,
+          current,
+          target,
+          earned
+        };
+      }) || [];
+
+      setBadges(badgesWithProgress);
+      setUserBadges(userBadgesData || []);
+      setUserStats({
+        total_badges: earnedBadges.length,
+        total_evs,
+        average_score,
+        max_score
+      });
+
     } catch (error) {
       console.error('Erro ao carregar badges:', error);
       setError('Erro ao carregar badges');
@@ -228,127 +352,122 @@ const Badges = () => {
     setLoading(false);
   };
 
-  const loadRecentBadges = async () => {
-    try {
-      const response = await axios.get('/api/badges/recent');
-      setRecentBadges(response.data.recent_badges);
-    } catch (error) {
-      console.error('Erro ao carregar badges recentes:', error);
+  const calculateConsecutiveDays = (evs) => {
+    if (!evs || evs.length === 0) return 0;
+    
+    const dates = [...new Set(evs.map(ev => new Date(ev.created_at).toDateString()))].sort();
+    let maxConsecutive = 0;
+    let currentConsecutive = 1;
+    
+    for (let i = 1; i < dates.length; i++) {
+      const prevDate = new Date(dates[i - 1]);
+      const currDate = new Date(dates[i]);
+      const diffDays = (currDate - prevDate) / (1000 * 60 * 60 * 24);
+      
+      if (diffDays === 1) {
+        currentConsecutive++;
+      } else {
+        maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
+        currentConsecutive = 1;
+      }
     }
+    
+    return Math.max(maxConsecutive, currentConsecutive);
   };
+
+  useEffect(() => {
+    loadBadges();
+  }, [user]);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric'
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
   };
-
-  if (loading) {
-    return (
-      <Container>
-        <Title>Badges</Title>
-        <LoadingText>CARREGANDO BADGES...</LoadingText>
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container>
-        <Title>Badges</Title>
-        <ErrorText>{error}</ErrorText>
-      </Container>
-    );
-  }
 
   return (
     <Container>
       <Title>Badges</Title>
       
-      {badgesData && (
-        <StatsGrid>
-          <StatCard>
-            <StatValue>{badgesData.total_earned}</StatValue>
-            <StatLabel>Badges Conquistadas</StatLabel>
-          </StatCard>
-          <StatCard>
-            <StatValue>{badgesData.total_available}</StatValue>
-            <StatLabel>Total de Badges</StatLabel>
-          </StatCard>
-          <StatCard>
-            <StatValue>
-              {Math.round((badgesData.total_earned / badgesData.total_available) * 100)}%
-            </StatValue>
-            <StatLabel>Progresso</StatLabel>
-          </StatCard>
-        </StatsGrid>
+      <StatsGrid>
+        <StatCard>
+          <StatValue>{userStats.total_badges}</StatValue>
+          <StatLabel>Badges Conquistadas</StatLabel>
+        </StatCard>
+        <StatCard>
+          <StatValue>{userStats.total_evs}</StatValue>
+          <StatLabel>Total de EVs</StatLabel>
+        </StatCard>
+        <StatCard>
+          <StatValue>{userStats.average_score}</StatValue>
+          <StatLabel>Média Geral</StatLabel>
+        </StatCard>
+        <StatCard>
+          <StatValue>{userStats.max_score}</StatValue>
+          <StatLabel>Pontuação Máxima</StatLabel>
+        </StatCard>
+      </StatsGrid>
+
+      {loading && (
+        <LoadingText>CARREGANDO BADGES...</LoadingText>
       )}
 
-      <BadgesGrid>
-        {badgesData?.all_badges?.map(badge => (
-          <BadgeCard key={badge.id} earned={badge.earned}>
-            {badge.earned && <EarnedBadge>Conquistada</EarnedBadge>}
-            
-            <BadgeHeader>
-              <BadgeIcon earned={badge.earned}>{badge.icon}</BadgeIcon>
-              <BadgeInfo>
-                <BadgeName>{badge.name}</BadgeName>
-                <BadgeDescription>{badge.description}</BadgeDescription>
-              </BadgeInfo>
-            </BadgeHeader>
-            
-            <BadgeProgress>
-              <ProgressBar>
-                <ProgressFill 
-                  earned={badge.earned} 
-                  percentage={badge.earned ? 100 : 0}
-                />
-              </ProgressBar>
-              <ProgressText>
-                {badge.earned ? 'Conquistada!' : 'Em progresso...'}
-              </ProgressText>
-            </BadgeProgress>
-          </BadgeCard>
-        ))}
-      </BadgesGrid>
+      {error && (
+        <ErrorText>{error}</ErrorText>
+      )}
 
-      <RecentBadges>
-        <h2 style={{
-          fontFamily: 'Press Start 2P, monospace',
-          fontSize: '16px',
-          color: '#ffffff',
-          marginBottom: '20px',
-          textTransform: 'uppercase'
-        }}>
-          Badges Recentes
-        </h2>
-        
-        {recentBadges.length === 0 ? (
-          <div style={{ 
-            textAlign: 'center', 
-            color: '#6a6a6a', 
-            padding: '20px',
-            fontFamily: 'Press Start 2P, monospace',
-            fontSize: '12px'
-          }}>
-            Nenhuma badge conquistada ainda
-          </div>
-        ) : (
-          recentBadges.map((badge, index) => (
-            <RecentBadgeItem key={index}>
-              <RecentBadgeIcon>{badge.icon}</RecentBadgeIcon>
-              <RecentBadgeInfo>
-                <RecentBadgeName>{badge.name}</RecentBadgeName>
-                <RecentBadgeDate>
-                  Conquistada em {formatDate(badge.earned_at)}
-                </RecentBadgeDate>
-              </RecentBadgeInfo>
-            </RecentBadgeItem>
-          ))
-        )}
-      </RecentBadges>
+      {!loading && !error && (
+        <>
+          <BadgesGrid>
+            {badges.map(badge => (
+              <BadgeCard key={badge.id} earned={badge.earned}>
+                {badge.earned && <EarnedBadge>Conquistada</EarnedBadge>}
+                <BadgeHeader>
+                  <BadgeIcon earned={badge.earned}>{badge.icon}</BadgeIcon>
+                  <BadgeInfo>
+                    <BadgeName>{badge.name}</BadgeName>
+                    <BadgeDescription>{badge.description}</BadgeDescription>
+                  </BadgeInfo>
+                </BadgeHeader>
+                <BadgeProgress>
+                  <ProgressBar>
+                    <ProgressFill 
+                      earned={badge.earned} 
+                      percentage={badge.progress}
+                    />
+                  </ProgressBar>
+                  <ProgressText>
+                    {badge.current}/{badge.target} ({badge.progress.toFixed(0)}%)
+                  </ProgressText>
+                </BadgeProgress>
+              </BadgeCard>
+            ))}
+          </BadgesGrid>
+
+          <RecentBadges>
+            <BadgeName style={{ marginBottom: '20px' }}>Badges Recentes</BadgeName>
+            {userBadges.length === 0 ? (
+              <div style={{ textAlign: 'center', color: '#6a6a6a', padding: '20px' }}>
+                Nenhuma badge conquistada ainda
+              </div>
+            ) : (
+              userBadges.slice(0, 5).map(userBadge => (
+                <RecentBadgeItem key={userBadge.id}>
+                  <RecentBadgeIcon>{userBadge.badges.icon}</RecentBadgeIcon>
+                  <RecentBadgeInfo>
+                    <RecentBadgeName>{userBadge.badges.name}</RecentBadgeName>
+                    <RecentBadgeDate>{formatDate(userBadge.awarded_at)}</RecentBadgeDate>
+                  </RecentBadgeInfo>
+                </RecentBadgeItem>
+              ))
+            )}
+          </RecentBadges>
+        </>
+      )}
     </Container>
   );
 };

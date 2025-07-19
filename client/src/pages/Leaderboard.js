@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+import { supabase } from '../supabaseClient';
+import { useAuth } from '../contexts/AuthContext';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -179,13 +180,12 @@ const EmptyText = styled.div`
 `;
 
 const tabs = [
-  { key: 'daily', label: 'Diário', endpoint: '/api/leaderboard/daily' },
-  { key: 'weekly', label: 'Semanal', endpoint: '/api/leaderboard/weekly' },
-  { key: 'monthly', label: 'Mensal', endpoint: '/api/leaderboard/monthly' },
-  { key: 'yearly', label: 'Anual', endpoint: '/api/leaderboard/yearly' },
-  { key: 'all-time', label: 'Todos os Tempos', endpoint: '/api/leaderboard/all-time' },
-  { key: 'consistency', label: 'Consistência', endpoint: '/api/leaderboard/consistency' },
-  { key: 'dedication', label: 'Dedicação', endpoint: '/api/leaderboard/dedication' }
+  { key: 'daily', label: 'Diário' },
+  { key: 'weekly', label: 'Semanal' },
+  { key: 'monthly', label: 'Mensal' },
+  { key: 'all-time', label: 'Todos os Tempos' },
+  { key: 'consistency', label: 'Consistência' },
+  { key: 'dedication', label: 'Dedicação' }
 ];
 
 const avatars = [
@@ -194,48 +194,254 @@ const avatars = [
 ];
 
 const Leaderboard = () => {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('daily');
   const [leaderboardData, setLeaderboardData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const loadLeaderboard = useCallback(async () => {
+    if (!user) return;
+    
     setLoading(true);
     setError(null);
     
     try {
-      const response = await axios.get(tabs.find(t => t.key === activeTab).endpoint);
-      setLeaderboardData(response.data);
+      let leaderboard = [];
+      let info = '';
+
+      switch (activeTab) {
+        case 'daily':
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const { data: dailyData } = await supabase
+            .from('evs')
+            .select(`
+              score,
+              created_at,
+              profiles!inner(username, avatar_url)
+            `)
+            .gte('created_at', today.toISOString());
+          
+          if (dailyData) {
+            const dailyStats = dailyData.reduce((acc, ev) => {
+              const username = ev.profiles?.username || 'Anônimo';
+              if (!acc[username]) {
+                acc[username] = { total_points: 0, evs_count: 0, scores: [] };
+              }
+              acc[username].total_points += ev.score;
+              acc[username].evs_count += 1;
+              acc[username].scores.push(ev.score);
+              return acc;
+            }, {});
+
+            leaderboard = Object.entries(dailyStats)
+              .map(([username, stats]) => ({
+                nickname: username,
+                total_points: stats.total_points,
+                evs_count: stats.evs_count,
+                average_score: (stats.total_points / stats.evs_count).toFixed(1),
+                max_score: Math.max(...stats.scores)
+              }))
+              .sort((a, b) => b.total_points - a.total_points)
+              .slice(0, 10);
+          }
+          info = `Data: ${today.toLocaleDateString('pt-BR')}`;
+          break;
+
+        case 'weekly':
+          const weekAgo = new Date();
+          weekAgo.setDate(weekAgo.getDate() - 7);
+          const { data: weeklyData } = await supabase
+            .from('evs')
+            .select(`
+              score,
+              created_at,
+              profiles!inner(username, avatar_url)
+            `)
+            .gte('created_at', weekAgo.toISOString());
+          
+          if (weeklyData) {
+            const weeklyStats = weeklyData.reduce((acc, ev) => {
+              const username = ev.profiles?.username || 'Anônimo';
+              if (!acc[username]) {
+                acc[username] = { total_points: 0, evs_count: 0, scores: [] };
+              }
+              acc[username].total_points += ev.score;
+              acc[username].evs_count += 1;
+              acc[username].scores.push(ev.score);
+              return acc;
+            }, {});
+
+            leaderboard = Object.entries(weeklyStats)
+              .map(([username, stats]) => ({
+                nickname: username,
+                total_points: stats.total_points,
+                evs_count: stats.evs_count,
+                average_score: (stats.total_points / stats.evs_count).toFixed(1),
+                max_score: Math.max(...stats.scores)
+              }))
+              .sort((a, b) => b.total_points - a.total_points)
+              .slice(0, 10);
+          }
+          info = `${weekAgo.toLocaleDateString('pt-BR')} a ${new Date().toLocaleDateString('pt-BR')}`;
+          break;
+
+        case 'monthly':
+          const monthAgo = new Date();
+          monthAgo.setMonth(monthAgo.getMonth() - 1);
+          const { data: monthlyData } = await supabase
+            .from('evs')
+            .select(`
+              score,
+              created_at,
+              profiles!inner(username, avatar_url)
+            `)
+            .gte('created_at', monthAgo.toISOString());
+          
+          if (monthlyData) {
+            const monthlyStats = monthlyData.reduce((acc, ev) => {
+              const username = ev.profiles?.username || 'Anônimo';
+              if (!acc[username]) {
+                acc[username] = { total_points: 0, evs_count: 0, scores: [] };
+              }
+              acc[username].total_points += ev.score;
+              acc[username].evs_count += 1;
+              acc[username].scores.push(ev.score);
+              return acc;
+            }, {});
+
+            leaderboard = Object.entries(monthlyStats)
+              .map(([username, stats]) => ({
+                nickname: username,
+                total_points: stats.total_points,
+                evs_count: stats.evs_count,
+                average_score: (stats.total_points / stats.evs_count).toFixed(1),
+                max_score: Math.max(...stats.scores)
+              }))
+              .sort((a, b) => b.total_points - a.total_points)
+              .slice(0, 10);
+          }
+          info = `${monthAgo.toLocaleDateString('pt-BR')} a ${new Date().toLocaleDateString('pt-BR')}`;
+          break;
+
+        case 'all-time':
+          const { data: allTimeData } = await supabase
+            .from('evs')
+            .select(`
+              score,
+              created_at,
+              profiles!inner(username, avatar_url)
+            `);
+          
+          if (allTimeData) {
+            const allTimeStats = allTimeData.reduce((acc, ev) => {
+              const username = ev.profiles?.username || 'Anônimo';
+              if (!acc[username]) {
+                acc[username] = { total_points: 0, evs_count: 0, scores: [] };
+              }
+              acc[username].total_points += ev.score;
+              acc[username].evs_count += 1;
+              acc[username].scores.push(ev.score);
+              return acc;
+            }, {});
+
+            leaderboard = Object.entries(allTimeStats)
+              .map(([username, stats]) => ({
+                nickname: username,
+                total_points: stats.total_points,
+                evs_count: stats.evs_count,
+                average_score: (stats.total_points / stats.evs_count).toFixed(1),
+                max_score: Math.max(...stats.scores)
+              }))
+              .sort((a, b) => b.total_points - a.total_points)
+              .slice(0, 10);
+          }
+          info = 'Todos os tempos';
+          break;
+
+        case 'consistency':
+          const { data: consistencyData } = await supabase
+            .from('evs')
+            .select(`
+              score,
+              created_at,
+              profiles!inner(username, avatar_url)
+            `);
+          
+          if (consistencyData) {
+            const consistencyStats = consistencyData.reduce((acc, ev) => {
+              const username = ev.profiles?.username || 'Anônimo';
+              if (!acc[username]) {
+                acc[username] = { total_points: 0, evs_count: 0, scores: [] };
+              }
+              acc[username].total_points += ev.score;
+              acc[username].evs_count += 1;
+              acc[username].scores.push(ev.score);
+              return acc;
+            }, {});
+
+            leaderboard = Object.entries(consistencyStats)
+              .filter(([_, stats]) => stats.evs_count >= 10) // Mínimo 10 EVs
+              .map(([username, stats]) => ({
+                nickname: username,
+                average_score: (stats.total_points / stats.evs_count).toFixed(1),
+                evs_count: stats.evs_count,
+                total_points: stats.total_points
+              }))
+              .sort((a, b) => parseFloat(b.average_score) - parseFloat(a.average_score))
+              .slice(0, 10);
+          }
+          info = 'Mínimo 10 EVs';
+          break;
+
+        case 'dedication':
+          const { data: dedicationData } = await supabase
+            .from('evs')
+            .select(`
+              score,
+              created_at,
+              profiles!inner(username, avatar_url)
+            `);
+          
+          if (dedicationData) {
+            const dedicationStats = dedicationData.reduce((acc, ev) => {
+              const username = ev.profiles?.username || 'Anônimo';
+              if (!acc[username]) {
+                acc[username] = { total_points: 0, evs_count: 0, scores: [] };
+              }
+              acc[username].total_points += ev.score;
+              acc[username].evs_count += 1;
+              acc[username].scores.push(ev.score);
+              return acc;
+            }, {});
+
+            leaderboard = Object.entries(dedicationStats)
+              .map(([username, stats]) => ({
+                nickname: username,
+                evs_count: stats.evs_count,
+                average_score: (stats.total_points / stats.evs_count).toFixed(1),
+                total_points: stats.total_points
+              }))
+              .sort((a, b) => b.evs_count - a.evs_count)
+              .slice(0, 10);
+          }
+          info = 'Mais EVs registrados';
+          break;
+      }
+
+      setLeaderboardData({ leaderboard, info });
     } catch (error) {
       console.error('Erro ao carregar leaderboard:', error);
       setError('Erro ao carregar ranking');
     }
     
     setLoading(false);
-  }, [activeTab]);
+  }, [activeTab, user]);
 
   useEffect(() => {
     loadLeaderboard();
   }, [loadLeaderboard]);
-
-  const getTabInfo = () => {
-    if (!leaderboardData) return '';
-    
-    switch (activeTab) {
-      case 'daily':
-        return `Data: ${leaderboardData.date}`;
-      case 'weekly':
-        return `${leaderboardData.start_date} a ${leaderboardData.end_date}`;
-      case 'monthly':
-        return `${leaderboardData.start_date} a ${leaderboardData.end_date}`;
-      case 'yearly':
-        return `${leaderboardData.start_date} a ${leaderboardData.end_date}`;
-      case 'consistency':
-        return `Mínimo ${leaderboardData.min_evs} EVs`;
-      default:
-        return '';
-    }
-  };
 
   const getScoreDisplay = (user) => {
     switch (activeTab) {
@@ -281,7 +487,7 @@ const Leaderboard = () => {
             {tabs.find(t => t.key === activeTab)?.label}
           </LeaderboardTitle>
           <LeaderboardInfo>
-            {getTabInfo()}
+            {leaderboardData?.info || ''}
           </LeaderboardInfo>
         </LeaderboardHeader>
 
@@ -317,10 +523,10 @@ const Leaderboard = () => {
             {leaderboardData.leaderboard.map((user, index) => (
               <RankingItem key={index} isTop3={index < 3}>
                 <Rank isTop3={index < 3}>
-                  {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : user.rank}
+                  {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1}
                 </Rank>
                 <Avatar>
-                  {avatars[user.avatar_id - 1] || '👤'}
+                  {avatars[Math.floor(Math.random() * avatars.length)]}
                 </Avatar>
                 <UserInfo>
                   <Username>{user.nickname}</Username>

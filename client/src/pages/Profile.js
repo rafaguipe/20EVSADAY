@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
+import { supabase } from '../supabaseClient';
 import toast from 'react-hot-toast';
 import styled from 'styled-components';
 
@@ -190,7 +190,13 @@ const ChartValue = styled.div`
   text-align: right;
 `;
 
-// LoadingText component removed as it's not being used
+const LoadingText = styled.div`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: #6a6a6a;
+  text-align: center;
+  padding: 40px;
+`;
 
 const avatars = [
   '👤', '👨', '👩', '🧑', '👨‍🦰', '👩‍🦰', '👨‍🦱', '👩‍🦱',
@@ -199,19 +205,69 @@ const avatars = [
 
 const Profile = () => {
   const { user, updateAvatar } = useAuth();
-  const [stats, setStats] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [stats, setStats] = useState({
+    total_evs: 0,
+    average_score: 0,
+    max_score: 0,
+    min_score: 0,
+    consecutive_days: 0,
+    total_points: 0
+  });
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadStats();
-    loadHistory();
-  }, []);
+    if (user) {
+      loadProfile();
+      loadStats();
+      loadHistory();
+    }
+  }, [user]);
+
+  const loadProfile = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+      setProfile(data);
+    } catch (error) {
+      console.error('Erro ao carregar perfil:', error);
+    }
+  };
 
   const loadStats = async () => {
     try {
-      const response = await axios.get('/api/evs/stats');
-      setStats(response.data);
+      const { data: evs, error } = await supabase
+        .from('evs')
+        .select('score, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      if (evs && evs.length > 0) {
+        const scores = evs.map(ev => ev.score);
+        const total_evs = evs.length;
+        const total_points = scores.reduce((sum, score) => sum + score, 0);
+        const average_score = (total_points / total_evs).toFixed(1);
+        const max_score = Math.max(...scores);
+        const min_score = Math.min(...scores);
+        const consecutive_days = calculateConsecutiveDays(evs);
+
+        setStats({
+          total_evs,
+          average_score,
+          max_score,
+          min_score,
+          consecutive_days,
+          total_points
+        });
+      }
     } catch (error) {
       console.error('Erro ao carregar estatísticas:', error);
     }
@@ -219,30 +275,95 @@ const Profile = () => {
 
   const loadHistory = async () => {
     try {
-      const response = await axios.get('/api/evs/history?days=7');
-      setHistory(response.data.history);
+      const { data, error } = await supabase
+        .from('evs')
+        .select('score, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(30);
+
+      if (error) throw error;
+
+      // Agrupar por data
+      const groupedByDate = data?.reduce((acc, ev) => {
+        const date = new Date(ev.created_at).toDateString();
+        if (!acc[date]) {
+          acc[date] = { count: 0, total_score: 0 };
+        }
+        acc[date].count += 1;
+        acc[date].total_score += ev.score;
+        return acc;
+      }, {});
+
+      const historyData = Object.entries(groupedByDate || {})
+        .map(([date, data]) => ({
+          date: new Date(date),
+          count: data.count,
+          average: (data.total_score / data.count).toFixed(1)
+        }))
+        .sort((a, b) => b.date - a.date)
+        .slice(0, 7); // Últimos 7 dias
+
+      setHistory(historyData);
     } catch (error) {
       console.error('Erro ao carregar histórico:', error);
     }
   };
 
-  const handleAvatarChange = async (avatarId) => {
-    setLoading(true);
+  const calculateConsecutiveDays = (evs) => {
+    if (!evs || evs.length === 0) return 0;
     
-    try {
-      await updateAvatar(avatarId);
-      toast.success('Avatar atualizado com sucesso!');
-    } catch (error) {
-      toast.error('Erro ao atualizar avatar');
+    const dates = [...new Set(evs.map(ev => new Date(ev.created_at).toDateString()))].sort();
+    let maxConsecutive = 0;
+    let currentConsecutive = 1;
+    
+    for (let i = 1; i < dates.length; i++) {
+      const prevDate = new Date(dates[i - 1]);
+      const currDate = new Date(dates[i]);
+      const diffDays = (currDate - prevDate) / (1000 * 60 * 60 * 24);
+      
+      if (diffDays === 1) {
+        currentConsecutive++;
+      } else {
+        maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
+        currentConsecutive = 1;
+      }
     }
     
+    return Math.max(maxConsecutive, currentConsecutive);
+  };
+
+  const handleAvatarChange = async (avatarId) => {
+    setLoading(true);
+    try {
+      const result = await updateAvatar(avatarId);
+      if (result.success) {
+        setProfile(prev => ({ ...prev, avatar_url: `avatar_${avatarId}.png` }));
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar avatar:', error);
+    }
     setLoading(false);
   };
 
   const getMaxValue = () => {
-    if (!history.length) return 1;
-    return Math.max(...history.map(day => day.total_points));
+    if (history.length === 0) return 1;
+    return Math.max(...history.map(h => h.count));
   };
+
+  const getCurrentAvatarId = () => {
+    if (!profile?.avatar_url) return 1;
+    const match = profile.avatar_url.match(/avatar_(\d+)\.png/);
+    return match ? parseInt(match[1]) : 1;
+  };
+
+  if (!user) {
+    return (
+      <Container>
+        <LoadingText>CARREGANDO PERFIL...</LoadingText>
+      </Container>
+    );
+  }
 
   return (
     <Container>
@@ -250,29 +371,29 @@ const Profile = () => {
       
       <Grid>
         <Card>
-          <CardTitle>Informações do Usuário</CardTitle>
+          <CardTitle>Informações</CardTitle>
           
           <ProfileInfo>
             <Avatar>
-              {avatars[user?.avatar_id - 1] || '👤'}
+              {avatars[getCurrentAvatarId() - 1] || '👤'}
             </Avatar>
             <UserInfo>
-              <Username>{user?.nickname}</Username>
-              <Email>{user?.email}</Email>
+              <Username>{profile?.username || user.email}</Username>
+              <Email>{user.email}</Email>
             </UserInfo>
           </ProfileInfo>
-          
+
           <AvatarSection>
             <CardTitle style={{ fontSize: '12px', marginBottom: '10px' }}>
-              Alterar Avatar
+              Escolher Avatar
             </CardTitle>
             <AvatarGrid>
               {avatars.map((avatar, index) => (
                 <AvatarOption
                   key={index}
-                  selected={user?.avatar_id === index + 1}
+                  selected={getCurrentAvatarId() === index + 1}
                   onClick={() => handleAvatarChange(index + 1)}
-                  style={{ opacity: loading ? 0.5 : 1 }}
+                  disabled={loading}
                 >
                   {avatar}
                 </AvatarOption>
@@ -282,84 +403,61 @@ const Profile = () => {
         </Card>
 
         <Card>
-          <CardTitle>Estatísticas Gerais</CardTitle>
+          <CardTitle>Estatísticas</CardTitle>
           
           <StatsGrid>
             <StatCard>
-              <StatValue>{stats?.general?.total_evs || 0}</StatValue>
-              <StatLabel>Total EVs</StatLabel>
+              <StatValue>{stats.total_evs}</StatValue>
+              <StatLabel>Total de EVs</StatLabel>
             </StatCard>
             <StatCard>
-              <StatValue>{stats?.general?.average_score || 0}</StatValue>
-              <StatLabel>Média</StatLabel>
+              <StatValue>{stats.average_score}</StatValue>
+              <StatLabel>Média Geral</StatLabel>
             </StatCard>
             <StatCard>
-              <StatValue>{stats?.general?.max_score || 0}</StatValue>
-              <StatLabel>Máximo</StatLabel>
+              <StatValue>{stats.max_score}</StatValue>
+              <StatLabel>Pontuação Máxima</StatLabel>
             </StatCard>
             <StatCard>
-              <StatValue>{stats?.general?.total_points || 0}</StatValue>
-              <StatLabel>Pontos</StatLabel>
+              <StatValue>{stats.min_score}</StatValue>
+              <StatLabel>Pontuação Mínima</StatLabel>
+            </StatCard>
+            <StatCard>
+              <StatValue>{stats.consecutive_days}</StatValue>
+              <StatLabel>Dias Consecutivos</StatLabel>
+            </StatCard>
+            <StatCard>
+              <StatValue>{stats.total_points}</StatValue>
+              <StatLabel>Total de Pontos</StatLabel>
             </StatCard>
           </StatsGrid>
-          
-          <div style={{ marginTop: '20px' }}>
-            <CardTitle style={{ fontSize: '12px', marginBottom: '10px' }}>
-              Estatísticas por Período
-            </CardTitle>
-            <StatsGrid>
-              <StatCard>
-                <StatValue>{stats?.today?.evs || 0}</StatValue>
-                <StatLabel>Hoje</StatLabel>
-              </StatCard>
-              <StatCard>
-                <StatValue>{stats?.week?.evs || 0}</StatValue>
-                <StatLabel>Semana</StatLabel>
-              </StatCard>
-              <StatCard>
-                <StatValue>{stats?.month?.evs || 0}</StatValue>
-                <StatLabel>Mês</StatLabel>
-              </StatCard>
-            </StatsGrid>
-          </div>
+
+          <HistoryChart>
+            <ChartTitle>Histórico dos Últimos 7 Dias</ChartTitle>
+            {history.length === 0 ? (
+              <div style={{ textAlign: 'center', color: '#6a6a6a', padding: '20px' }}>
+                Nenhum EV registrado ainda
+              </div>
+            ) : (
+              history.map((day, index) => (
+                <ChartBar key={index}>
+                  <ChartLabel>
+                    {day.date.toLocaleDateString('pt-BR', { weekday: 'short' })}
+                  </ChartLabel>
+                  <ChartBarFill 
+                    style={{ 
+                      width: `${(day.count / getMaxValue()) * 200}px` 
+                    }} 
+                  />
+                  <ChartValue>
+                    {day.count} EVs (média: {day.average})
+                  </ChartValue>
+                </ChartBar>
+              ))
+            )}
+          </HistoryChart>
         </Card>
       </Grid>
-
-      <HistoryChart>
-        <ChartTitle>Histórico dos Últimos 7 Dias</ChartTitle>
-        
-        {history.length === 0 ? (
-          <div style={{ 
-            textAlign: 'center', 
-            color: '#6a6a6a', 
-            padding: '20px',
-            fontFamily: 'Press Start 2P, monospace',
-            fontSize: '12px'
-          }}>
-            Nenhum dado disponível
-          </div>
-        ) : (
-          history.map((day, index) => {
-            const maxValue = getMaxValue();
-            const percentage = maxValue > 0 ? (day.total_points / maxValue) * 100 : 0;
-            
-            return (
-              <ChartBar key={index}>
-                <ChartLabel>
-                  {new Date(day.date).toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit'
-                  })}
-                </ChartLabel>
-                <ChartBarFill style={{ width: `${percentage}%` }} />
-                <ChartValue>
-                  {day.total_points} pts ({day.evs_count} EVs)
-                </ChartValue>
-              </ChartBar>
-            );
-          })
-        )}
-      </HistoryChart>
     </Container>
   );
 };
