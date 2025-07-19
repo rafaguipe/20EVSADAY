@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { supabase } from '../supabaseClient';
+import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import styled from 'styled-components';
 
@@ -63,8 +64,6 @@ const Label = styled.label`
   color: #ffffff;
   text-transform: uppercase;
 `;
-
-// Input component removed as it's not being used
 
 const TextArea = styled.textarea`
   font-family: 'Press Start 2P', monospace;
@@ -213,23 +212,71 @@ const EVNotes = styled.div`
 `;
 
 const Dashboard = () => {
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     score: null,
     notes: ''
   });
-  const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState({
+    total_evs: 0,
+    average_score: 0,
+    max_score: 0,
+    today_evs: 0,
+    today_points: 0,
+    week_evs: 0
+  });
   const [recentEVs, setRecentEVs] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadStats();
-    loadRecentEVs();
-  }, []);
+    if (user) {
+      loadStats();
+      loadRecentEVs();
+    }
+  }, [user]);
 
   const loadStats = async () => {
     try {
-      const response = await axios.get('/api/evs/stats');
-      setStats(response.data);
+      // Buscar todos os EVs do usuário
+      const { data: allEVs, error } = await supabase
+        .from('evs')
+        .select('*')
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      if (allEVs && allEVs.length > 0) {
+        const total_evs = allEVs.length;
+        const scores = allEVs.map(ev => ev.score);
+        const average_score = (scores.reduce((a, b) => a + b, 0) / total_evs).toFixed(1);
+        const max_score = Math.max(...scores);
+
+        // EVs de hoje
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const today_evs = allEVs.filter(ev => {
+          const evDate = new Date(ev.created_at);
+          return evDate >= today;
+        });
+        const today_points = today_evs.reduce((sum, ev) => sum + ev.score, 0);
+
+        // EVs da semana
+        const weekAgo = new Date();
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        const week_evs = allEVs.filter(ev => {
+          const evDate = new Date(ev.created_at);
+          return evDate >= weekAgo;
+        });
+
+        setStats({
+          total_evs,
+          average_score,
+          max_score,
+          today_evs: today_evs.length,
+          today_points,
+          week_evs: week_evs.length
+        });
+      }
     } catch (error) {
       console.error('Erro ao carregar estatísticas:', error);
     }
@@ -237,8 +284,15 @@ const Dashboard = () => {
 
   const loadRecentEVs = async () => {
     try {
-      const response = await axios.get('/api/evs/my?limit=10');
-      setRecentEVs(response.data.evs);
+      const { data, error } = await supabase
+        .from('evs')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if (error) throw error;
+      setRecentEVs(data || []);
     } catch (error) {
       console.error('Erro ao carregar EVs recentes:', error);
     }
@@ -262,10 +316,18 @@ const Dashboard = () => {
     setLoading(true);
     
     try {
-      await axios.post('/api/evs', {
-        score: formData.score,
-        notes: formData.notes
-      });
+      const { error } = await supabase
+        .from('evs')
+        .insert([
+          {
+            user_id: user.id,
+            score: formData.score,
+            notes: formData.notes,
+            created_at: new Date().toISOString()
+          }
+        ]);
+
+      if (error) throw error;
       
       toast.success('EV registrado com sucesso!');
       
@@ -277,6 +339,7 @@ const Dashboard = () => {
       loadStats();
       loadRecentEVs();
     } catch (error) {
+      console.error('Erro ao registrar EV:', error);
       toast.error('Erro ao registrar EV');
     }
     
@@ -299,27 +362,27 @@ const Dashboard = () => {
       
       <StatsGrid>
         <StatCard>
-          <StatValue>{stats?.general?.total_evs || 0}</StatValue>
+          <StatValue>{stats.total_evs}</StatValue>
           <StatLabel>Total de EVs</StatLabel>
         </StatCard>
         <StatCard>
-          <StatValue>{stats?.general?.average_score || 0}</StatValue>
+          <StatValue>{stats.average_score}</StatValue>
           <StatLabel>Média Geral</StatLabel>
         </StatCard>
         <StatCard>
-          <StatValue>{stats?.general?.max_score || 0}</StatValue>
+          <StatValue>{stats.max_score}</StatValue>
           <StatLabel>Pontuação Máxima</StatLabel>
         </StatCard>
         <StatCard>
-          <StatValue>{stats?.today?.evs || 0}</StatValue>
+          <StatValue>{stats.today_evs}</StatValue>
           <StatLabel>EVs Hoje</StatLabel>
         </StatCard>
         <StatCard>
-          <StatValue>{stats?.today?.points || 0}</StatValue>
+          <StatValue>{stats.today_points}</StatValue>
           <StatLabel>Pontos Hoje</StatLabel>
         </StatCard>
         <StatCard>
-          <StatValue>{stats?.week?.evs || 0}</StatValue>
+          <StatValue>{stats.week_evs}</StatValue>
           <StatLabel>EVs na Semana</StatLabel>
         </StatCard>
       </StatsGrid>
