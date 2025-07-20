@@ -31,48 +31,16 @@ const LogoContainer = styled(Link)`
   }
 `;
 
-const LogoImage = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+const LogoImage = styled.img`
+  height: 50px;
+  width: auto;
+  
+  @media (max-width: 768px) {
+    height: 40px;
+  }
 `;
 
-const LogoMain = styled.div`
-  font-family: 'Georgia', serif;
-  font-size: 24px;
-  font-weight: bold;
-  color: #ffffff;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  line-height: 1;
-`;
 
-const LogoSub = styled.div`
-  font-family: 'Arial', sans-serif;
-  font-size: 10px;
-  color: #ffd700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  line-height: 1;
-  position: relative;
-`;
-
-const LogoLine = styled.div`
-  width: 100%;
-  height: 2px;
-  background: #ffd700;
-  margin-top: 2px;
-  max-width: 60px;
-`;
-
-const LogoGPC = styled.div`
-  font-family: 'Arial', sans-serif;
-  font-size: 8px;
-  color: #ffffff;
-  text-align: right;
-  margin-top: -8px;
-  margin-right: 5px;
-`;
 
 const LogoText = styled.div`
   font-family: 'Press Start 2P', monospace;
@@ -234,12 +202,7 @@ const Navbar = () => {
   return (
     <Nav>
       <LogoContainer to="/">
-        <LogoImage>
-          <LogoMain>JOGOS</LogoMain>
-          <LogoSub>EVOLUTIVOS</LogoSub>
-          <LogoLine />
-          <LogoGPC>GPC</LogoGPC>
-        </LogoImage>
+        <LogoImage src="/assets/logo.png" alt="Logo" />
         <LogoText>#20EVSADAY</LogoText>
       </LogoContainer>
       

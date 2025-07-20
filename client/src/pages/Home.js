@@ -19,54 +19,17 @@ const Logo = styled.div`
   text-align: center;
 `;
 
-const LogoMain = styled.div`
-  font-family: 'Georgia', serif;
-  font-size: 64px;
-  font-weight: bold;
-  color: #ffffff;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 8px;
+const LogoImage = styled.img`
+  height: 120px;
+  width: auto;
+  margin-bottom: 20px;
   
   @media (max-width: 768px) {
-    font-size: 48px;
+    height: 80px;
   }
 `;
 
-const LogoSub = styled.div`
-  font-family: 'Arial', sans-serif;
-  font-size: 24px;
-  color: #ffd700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 4px;
-  
-  @media (max-width: 768px) {
-    font-size: 18px;
-  }
-`;
 
-const LogoLine = styled.div`
-  width: 100%;
-  height: 3px;
-  background: #ffd700;
-  margin: 0 auto 8px auto;
-  max-width: 200px;
-`;
-
-const LogoGPC = styled.div`
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  color: #ffffff;
-  text-align: right;
-  margin-top: -12px;
-  margin-right: 20px;
-  
-  @media (max-width: 768px) {
-    font-size: 14px;
-    margin-right: 15px;
-  }
-`;
 
 const Title = styled.h1`
   font-family: 'Press Start 2P', monospace;
@@ -217,10 +180,7 @@ const Home = () => {
     <div>
       <Hero>
         <Logo>
-          <LogoMain>JOGOS</LogoMain>
-          <LogoSub>EVOLUTIVOS</LogoSub>
-          <LogoLine />
-          <LogoGPC>GPC</LogoGPC>
+          <LogoImage src="/assets/logo.png" alt="Logo" />
         </Logo>
         
         <Title>#20EVSADAY</Title>
