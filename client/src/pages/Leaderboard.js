@@ -216,28 +216,25 @@ const Leaderboard = () => {
           today.setHours(0, 0, 0, 0);
           const { data: dailyData } = await supabase
             .from('evs')
-            .select(`
-              score,
-              created_at,
-              profiles!inner(username, avatar_url)
-            `)
+            .select('score, created_at, user_id')
             .gte('created_at', today.toISOString());
           
-          if (dailyData) {
+          if (dailyData && dailyData.length > 0) {
             const dailyStats = dailyData.reduce((acc, ev) => {
-              const username = ev.profiles?.username || 'Anônimo';
-              if (!acc[username]) {
-                acc[username] = { total_points: 0, evs_count: 0, scores: [] };
+              const userId = ev.user_id;
+              if (!acc[userId]) {
+                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
               }
-              acc[username].total_points += ev.score;
-              acc[username].evs_count += 1;
-              acc[username].scores.push(ev.score);
+              acc[userId].total_points += ev.score;
+              acc[userId].evs_count += 1;
+              acc[userId].scores.push(ev.score);
               return acc;
             }, {});
 
             leaderboard = Object.entries(dailyStats)
-              .map(([username, stats]) => ({
-                nickname: username,
+              .map(([userId, stats]) => ({
+                user_id: userId,
+                nickname: `Jogador ${userId.slice(0, 8)}`,
                 total_points: stats.total_points,
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
@@ -254,28 +251,25 @@ const Leaderboard = () => {
           weekAgo.setDate(weekAgo.getDate() - 7);
           const { data: weeklyData } = await supabase
             .from('evs')
-            .select(`
-              score,
-              created_at,
-              profiles!inner(username, avatar_url)
-            `)
+            .select('score, created_at, user_id')
             .gte('created_at', weekAgo.toISOString());
           
-          if (weeklyData) {
+          if (weeklyData && weeklyData.length > 0) {
             const weeklyStats = weeklyData.reduce((acc, ev) => {
-              const username = ev.profiles?.username || 'Anônimo';
-              if (!acc[username]) {
-                acc[username] = { total_points: 0, evs_count: 0, scores: [] };
+              const userId = ev.user_id;
+              if (!acc[userId]) {
+                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
               }
-              acc[username].total_points += ev.score;
-              acc[username].evs_count += 1;
-              acc[username].scores.push(ev.score);
+              acc[userId].total_points += ev.score;
+              acc[userId].evs_count += 1;
+              acc[userId].scores.push(ev.score);
               return acc;
             }, {});
 
             leaderboard = Object.entries(weeklyStats)
-              .map(([username, stats]) => ({
-                nickname: username,
+              .map(([userId, stats]) => ({
+                user_id: userId,
+                nickname: `Jogador ${userId.slice(0, 8)}`,
                 total_points: stats.total_points,
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
@@ -292,28 +286,25 @@ const Leaderboard = () => {
           monthAgo.setMonth(monthAgo.getMonth() - 1);
           const { data: monthlyData } = await supabase
             .from('evs')
-            .select(`
-              score,
-              created_at,
-              profiles!inner(username, avatar_url)
-            `)
+            .select('score, created_at, user_id')
             .gte('created_at', monthAgo.toISOString());
           
-          if (monthlyData) {
+          if (monthlyData && monthlyData.length > 0) {
             const monthlyStats = monthlyData.reduce((acc, ev) => {
-              const username = ev.profiles?.username || 'Anônimo';
-              if (!acc[username]) {
-                acc[username] = { total_points: 0, evs_count: 0, scores: [] };
+              const userId = ev.user_id;
+              if (!acc[userId]) {
+                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
               }
-              acc[username].total_points += ev.score;
-              acc[username].evs_count += 1;
-              acc[username].scores.push(ev.score);
+              acc[userId].total_points += ev.score;
+              acc[userId].evs_count += 1;
+              acc[userId].scores.push(ev.score);
               return acc;
             }, {});
 
             leaderboard = Object.entries(monthlyStats)
-              .map(([username, stats]) => ({
-                nickname: username,
+              .map(([userId, stats]) => ({
+                user_id: userId,
+                nickname: `Jogador ${userId.slice(0, 8)}`,
                 total_points: stats.total_points,
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
@@ -328,27 +319,24 @@ const Leaderboard = () => {
         case 'all-time':
           const { data: allTimeData } = await supabase
             .from('evs')
-            .select(`
-              score,
-              created_at,
-              profiles!inner(username, avatar_url)
-            `);
+            .select('score, created_at, user_id');
           
-          if (allTimeData) {
+          if (allTimeData && allTimeData.length > 0) {
             const allTimeStats = allTimeData.reduce((acc, ev) => {
-              const username = ev.profiles?.username || 'Anônimo';
-              if (!acc[username]) {
-                acc[username] = { total_points: 0, evs_count: 0, scores: [] };
+              const userId = ev.user_id;
+              if (!acc[userId]) {
+                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
               }
-              acc[username].total_points += ev.score;
-              acc[username].evs_count += 1;
-              acc[username].scores.push(ev.score);
+              acc[userId].total_points += ev.score;
+              acc[userId].evs_count += 1;
+              acc[userId].scores.push(ev.score);
               return acc;
             }, {});
 
             leaderboard = Object.entries(allTimeStats)
-              .map(([username, stats]) => ({
-                nickname: username,
+              .map(([userId, stats]) => ({
+                user_id: userId,
+                nickname: `Jogador ${userId.slice(0, 8)}`,
                 total_points: stats.total_points,
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
@@ -363,28 +351,25 @@ const Leaderboard = () => {
         case 'consistency':
           const { data: consistencyData } = await supabase
             .from('evs')
-            .select(`
-              score,
-              created_at,
-              profiles!inner(username, avatar_url)
-            `);
+            .select('score, created_at, user_id');
           
-          if (consistencyData) {
+          if (consistencyData && consistencyData.length > 0) {
             const consistencyStats = consistencyData.reduce((acc, ev) => {
-              const username = ev.profiles?.username || 'Anônimo';
-              if (!acc[username]) {
-                acc[username] = { total_points: 0, evs_count: 0, scores: [] };
+              const userId = ev.user_id;
+              if (!acc[userId]) {
+                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
               }
-              acc[username].total_points += ev.score;
-              acc[username].evs_count += 1;
-              acc[username].scores.push(ev.score);
+              acc[userId].total_points += ev.score;
+              acc[userId].evs_count += 1;
+              acc[userId].scores.push(ev.score);
               return acc;
             }, {});
 
             leaderboard = Object.entries(consistencyStats)
               .filter(([_, stats]) => stats.evs_count >= 10) // Mínimo 10 EVs
-              .map(([username, stats]) => ({
-                nickname: username,
+              .map(([userId, stats]) => ({
+                user_id: userId,
+                nickname: `Jogador ${userId.slice(0, 8)}`,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
                 evs_count: stats.evs_count,
                 total_points: stats.total_points
@@ -398,27 +383,24 @@ const Leaderboard = () => {
         case 'dedication':
           const { data: dedicationData } = await supabase
             .from('evs')
-            .select(`
-              score,
-              created_at,
-              profiles!inner(username, avatar_url)
-            `);
+            .select('score, created_at, user_id');
           
-          if (dedicationData) {
+          if (dedicationData && dedicationData.length > 0) {
             const dedicationStats = dedicationData.reduce((acc, ev) => {
-              const username = ev.profiles?.username || 'Anônimo';
-              if (!acc[username]) {
-                acc[username] = { total_points: 0, evs_count: 0, scores: [] };
+              const userId = ev.user_id;
+              if (!acc[userId]) {
+                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
               }
-              acc[username].total_points += ev.score;
-              acc[username].evs_count += 1;
-              acc[username].scores.push(ev.score);
+              acc[userId].total_points += ev.score;
+              acc[userId].evs_count += 1;
+              acc[userId].scores.push(ev.score);
               return acc;
             }, {});
 
             leaderboard = Object.entries(dedicationStats)
-              .map(([username, stats]) => ({
-                nickname: username,
+              .map(([userId, stats]) => ({
+                user_id: userId,
+                nickname: `Jogador ${userId.slice(0, 8)}`,
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
                 total_points: stats.total_points
