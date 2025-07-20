@@ -180,7 +180,7 @@ const Home = () => {
     <div>
       <Hero>
         <Logo>
-          <LogoImage src="/assets/logo.png" alt="Logo" />
+          <LogoImage src="/assets/logo_jogos_evolutivos.png" alt="Logo" />
         </Logo>
         
         <Title>#20EVSADAY</Title>
