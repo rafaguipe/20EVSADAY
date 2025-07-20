@@ -258,6 +258,17 @@ const Badges = () => {
       // Verificar quais badges o usuário conquistou
       const earnedBadges = userBadgesData?.map(ub => ub.badges.id) || [];
       
+      // Verificar se o usuário é fundador (inscrito até 31/7/2025)
+      const userProfile = await supabase
+        .from('profiles')
+        .select('created_at')
+        .eq('user_id', user.id)
+        .single();
+      
+      const isFounder = userProfile?.data?.created_at ? 
+        new Date(userProfile.data.created_at) <= new Date('2025-07-31 23:59:59') : 
+        false;
+      
       const badgesWithProgress = allBadges?.map(badge => {
         let progress = 0;
         let current = 0;
@@ -319,6 +330,13 @@ const Badges = () => {
             current = 1;
             target = 1;
             earned = false; // Será calculado dinamicamente
+            break;
+          case 'Fundador':
+            // Verificar se o usuário se inscreveu até 31/7/2025
+            earned = isFounder;
+            progress = isFounder ? 100 : 0;
+            current = isFounder ? 1 : 0;
+            target = 1;
             break;
           default:
             progress = 0;
