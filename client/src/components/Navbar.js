@@ -19,18 +19,70 @@ const Nav = styled.nav`
   padding: 0 20px;
 `;
 
-const Logo = styled(Link)`
+const LogoContainer = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  text-decoration: none;
+  
+  &:hover {
+    transform: scale(1.02);
+    transition: all 0.3s ease;
+  }
+`;
+
+const LogoImage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const LogoMain = styled.div`
+  font-family: 'Georgia', serif;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1;
+`;
+
+const LogoSub = styled.div`
+  font-family: 'Arial', sans-serif;
+  font-size: 10px;
+  color: #ffd700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  position: relative;
+`;
+
+const LogoLine = styled.div`
+  width: 100%;
+  height: 2px;
+  background: #ffd700;
+  margin-top: 2px;
+  max-width: 60px;
+`;
+
+const LogoGPC = styled.div`
+  font-family: 'Arial', sans-serif;
+  font-size: 8px;
+  color: #ffffff;
+  text-align: right;
+  margin-top: -8px;
+  margin-right: 5px;
+`;
+
+const LogoText = styled.div`
   font-family: 'Press Start 2P', monospace;
   font-size: 18px;
   color: #ffffff;
-  text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 2px;
   
-  &:hover {
-    color: #6a6a6a;
-    transform: scale(1.05);
-    transition: all 0.3s ease;
+  @media (max-width: 768px) {
+    font-size: 14px;
   }
 `;
 
@@ -181,7 +233,15 @@ const Navbar = () => {
 
   return (
     <Nav>
-      <Logo to="/">EVSADAY</Logo>
+      <LogoContainer to="/">
+        <LogoImage>
+          <LogoMain>JOGOS</LogoMain>
+          <LogoSub>EVOLUTIVOS</LogoSub>
+          <LogoLine />
+          <LogoGPC>GPC</LogoGPC>
+        </LogoImage>
+        <LogoText>#20EVSADAY</LogoText>
+      </LogoContainer>
       
       {isAuthenticated ? (
         <>
