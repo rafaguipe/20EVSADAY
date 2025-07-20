@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import styled from 'styled-components';
 import SoundEffect from '../components/SoundEffect';
+import BadgeNotification from '../components/BadgeNotification';
 
 const Container = styled.div`
   padding: 20px;
@@ -229,6 +230,9 @@ const Dashboard = () => {
   const [recentEVs, setRecentEVs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [playCoinSound, setPlayCoinSound] = useState(false);
+  const [playVictorySound, setPlayVictorySound] = useState(false);
+  const [showBadgeNotification, setShowBadgeNotification] = useState(false);
+  const [earnedBadge, setEarnedBadge] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -331,10 +335,52 @@ const Dashboard = () => {
 
       if (error) throw error;
       
+      // Verificar se é o primeiro EV e atribuir badge de Iniciante Consciencial
+      const { data: evCount } = await supabase
+        .from('evs')
+        .select('id', { count: 'exact' })
+        .eq('user_id', user.id);
+      
+      if (evCount && evCount.length === 1) {
+        // É o primeiro EV, atribuir badge de Iniciante Consciencial
+        const { data: badge } = await supabase
+          .from('badges')
+          .select('id')
+          .eq('name', 'Iniciante Consciencial')
+          .single();
+        
+        if (badge) {
+          await supabase
+            .from('user_badges')
+            .insert([
+              {
+                user_id: user.id,
+                badge_id: badge.id,
+                awarded_at: new Date().toISOString()
+              }
+            ]);
+          
+          // Mostrar pop-up de badge conquistado
+          setEarnedBadge({
+            name: 'Iniciante Consciencial',
+            description: 'Primeiro EV registrado',
+            icon: '🌱'
+          });
+          setShowBadgeNotification(true);
+          
+          // Tocar som de vitória
+          setPlayVictorySound(true);
+          
+          toast.success('EV registrado com sucesso! 🎉 Badge "Iniciante Consciencial" conquistado!');
+        } else {
+          toast.success('EV registrado com sucesso!');
+        }
+      } else {
+        toast.success('EV registrado com sucesso!');
+      }
+      
       // Tocar som de moeda como recompensa
       setPlayCoinSound(true);
-      
-      toast.success('EV registrado com sucesso!');
       
       setFormData({
         score: null,
@@ -457,6 +503,24 @@ const Dashboard = () => {
         soundFile="/sounds/coin.mp3" 
         play={playCoinSound} 
         volume={0.3}
+      />
+      
+      {/* Som de vitória quando conquistar badge */}
+      <SoundEffect 
+        soundFile="/sounds/victory.mp3" 
+        play={playVictorySound} 
+        volume={0.4}
+      />
+      
+      {/* Pop-up de badge conquistado */}
+      <BadgeNotification
+        badge={earnedBadge}
+        show={showBadgeNotification}
+        onClose={() => {
+          setShowBadgeNotification(false);
+          setEarnedBadge(null);
+          setPlayVictorySound(false);
+        }}
       />
     </Container>
   );
