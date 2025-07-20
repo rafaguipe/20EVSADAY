@@ -210,14 +210,17 @@ const Leaderboard = () => {
       let leaderboard = [];
       let info = '';
 
-      // Primeiro, buscar todos os perfis de usuários para ter os apelidos
+      // Primeiro, buscar todos os perfis de usuários para ter os apelidos e avatars
       const { data: profiles } = await supabase
         .from('profiles')
-        .select('user_id, username');
+        .select('user_id, username, avatar_url');
 
       const profilesMap = {};
       profiles?.forEach(profile => {
-        profilesMap[profile.user_id] = profile.username;
+        profilesMap[profile.user_id] = {
+          username: profile.username,
+          avatar_url: profile.avatar_url
+        };
       });
 
       // Se o usuário atual não tem perfil, criar um
@@ -239,7 +242,10 @@ const Leaderboard = () => {
           .single();
 
         if (newProfile) {
-          profilesMap[user.id] = newProfile.username;
+          profilesMap[user.id] = {
+            username: newProfile.username,
+            avatar_url: newProfile.avatar_url
+          };
         }
       }
 
@@ -267,7 +273,8 @@ const Leaderboard = () => {
             leaderboard = Object.entries(dailyStats)
               .map(([userId, stats]) => ({
                 user_id: userId,
-                nickname: profilesMap[userId] || `Jogador ${userId.slice(0, 8)}`,
+                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
+                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
                 total_points: stats.total_points,
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
@@ -302,7 +309,8 @@ const Leaderboard = () => {
             leaderboard = Object.entries(weeklyStats)
               .map(([userId, stats]) => ({
                 user_id: userId,
-                nickname: profilesMap[userId] || `Jogador ${userId.slice(0, 8)}`,
+                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
+                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
                 total_points: stats.total_points,
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
@@ -337,7 +345,8 @@ const Leaderboard = () => {
             leaderboard = Object.entries(monthlyStats)
               .map(([userId, stats]) => ({
                 user_id: userId,
-                nickname: profilesMap[userId] || `Jogador ${userId.slice(0, 8)}`,
+                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
+                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
                 total_points: stats.total_points,
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
@@ -369,7 +378,8 @@ const Leaderboard = () => {
             leaderboard = Object.entries(allTimeStats)
               .map(([userId, stats]) => ({
                 user_id: userId,
-                nickname: profilesMap[userId] || `Jogador ${userId.slice(0, 8)}`,
+                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
+                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
                 total_points: stats.total_points,
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
@@ -402,7 +412,8 @@ const Leaderboard = () => {
               .filter(([_, stats]) => stats.evs_count >= 10) // Mínimo 10 EVs
               .map(([userId, stats]) => ({
                 user_id: userId,
-                nickname: profilesMap[userId] || `Jogador ${userId.slice(0, 8)}`,
+                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
+                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
                 evs_count: stats.evs_count,
                 total_points: stats.total_points
@@ -433,7 +444,8 @@ const Leaderboard = () => {
             leaderboard = Object.entries(dedicationStats)
               .map(([userId, stats]) => ({
                 user_id: userId,
-                nickname: profilesMap[userId] || `Jogador ${userId.slice(0, 8)}`,
+                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
+                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
                 total_points: stats.total_points
@@ -541,7 +553,11 @@ const Leaderboard = () => {
                   {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1}
                 </Rank>
                 <Avatar>
-                  {avatars[Math.floor(Math.random() * avatars.length)]}
+                  {(() => {
+                    const avatarMatch = user.avatar_url?.match(/avatar_(\d+)\.png/);
+                    const avatarId = avatarMatch ? parseInt(avatarMatch[1]) : 1;
+                    return avatars[avatarId - 1] || avatars[0];
+                  })()}
                 </Avatar>
                 <UserInfo>
                   <Username>{user.nickname}</Username>
