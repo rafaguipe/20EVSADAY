@@ -3,6 +3,7 @@ import { supabase } from '../supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import styled from 'styled-components';
+import SoundEffect from '../components/SoundEffect';
 
 const Container = styled.div`
   padding: 20px;
@@ -227,6 +228,7 @@ const Dashboard = () => {
   });
   const [recentEVs, setRecentEVs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [playCoinSound, setPlayCoinSound] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -329,6 +331,9 @@ const Dashboard = () => {
 
       if (error) throw error;
       
+      // Tocar som de moeda como recompensa
+      setPlayCoinSound(true);
+      
       toast.success('EV registrado com sucesso!');
       
       setFormData({
@@ -338,6 +343,9 @@ const Dashboard = () => {
       
       loadStats();
       loadRecentEVs();
+      
+      // Resetar o som após tocar
+      setTimeout(() => setPlayCoinSound(false), 100);
     } catch (error) {
       console.error('Erro ao registrar EV:', error);
       toast.error('Erro ao registrar EV');
@@ -443,6 +451,13 @@ const Dashboard = () => {
           )}
         </RecentEVs>
       </Grid>
+      
+      {/* Som de moeda quando registrar EV */}
+      <SoundEffect 
+        soundFile="/sounds/coin.mp3" 
+        play={playCoinSound} 
+        volume={0.3}
+      />
     </Container>
   );
 };
