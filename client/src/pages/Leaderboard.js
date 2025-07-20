@@ -210,6 +210,16 @@ const Leaderboard = () => {
       let leaderboard = [];
       let info = '';
 
+      // Primeiro, buscar todos os perfis de usuários para ter os apelidos
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('user_id, username');
+
+      const profilesMap = {};
+      profiles?.forEach(profile => {
+        profilesMap[profile.user_id] = profile.username;
+      });
+
       switch (activeTab) {
         case 'daily':
           const today = new Date();
@@ -234,7 +244,7 @@ const Leaderboard = () => {
             leaderboard = Object.entries(dailyStats)
               .map(([userId, stats]) => ({
                 user_id: userId,
-                nickname: `Jogador ${userId.slice(0, 8)}`,
+                nickname: profilesMap[userId] || `Jogador ${userId.slice(0, 8)}`,
                 total_points: stats.total_points,
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
@@ -269,7 +279,7 @@ const Leaderboard = () => {
             leaderboard = Object.entries(weeklyStats)
               .map(([userId, stats]) => ({
                 user_id: userId,
-                nickname: `Jogador ${userId.slice(0, 8)}`,
+                nickname: profilesMap[userId] || `Jogador ${userId.slice(0, 8)}`,
                 total_points: stats.total_points,
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
@@ -304,7 +314,7 @@ const Leaderboard = () => {
             leaderboard = Object.entries(monthlyStats)
               .map(([userId, stats]) => ({
                 user_id: userId,
-                nickname: `Jogador ${userId.slice(0, 8)}`,
+                nickname: profilesMap[userId] || `Jogador ${userId.slice(0, 8)}`,
                 total_points: stats.total_points,
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
@@ -336,7 +346,7 @@ const Leaderboard = () => {
             leaderboard = Object.entries(allTimeStats)
               .map(([userId, stats]) => ({
                 user_id: userId,
-                nickname: `Jogador ${userId.slice(0, 8)}`,
+                nickname: profilesMap[userId] || `Jogador ${userId.slice(0, 8)}`,
                 total_points: stats.total_points,
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
@@ -369,7 +379,7 @@ const Leaderboard = () => {
               .filter(([_, stats]) => stats.evs_count >= 10) // Mínimo 10 EVs
               .map(([userId, stats]) => ({
                 user_id: userId,
-                nickname: `Jogador ${userId.slice(0, 8)}`,
+                nickname: profilesMap[userId] || `Jogador ${userId.slice(0, 8)}`,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
                 evs_count: stats.evs_count,
                 total_points: stats.total_points
@@ -400,7 +410,7 @@ const Leaderboard = () => {
             leaderboard = Object.entries(dedicationStats)
               .map(([userId, stats]) => ({
                 user_id: userId,
-                nickname: `Jogador ${userId.slice(0, 8)}`,
+                nickname: profilesMap[userId] || `Jogador ${userId.slice(0, 8)}`,
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
                 total_points: stats.total_points
