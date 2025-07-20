@@ -14,6 +14,60 @@ const Hero = styled.div`
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
 `;
 
+const Logo = styled.div`
+  margin-bottom: 40px;
+  text-align: center;
+`;
+
+const LogoMain = styled.div`
+  font-family: 'Georgia', serif;
+  font-size: 64px;
+  font-weight: bold;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  
+  @media (max-width: 768px) {
+    font-size: 48px;
+  }
+`;
+
+const LogoSub = styled.div`
+  font-family: 'Arial', sans-serif;
+  font-size: 24px;
+  color: #ffd700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
+`;
+
+const LogoLine = styled.div`
+  width: 100%;
+  height: 3px;
+  background: #ffd700;
+  margin: 0 auto 8px auto;
+  max-width: 200px;
+`;
+
+const LogoGPC = styled.div`
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  color: #ffffff;
+  text-align: right;
+  margin-top: -12px;
+  margin-right: 20px;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+    margin-right: 15px;
+  }
+`;
+
 const Title = styled.h1`
   font-family: 'Press Start 2P', monospace;
   font-size: 48px;
@@ -162,7 +216,14 @@ const Home = () => {
   return (
     <div>
       <Hero>
-        <Title>EVSADAY</Title>
+        <Logo>
+          <LogoMain>JOGOS</LogoMain>
+          <LogoSub>EVOLUTIVOS</LogoSub>
+          <LogoLine />
+          <LogoGPC>GPC</LogoGPC>
+        </Logo>
+        
+        <Title>#20EVSADAY</Title>
         <Subtitle>
           Registre seus Estados Vibracionais de forma gamificada. 
           Acompanhe seu progresso, conquiste badges e participe do ranking 
