@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import styled from 'styled-components';
 import SoundEffect from '../components/SoundEffect';
 import BadgeNotification from '../components/BadgeNotification';
+import DailyProgressBar from '../components/DailyProgressBar';
 
 const Container = styled.div`
   padding: 20px;
@@ -341,8 +342,8 @@ const Dashboard = () => {
         .select('id', { count: 'exact' })
         .eq('user_id', user.id);
       
+      // Verificar se é o primeiro EV e atribuir badge de Iniciante Consciencial
       if (evCount && evCount.length === 1) {
-        // É o primeiro EV, atribuir badge de Iniciante Consciencial
         const { data: badge } = await supabase
           .from('badges')
           .select('id')
@@ -377,6 +378,58 @@ const Dashboard = () => {
         }
       } else {
         toast.success('EV registrado com sucesso!');
+      }
+      
+      // Verificar se atingiu 20 EVs no dia e atribuir badge de Mestre Diário
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const { data: todayEVs } = await supabase
+        .from('evs')
+        .select('id', { count: 'exact' })
+        .eq('user_id', user.id)
+        .gte('created_at', today.toISOString());
+      
+      if (todayEVs && todayEVs.length === 20) {
+        // Verificar se já tem o badge de Mestre Diário
+        const { data: existingBadge } = await supabase
+          .from('user_badges')
+          .select('badges!inner(*)')
+          .eq('user_id', user.id)
+          .eq('badges.name', 'Mestre Diário')
+          .single();
+        
+        if (!existingBadge) {
+          const { data: badge } = await supabase
+            .from('badges')
+            .select('id')
+            .eq('name', 'Mestre Diário')
+            .single();
+          
+          if (badge) {
+            await supabase
+              .from('user_badges')
+              .insert([
+                {
+                  user_id: user.id,
+                  badge_id: badge.id,
+                  awarded_at: new Date().toISOString()
+                }
+              ]);
+            
+            // Mostrar pop-up de badge conquistado
+            setEarnedBadge({
+              name: 'Mestre Diário',
+              description: 'Registrou 20 EVs em um único dia',
+              icon: '⚡'
+            });
+            setShowBadgeNotification(true);
+            
+            // Tocar som de vitória
+            setPlayVictorySound(true);
+            
+            toast.success('🎉 Badge "Mestre Diário" conquistado! 20 EVs em um dia!');
+          }
+        }
       }
       
       // Tocar som de moeda como recompensa
@@ -440,6 +493,9 @@ const Dashboard = () => {
           <StatLabel>EVs na Semana</StatLabel>
         </StatCard>
       </StatsGrid>
+      
+      {/* Barra de Progresso Diária */}
+      <DailyProgressBar currentEVs={stats.today_evs} targetEVs={20} />
 
       <Grid>
         <Card>

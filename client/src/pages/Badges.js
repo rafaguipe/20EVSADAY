@@ -331,6 +331,23 @@ const Badges = () => {
             target = 1;
             earned = false; // Será calculado dinamicamente
             break;
+          case 'Mestre Diário':
+            // Verificar se já fez 20 EVs em um dia
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayEVs = userEVs?.filter(ev => new Date(ev.created_at) >= today) || [];
+            const maxDailyEVs = Math.max(...Object.values(
+              userEVs?.reduce((acc, ev) => {
+                const date = new Date(ev.created_at).toDateString();
+                acc[date] = (acc[date] || 0) + 1;
+                return acc;
+              }, {}) || {}
+            ));
+            earned = maxDailyEVs >= 20;
+            progress = Math.min((maxDailyEVs / 20) * 100, 100);
+            current = maxDailyEVs;
+            target = 20;
+            break;
           case 'Fundador':
             // Verificar se o usuário se inscreveu até 31/7/2025
             earned = isFounder;
