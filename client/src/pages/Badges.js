@@ -355,6 +355,19 @@ const Badges = () => {
             current = isFounder ? 1 : 0;
             target = 1;
             break;
+          case 'Líder 4 Anos de Fundação':
+            // Verificar se registrou EVs no período de fundação (1/7/2025 a 31/7/2025)
+            const foundationStart = new Date('2025-07-01T00:00:00');
+            const foundationEnd = new Date('2025-07-31T23:59:59');
+            const foundationEVs = userEVs?.filter(ev => {
+              const evDate = new Date(ev.created_at);
+              return evDate >= foundationStart && evDate <= foundationEnd;
+            }) || [];
+            earned = foundationEVs.length > 0;
+            progress = earned ? 100 : 0;
+            current = foundationEVs.length;
+            target = 1; // Apenas 1 EV no período já é suficiente
+            break;
           default:
             progress = 0;
             current = 0;

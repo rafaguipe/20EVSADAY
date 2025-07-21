@@ -432,6 +432,54 @@ const Dashboard = () => {
         }
       }
       
+      // Verificar se registrou EV no período de fundação (1/7/2025 a 31/7/2025)
+      const foundationStart = new Date('2025-07-01T00:00:00');
+      const foundationEnd = new Date('2025-07-31T23:59:59');
+      const evDate = new Date();
+      
+      if (evDate >= foundationStart && evDate <= foundationEnd) {
+        // Verificar se já tem o badge de Líder 4 Anos
+        const { data: existingFoundationBadge } = await supabase
+          .from('user_badges')
+          .select('badges!inner(*)')
+          .eq('user_id', user.id)
+          .eq('badges.name', 'Líder 4 Anos de Fundação')
+          .single();
+        
+        if (!existingFoundationBadge) {
+          const { data: foundationBadge } = await supabase
+            .from('badges')
+            .select('id')
+            .eq('name', 'Líder 4 Anos de Fundação')
+            .single();
+          
+          if (foundationBadge) {
+            await supabase
+              .from('user_badges')
+              .insert([
+                {
+                  user_id: user.id,
+                  badge_id: foundationBadge.id,
+                  awarded_at: new Date().toISOString()
+                }
+              ]);
+            
+            // Mostrar pop-up de badge conquistado
+            setEarnedBadge({
+              name: 'Líder 4 Anos de Fundação',
+              description: 'Registrou EVs durante o período de fundação de 4 anos',
+              icon: '🏆'
+            });
+            setShowBadgeNotification(true);
+            
+            // Tocar som de vitória
+            setPlayVictorySound(true);
+            
+            toast.success('🏆 Badge "Líder 4 Anos de Fundação" conquistado!');
+          }
+        }
+      }
+      
       // Tocar som de moeda como recompensa
       setPlayCoinSound(true);
       
