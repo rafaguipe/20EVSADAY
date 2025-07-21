@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import SoundEffect from '../components/SoundEffect';
 import BadgeNotification from '../components/BadgeNotification';
 import DailyProgressBar from '../components/DailyProgressBar';
+import EVReminder from '../components/EVReminder';
 
 const Container = styled.div`
   padding: 20px;
@@ -513,6 +514,7 @@ const Dashboard = () => {
 
   return (
     <Container>
+      <EVReminder />
       <Title>Dashboard</Title>
       
       <StatsGrid>
