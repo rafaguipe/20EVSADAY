@@ -365,6 +365,8 @@ const Profile = () => {
   const [soundEnabledLocal, setSoundEnabledLocal] = useState(true);
   const [evData, setEvData] = useState([]);
   const [exportLoading, setExportLoading] = useState(false);
+  const [editingUsername, setEditingUsername] = useState(false);
+  const [newUsername, setNewUsername] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -601,6 +603,57 @@ const Profile = () => {
     }
   };
 
+  const handleUsernameEdit = () => {
+    setEditingUsername(true);
+    setNewUsername(profile?.username || '');
+  };
+
+  const handleUsernameSave = async () => {
+    if (!newUsername.trim() || newUsername.trim().length < 3) {
+      toast.error('O apelido deve ter pelo menos 3 caracteres');
+      return;
+    }
+
+    if (newUsername.trim() === profile?.username) {
+      setEditingUsername(false);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ 
+          username: newUsername.trim(), 
+          updated_at: new Date().toISOString() 
+        })
+        .eq('user_id', user.id);
+
+      if (error) {
+        if (error.code === '23505') {
+          toast.error('Este apelido já está em uso');
+        } else {
+          toast.error('Erro ao atualizar apelido: ' + error.message);
+        }
+        return;
+      }
+
+      setProfile(prev => ({ ...prev, username: newUsername.trim() }));
+      setEditingUsername(false);
+      toast.success('Apelido atualizado com sucesso!');
+    } catch (err) {
+      console.error('Erro ao atualizar apelido:', err);
+      toast.error('Erro inesperado ao atualizar apelido');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUsernameCancel = () => {
+    setEditingUsername(false);
+    setNewUsername('');
+  };
+
   const getMaxValue = () => {
     if (history.length === 0) return 1;
     return Math.max(...history.map(h => h.count));
@@ -743,7 +796,84 @@ const Profile = () => {
               {avatars[getCurrentAvatarId() - 1] || '👤'}
             </Avatar>
             <UserInfo>
-              <Username>{profile?.username || user.email}</Username>
+              {editingUsername ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <input
+                    type="text"
+                    value={newUsername}
+                    onChange={(e) => setNewUsername(e.target.value)}
+                    style={{
+                      fontFamily: 'Press Start 2P, monospace',
+                      fontSize: '14px',
+                      padding: '8px',
+                      border: '2px solid #4a6a8a',
+                      borderRadius: '4px',
+                      background: '#1a1a1a',
+                      color: '#ffffff',
+                      width: '200px'
+                    }}
+                    maxLength={20}
+                    placeholder="Novo apelido"
+                  />
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={handleUsernameSave}
+                      disabled={loading}
+                      style={{
+                        fontFamily: 'Press Start 2P, monospace',
+                        fontSize: '10px',
+                        padding: '6px 12px',
+                        border: 'none',
+                        borderRadius: '4px',
+                        background: '#4a8a4a',
+                        color: '#ffffff',
+                        cursor: 'pointer',
+                        transition: 'background 0.2s'
+                      }}
+                    >
+                      Salvar
+                    </button>
+                    <button
+                      onClick={handleUsernameCancel}
+                      disabled={loading}
+                      style={{
+                        fontFamily: 'Press Start 2P, monospace',
+                        fontSize: '10px',
+                        padding: '6px 12px',
+                        border: 'none',
+                        borderRadius: '4px',
+                        background: '#8a4a4a',
+                        color: '#ffffff',
+                        cursor: 'pointer',
+                        transition: 'background 0.2s'
+                      }}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Username>{profile?.username || user.email}</Username>
+                  <button
+                    onClick={handleUsernameEdit}
+                    disabled={loading}
+                    style={{
+                      fontFamily: 'Press Start 2P, monospace',
+                      fontSize: '8px',
+                      padding: '4px 8px',
+                      border: '1px solid #4a6a8a',
+                      borderRadius: '4px',
+                      background: 'transparent',
+                      color: '#4a6a8a',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    ✏️ Editar
+                  </button>
+                </div>
+              )}
               <Email>{user.email}</Email>
             </UserInfo>
           </ProfileInfo>
