@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
       setUser(session?.user || null);
       setLoading(false);
       if (session?.user) {
-        await ensureProfileExists(session.user);
+        ensureProfileExists(session.user);
       }
     };
 
@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
         setUser(session?.user || null);
         setLoading(false);
         if (session?.user) {
-          await ensureProfileExists(session.user);
+          ensureProfileExists(session.user);
         }
       }
     );

@@ -202,7 +202,7 @@ const Leaderboard = () => {
 
   const loadLeaderboard = useCallback(async () => {
     if (!user) return;
-    
+
     setLoading(true);
     setError(null);
     
