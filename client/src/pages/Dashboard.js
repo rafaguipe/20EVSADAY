@@ -7,7 +7,6 @@ import SoundEffect from '../components/SoundEffect';
 import BadgeNotification from '../components/BadgeNotification';
 import DailyProgressBar from '../components/DailyProgressBar';
 import EVReminder from '../components/EVReminder';
-import DailyReportTester from '../components/DailyReportTester';
 
 const Container = styled.div`
   padding: 20px;
@@ -642,8 +641,6 @@ const Dashboard = () => {
     <Container>
       <EVReminder />
       <Title>Dashboard</Title>
-      
-      <DailyReportTester />
       
       <StatsGrid>
         <StatCard>

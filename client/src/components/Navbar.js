@@ -199,6 +199,7 @@ const Navbar = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profile, setProfile] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { timer: evTimer, formatTime } = useEVTimer();
 
   useEffect(() => {
@@ -222,6 +223,7 @@ const Navbar = () => {
           if (data) {
             console.log('Perfil encontrado:', data);
             setProfile(data);
+            setIsAdmin(data.is_admin || false);
           } else {
             console.log('Perfil não encontrado, criando novo...');
             const nickname = user.user_metadata?.nickname || `Jogador ${user.id.slice(0, 8)}`;
@@ -301,6 +303,11 @@ const Navbar = () => {
             <NavLink to="/multimidia" active={isActive('/multimidia')}>
               Multimídia
             </NavLink>
+            {isAdmin && (
+              <NavLink to="/dev" active={isActive('/dev')}>
+                🔧 Dev
+              </NavLink>
+            )}
           </NavLinks>
           
           <UserSection>
@@ -336,6 +343,11 @@ const Navbar = () => {
               <NavLink to="/multimidia" active={isActive('/multimidia')}>
                 Multimídia
               </NavLink>
+              {isAdmin && (
+                <NavLink to="/dev" active={isActive('/dev')}>
+                  🔧 Dev
+                </NavLink>
+              )}
               <LogoutBtn onClick={handleLogout}>Sair</LogoutBtn>
             </MobileMenuContent>
           </MobileMenu>

@@ -2,16 +2,16 @@
   "name": "evsaday",
   "version": "1.0.0",
   "description": "Site gamificado para registro de Estados Vibracionais (EVs)",
-  "main": "server/index.js",
+  "main": "client/src/index.js",
   "scripts": {
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "cd server && npm run dev",
+    "dev": "cd client && npm start",
+    "server": "echo 'Server não é mais necessário - usando Supabase'",
     "client": "cd client && npm start",
     "build": "cd client && npm run build",
-    "build:server": "cd server && npm run build",
-    "build:all": "npm run build && npm run build:server",
-    "install-all": "npm install && cd server && npm install && cd ../client && npm install",
-    "start": "cd server && npm start",
+    "build:server": "echo 'Server não é mais necessário'",
+    "build:all": "npm run build",
+    "install-all": "npm install && cd client && npm install",
+    "start": "cd client && npm start",
     "vercel-build": "npm run install-all && npm run build"
   },
   "keywords": [
