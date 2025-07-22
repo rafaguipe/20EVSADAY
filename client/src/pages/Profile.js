@@ -8,7 +8,6 @@ import { useEVTimer } from '../contexts/EVTimerContext';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Papa from 'papaparse';
-import { saveAs } from 'file-saver';
 
 const Container = styled.div`
   padding: 20px;
@@ -691,6 +690,18 @@ const Profile = () => {
     }
   };
 
+  const downloadFile = (content, filename, type) => {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const exportToCSV = async () => {
     if (evData.length === 0) {
       toast.error('Nenhum EV registrado para exportar');
@@ -707,10 +718,9 @@ const Profile = () => {
       }));
 
       const csv = Papa.unparse(csvData);
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      
       const filename = `EV_${profile?.username || 'user'}_${new Date().toISOString().split('T')[0]}.csv`;
-      saveAs(blob, filename);
+      
+      downloadFile(csv, filename, 'text/csv;charset=utf-8;');
       
       toast.success('📊 CSV exportado com sucesso!');
     } catch (error) {
