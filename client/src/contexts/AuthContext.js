@@ -23,6 +23,9 @@ export const AuthProvider = ({ children }) => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user || null);
       setLoading(false);
+      if (session?.user) {
+        await ensureProfileExists(session.user);
+      }
     };
 
     getSession();
@@ -32,11 +35,39 @@ export const AuthProvider = ({ children }) => {
       async (event, session) => {
         setUser(session?.user || null);
         setLoading(false);
+        if (session?.user) {
+          await ensureProfileExists(session.user);
+        }
       }
     );
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Função auxiliar para garantir que o perfil existe
+  const ensureProfileExists = async (user) => {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('user_id')
+      .eq('user_id', user.id)
+      .single();
+    if (!profile) {
+      const nickname = user.user_metadata?.nickname || `Jogador ${user.id.slice(0, 8)}`;
+      const avatar_id = user.user_metadata?.avatar_id || 1;
+      await supabase
+        .from('profiles')
+        .insert([
+          {
+            user_id: user.id,
+            username: nickname,
+            full_name: nickname,
+            avatar_url: `avatar_${avatar_id}.png`,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+        ]);
+    }
+  };
 
   const login = async (email, password) => {
     try {

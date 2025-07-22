@@ -223,32 +223,6 @@ const Leaderboard = () => {
         };
       });
 
-      // Se o usuário atual não tem perfil, criar um
-      if (!profilesMap[user.id]) {
-        const nickname = user.user_metadata?.nickname || `Jogador ${user.id.slice(0, 8)}`;
-        const { data: newProfile } = await supabase
-          .from('profiles')
-          .insert([
-            {
-              user_id: user.id,
-              username: nickname,
-              full_name: nickname,
-              avatar_url: `avatar_${user.user_metadata?.avatar_id || 1}.png`,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString()
-            }
-          ])
-          .select()
-          .single();
-
-        if (newProfile) {
-          profilesMap[user.id] = {
-            username: newProfile.username,
-            avatar_url: newProfile.avatar_url
-          };
-        }
-      }
-
       switch (activeTab) {
         case 'daily':
           const today = new Date();

@@ -55,28 +55,6 @@ const Multimidia = () => (
         </li>
       </List>
     </Section>
-    <Section>
-      <SectionTitle>Papers & Artigos</SectionTitle>
-      <List>
-        <li>
-          <Link href="https://www.iexist.org/estado-vibracional/" target="_blank" rel="noopener noreferrer">
-            Estado Vibracional: Conceito e Técnicas (iexist.org)
-          </Link>
-        </li>
-        {/* Adicione mais papers aqui */}
-      </List>
-    </Section>
-    <Section>
-      <SectionTitle>Verbetes & Outros</SectionTitle>
-      <List>
-        <li>
-          <Link href="https://www.verbete.org/estado-vibracional" target="_blank" rel="noopener noreferrer">
-            Verbete: Estado Vibracional
-          </Link>
-        </li>
-        {/* Adicione mais verbetes ou links */}
-      </List>
-    </Section>
   </Container>
 );
 
