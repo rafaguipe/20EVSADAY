@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import styled from 'styled-components';
-import { supabase } from '../lib/supabaseClient';
-import { toast } from 'react-toastify';
+import { supabase } from '../supabaseClient';
+import toast from 'react-hot-toast';
 
 const Container = styled.div`
   min-height: 100vh;
