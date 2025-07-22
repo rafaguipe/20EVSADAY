@@ -5,6 +5,10 @@ import toast from 'react-hot-toast';
 import styled from 'styled-components';
 import { useTheme } from '../contexts/ThemeContext';
 import { useEVTimer } from '../contexts/EVTimerContext';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import Papa from 'papaparse';
+import { saveAs } from 'file-saver';
 
 const Container = styled.div`
   padding: 20px;
@@ -273,6 +277,63 @@ const avatars = [
   '👨‍🦲', '👩‍🦲', '👨‍🦳', '👩‍🦳', '👴', '👵', '🧓', '👶'
 ];
 
+const ExportSection = styled.div`
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(74, 106, 138, 0.1);
+  border: 2px solid #4a6a8a;
+  border-radius: 8px;
+`;
+
+const ExportTitle = styled.h3`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: #4a6a8a;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+`;
+
+const ExportButtons = styled.div`
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+`;
+
+const ExportButton = styled.button`
+  font-family: 'Press Start 2P', monospace;
+  padding: 12px 20px;
+  border: 2px solid ${({ variant }) => variant === 'pdf' ? '#dc3545' : '#28a745'};
+  background: ${({ variant }) => variant === 'pdf' ? 'rgba(220, 53, 69, 0.1)' : 'rgba(40, 167, 69, 0.1)'};
+  color: ${({ variant }) => variant === 'pdf' ? '#dc3545' : '#28a745'};
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  &:hover {
+    background: ${({ variant }) => variant === 'pdf' ? '#dc3545' : '#28a745'};
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+`;
+
+const ExportInfo = styled.p`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #6a6a6a;
+  margin-top: 15px;
+  line-height: 1.4;
+`;
+
 const Profile = () => {
   const { user, updateAvatar } = useAuth();
   const { themeName, toggleTheme } = useTheme();
@@ -290,6 +351,8 @@ const Profile = () => {
   const [evInterval, setEvInterval] = useState(25);
   const { intervalMinutes, setIntervalMinutes, updateInterval, soundEnabled, updateSoundEnabled } = useEVTimer();
   const [soundEnabledLocal, setSoundEnabledLocal] = useState(true);
+  const [evData, setEvData] = useState([]);
+  const [exportLoading, setExportLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -310,6 +373,32 @@ const Profile = () => {
       setSoundEnabledLocal(profile.sound_enabled);
     }
   }, [profile]);
+
+  // Carregar dados de EV para exportação
+  useEffect(() => {
+    const loadEVData = async () => {
+      if (user) {
+        try {
+          const { data, error } = await supabase
+            .from('evs')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: false });
+
+          if (error) {
+            console.error('Erro ao carregar dados EV:', error);
+            return;
+          }
+
+          setEvData(data || []);
+        } catch (err) {
+          console.error('Erro inesperado ao carregar dados EV:', err);
+        }
+      }
+    };
+
+    loadEVData();
+  }, [user]);
 
   const loadProfile = async () => {
     try {
@@ -511,6 +600,127 @@ const Profile = () => {
     return match ? parseInt(match[1]) : 1;
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR') + ' ' + date.toLocaleTimeString('pt-BR', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+  };
+
+  const getIntensityText = (score) => {
+    const intensities = ['Nenhuma', 'Baixa', 'Média', 'Alta', 'Máxima'];
+    return intensities[score] || 'N/A';
+  };
+
+  const exportToPDF = async () => {
+    if (evData.length === 0) {
+      toast.error('Nenhum EV registrado para exportar');
+      return;
+    }
+
+    setExportLoading(true);
+    try {
+      const doc = new jsPDF();
+      
+      // Título
+      doc.setFontSize(20);
+      doc.setTextColor(74, 106, 138);
+      doc.text('Relatório de Estados Vibracionais', 20, 20);
+      
+      // Informações do usuário
+      doc.setFontSize(12);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Usuário: ${profile?.username || user.email}`, 20, 35);
+      doc.text(`Período: ${formatDate(evData[evData.length - 1]?.created_at)} a ${formatDate(evData[0]?.created_at)}`, 20, 45);
+      doc.text(`Total de EVs: ${evData.length}`, 20, 55);
+      
+      // Tabela
+      const tableData = evData.map(ev => [
+        formatDate(ev.created_at),
+        getIntensityText(ev.score),
+        ev.score,
+        ev.notes || '-'
+      ]);
+
+      doc.autoTable({
+        startY: 70,
+        head: [['Data/Hora', 'Intensidade', 'Pontuação', 'Comentários']],
+        body: tableData,
+        theme: 'grid',
+        headStyles: {
+          fillColor: [74, 106, 138],
+          textColor: 255,
+          fontStyle: 'bold'
+        },
+        styles: {
+          fontSize: 10,
+          cellPadding: 5
+        },
+        columnStyles: {
+          0: { cellWidth: 40 },
+          1: { cellWidth: 30 },
+          2: { cellWidth: 20 },
+          3: { cellWidth: 'auto' }
+        }
+      });
+
+      // Estatísticas
+      const avgScore = (evData.reduce((sum, ev) => sum + ev.score, 0) / evData.length).toFixed(2);
+      const maxScore = Math.max(...evData.map(ev => ev.score));
+      const minScore = Math.min(...evData.map(ev => ev.score));
+
+      const finalY = doc.lastAutoTable.finalY + 10;
+      doc.setFontSize(12);
+      doc.setTextColor(74, 106, 138);
+      doc.text('Estatísticas:', 20, finalY);
+      doc.setFontSize(10);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Média: ${avgScore} | Máxima: ${maxScore} | Mínima: ${minScore}`, 20, finalY + 10);
+
+      // Salvar arquivo
+      const filename = `EV_${profile?.username || 'user'}_${new Date().toISOString().split('T')[0]}.pdf`;
+      doc.save(filename);
+      
+      toast.success('📄 PDF exportado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      toast.error('Erro ao gerar PDF');
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
+  const exportToCSV = async () => {
+    if (evData.length === 0) {
+      toast.error('Nenhum EV registrado para exportar');
+      return;
+    }
+
+    setExportLoading(true);
+    try {
+      const csvData = evData.map(ev => ({
+        'Data/Hora': formatDate(ev.created_at),
+        'Intensidade': getIntensityText(ev.score),
+        'Pontuação': ev.score,
+        'Comentários': ev.notes || ''
+      }));
+
+      const csv = Papa.unparse(csvData);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      
+      const filename = `EV_${profile?.username || 'user'}_${new Date().toISOString().split('T')[0]}.csv`;
+      saveAs(blob, filename);
+      
+      toast.success('📊 CSV exportado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao gerar CSV:', error);
+      toast.error('Erro ao gerar CSV');
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
   if (!user) {
     return (
       <Container>
@@ -671,6 +881,29 @@ const Profile = () => {
               {soundEnabledLocal ? 'LIGADO' : 'DESLIGADO'}
             </ToggleStatus>
           </ToggleContainer>
+          <ExportSection>
+            <ExportTitle>Exportar Dados</ExportTitle>
+            <ExportButtons>
+              <ExportButton 
+                variant="pdf" 
+                onClick={exportToPDF} 
+                disabled={exportLoading || evData.length === 0}
+              >
+                📄 Exportar PDF
+              </ExportButton>
+              <ExportButton 
+                variant="csv" 
+                onClick={exportToCSV} 
+                disabled={exportLoading || evData.length === 0}
+              >
+                📊 Exportar CSV
+              </ExportButton>
+            </ExportButtons>
+            <ExportInfo>
+              Exporte todos os seus registros de EV com data, hora, intensidade e comentários.
+              {evData.length > 0 && ` Total de ${evData.length} registros disponíveis.`}
+            </ExportInfo>
+          </ExportSection>
         </Card>
       </Grid>
     </Container>
