@@ -11,46 +11,73 @@ export const EVTimerProvider = ({ children }) => {
   const [shouldTriggerReminder, setShouldTriggerReminder] = useState(false);
   const timerRef = useRef();
   const audioRef = useRef();
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
-  // Carregar intervalo do perfil
+  // Carregar intervalo e preferência de som do perfil
   useEffect(() => {
-    const fetchInterval = async () => {
+    const fetchUserPreferences = async () => {
       if (user) {
         const { data } = await supabase
           .from('profiles')
-          .select('ev_interval_minutes')
+          .select('ev_interval_minutes, sound_enabled')
           .eq('user_id', user.id)
           .single();
+        
         if (data?.ev_interval_minutes) {
           setIntervalMinutes(data.ev_interval_minutes);
-          setTimer(data.ev_interval_minutes * 60);
+          // Carregar timer salvo ou usar o padrão
+          const savedTimer = localStorage.getItem(`ev_timer_${user.id}`);
+          if (savedTimer) {
+            const savedTime = parseInt(savedTimer);
+            const now = Date.now();
+            const elapsed = Math.floor((now - savedTime) / 1000);
+            const remaining = (data.ev_interval_minutes * 60) - elapsed;
+            setTimer(Math.max(0, remaining));
+          } else {
+            setTimer(data.ev_interval_minutes * 60);
+          }
         } else {
           setIntervalMinutes(25);
           setTimer(25 * 60);
         }
+        
+        if (data?.sound_enabled !== undefined) {
+          setSoundEnabled(data.sound_enabled);
+        }
       }
     };
-    fetchInterval();
+    fetchUserPreferences();
   }, [user]);
+
+  // Salvar timer no localStorage
+  useEffect(() => {
+    if (user && timer > 0) {
+      const now = Date.now();
+      const startTime = now - ((intervalMinutes * 60 - timer) * 1000);
+      localStorage.setItem(`ev_timer_${user.id}`, startTime.toString());
+    }
+  }, [timer, user, intervalMinutes]);
 
   // Cronômetro regressivo
   useEffect(() => {
     if (!user) return;
     if (timer <= 0) {
-      // Tocar som de reminder
-      if (audioRef.current) {
+      // Tocar som apenas se estiver habilitado
+      if (soundEnabled && audioRef.current) {
         audioRef.current.currentTime = 0;
         audioRef.current.play().catch(e => console.log('Erro ao tocar som:', e));
       }
       setShouldTriggerReminder(true);
       setTimer(intervalMinutes * 60); // reinicia
+      // Limpar timer salvo quando reiniciar
+      localStorage.removeItem(`ev_timer_${user.id}`);
       return;
     }
     timerRef.current = setInterval(() => {
       setTimer((t) => t - 1);
     }, 1000);
     return () => clearInterval(timerRef.current);
-  }, [timer, intervalMinutes, user]);
+  }, [timer, intervalMinutes, user, soundEnabled]);
 
   // Função para consumir o lembrete
   const consumeReminder = () => setShouldTriggerReminder(false);
@@ -73,7 +100,8 @@ export const EVTimerProvider = ({ children }) => {
       intervalMinutes, 
       shouldTriggerReminder, 
       consumeReminder,
-      updateInterval 
+      updateInterval,
+      soundEnabled 
     }}>
       <audio ref={audioRef} src="/sounds/reminder.mp3" preload="auto" />
       {children}

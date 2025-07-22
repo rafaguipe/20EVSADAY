@@ -222,6 +222,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [evInterval, setEvInterval] = useState(25);
   const { intervalMinutes, setIntervalMinutes, updateInterval } = useEVTimer();
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -234,6 +235,12 @@ const Profile = () => {
   useEffect(() => {
     if (profile?.ev_interval_minutes) {
       setEvInterval(profile.ev_interval_minutes);
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    if (profile?.sound_enabled !== undefined) {
+      setSoundEnabled(profile.sound_enabled);
     }
   }, [profile]);
 
@@ -369,6 +376,18 @@ const Profile = () => {
       .eq('user_id', user.id);
     setLoading(false);
     if (!error) toast.success('Intervalo salvo!');
+  };
+
+  const handleSoundToggle = async () => {
+    const newValue = !soundEnabled;
+    setSoundEnabled(newValue);
+    setLoading(true);
+    const { error } = await supabase
+      .from('profiles')
+      .update({ sound_enabled: newValue, updated_at: new Date().toISOString() })
+      .eq('user_id', user.id);
+    setLoading(false);
+    if (!error) toast.success(newValue ? 'Som ativado!' : 'Som desativado!');
   };
 
   const getMaxValue = () => {
@@ -526,6 +545,27 @@ const Profile = () => {
               disabled={loading}
             />
             <span style={{ marginLeft: 8, fontSize: 12 }}>min</span>
+          </div>
+          <div style={{ marginBottom: 16 }}>
+            <strong>Notificações Sonoras:</strong>
+            <button
+              style={{
+                marginLeft: 16,
+                padding: '8px 20px',
+                borderRadius: 8,
+                border: 'none',
+                background: soundEnabled ? '#4a8a4a' : '#8a4a4a',
+                color: '#fff',
+                fontFamily: 'Press Start 2P, monospace',
+                fontSize: 12,
+                cursor: 'pointer',
+                transition: 'background 0.2s',
+              }}
+              onClick={handleSoundToggle}
+              disabled={loading}
+            >
+              {soundEnabled ? 'Ligado' : 'Desligado'}
+            </button>
           </div>
         </Card>
       </Grid>

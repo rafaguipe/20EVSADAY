@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import styled from 'styled-components';
+import { supabase } from '../lib/supabaseClient';
+import { toast } from 'react-toastify';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -125,7 +127,8 @@ const Login = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+  const [showResendButton, setShowResendButton] = useState(false);
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -135,6 +138,23 @@ const Login = () => {
       [e.target.name]: e.target.value
     });
     setError('');
+  };
+
+  const handleResendConfirmation = async () => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: formData.email
+      });
+      
+      if (error) {
+        toast.error('Erro ao reenviar e-mail: ' + error.message);
+      } else {
+        toast.success('E-mail de confirmação reenviado! Verifique sua caixa de entrada.');
+      }
+    } catch (error) {
+      toast.error('Erro ao reenviar e-mail');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -148,6 +168,10 @@ const Login = () => {
       navigate('/dashboard');
     } else {
       setError(result.error);
+      if (result.error.message.includes('Email not confirmed')) {
+        setShowResendButton(true);
+        toast.error('E-mail não confirmado. Verifique sua caixa de entrada ou clique em "Reenviar confirmação".');
+      }
     }
     
     setLoading(false);
@@ -191,6 +215,26 @@ const Login = () => {
           {error && <ErrorMessage>{error}</ErrorMessage>}
         </Form>
         
+        {showResendButton && (
+          <div style={{ textAlign: 'center', marginTop: '10px' }}>
+            <button
+              onClick={handleResendConfirmation}
+              style={{
+                background: 'transparent',
+                border: '1px solid #4a6a8a',
+                color: '#4a6a8a',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                fontFamily: 'Press Start 2P, monospace',
+                fontSize: '10px',
+                cursor: 'pointer'
+              }}
+            >
+              Reenviar Confirmação
+            </button>
+          </div>
+        )}
+
         <LinkText>
           Não tem uma conta?
           <StyledLink to="/register">Cadastre-se</StyledLink>
