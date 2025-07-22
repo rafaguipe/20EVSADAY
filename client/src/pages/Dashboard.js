@@ -244,6 +244,16 @@ const Dashboard = () => {
     }
   }, [user]);
 
+  // Reset do som de vitória após tocar
+  useEffect(() => {
+    if (playVictorySound) {
+      const timer = setTimeout(() => {
+        setPlayVictorySound(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [playVictorySound]);
+
   const loadStats = async () => {
     try {
       // Buscar todos os EVs do usuário
@@ -382,110 +392,32 @@ const Dashboard = () => {
         toast.success('EV registrado com sucesso!');
       }
       
-      // Verificar se atingiu 20 EVs no dia e atribuir badge de Mestre Diário
+      // Verificar se atingiu marcos especiais de EVs no dia para tocar som de vitória
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const { data: todayEVs } = await supabase
         .from('evs')
-        .select('id', { count: 'exact' })
+        .select('id')
         .eq('user_id', user.id)
         .gte('created_at', today.toISOString());
       
-      if (todayEVs && todayEVs.length >= 20 && todayEVs.length % 10 === 0) {
-        setPlayVictorySound(true);
-        toast.success(`Parabéns! Você atingiu ${todayEVs.length} EVs hoje! 🎉`);
+      if (todayEVs && todayEVs.length > 0) {
+        // Tocar som de vitória apenas em marcos especiais (20, 30, 40, 50 EVs)
+        const specialMilestones = [20, 30, 40, 50];
+        if (specialMilestones.includes(todayEVs.length)) {
+          setPlayVictorySound(true);
+          toast.success(`🎉 Parabéns! Você atingiu ${todayEVs.length} EVs hoje!`);
+        }
       }
 
-      if (todayEVs && todayEVs.length === 20) {
-        // Verificar se já tem o badge de Mestre Diário
-        const { data: existingBadge } = await supabase
-          .from('user_badges')
-          .select('badges!inner(*)')
-          .eq('user_id', user.id)
-          .eq('badges.name', 'Mestre Diário')
-          .single();
-        
-        if (!existingBadge) {
-          const { data: badge } = await supabase
-            .from('badges')
-            .select('id')
-            .eq('name', 'Mestre Diário')
-            .single();
-          
-          if (badge) {
-            await supabase
-              .from('user_badges')
-              .insert([
-                {
-                  user_id: user.id,
-                  badge_id: badge.id,
-                  awarded_at: new Date().toISOString()
-                }
-              ]);
-            
-            // Mostrar pop-up de badge conquistado
-            setEarnedBadge({
-              name: 'Mestre Diário',
-              description: 'Registrou 20 EVs em um único dia',
-              icon: '⚡'
-            });
-            setShowBadgeNotification(true);
-            
-            // Tocar som de vitória
-            setPlayVictorySound(true);
-            
-            toast.success('🎉 Badge "Mestre Diário" conquistado! 20 EVs em um dia!');
-          }
-        }
+      // Verificação de badges movida para função separada para evitar erros
+      try {
+        await checkAndAwardBadges();
+      } catch (error) {
+        console.log('Erro ao verificar badges (não crítico):', error);
       }
       
-      // Verificar se registrou EV no período de fundação (1/7/2025 a 31/7/2025)
-      const foundationStart = new Date('2025-07-01T00:00:00');
-      const foundationEnd = new Date('2025-07-31T23:59:59');
-      const evDate = new Date();
-      
-      if (evDate >= foundationStart && evDate <= foundationEnd) {
-        // Verificar se já tem o badge de Líder 4 Anos
-        const { data: existingFoundationBadge } = await supabase
-          .from('user_badges')
-          .select('badges!inner(*)')
-          .eq('user_id', user.id)
-          .eq('badges.name', 'Líder 4 Anos de Fundação')
-          .single();
-        
-        if (!existingFoundationBadge) {
-          const { data: foundationBadge } = await supabase
-            .from('badges')
-            .select('id')
-            .eq('name', 'Líder 4 Anos de Fundação')
-            .single();
-          
-          if (foundationBadge) {
-            await supabase
-              .from('user_badges')
-              .insert([
-                {
-                  user_id: user.id,
-                  badge_id: foundationBadge.id,
-                  awarded_at: new Date().toISOString()
-                }
-              ]);
-            
-            // Mostrar pop-up de badge conquistado
-            setEarnedBadge({
-              name: 'Líder 4 Anos de Fundação',
-              description: 'Registrou EVs durante o período de fundação de 4 anos',
-              icon: '🏆'
-            });
-            setShowBadgeNotification(true);
-            
-            // Tocar som de vitória
-            setPlayVictorySound(true);
-            
-            toast.success('🏆 Badge "Líder 4 Anos de Fundação" conquistado!');
-          }
-        }
-      }
+      // Verificação de badges de fundação movida para função separada
       
       // Tocar som de moeda como recompensa
       setPlayCoinSound(true);
@@ -501,8 +433,7 @@ const Dashboard = () => {
       // Resetar o som após tocar
       setTimeout(() => setPlayCoinSound(false), 100);
 
-      // Verificar novos badges
-      await checkAndAwardBadges();
+      // Verificação de badges já feita acima
 
     } catch (error) {
       console.error('Erro ao registrar EV:', error);
@@ -737,12 +668,14 @@ const Dashboard = () => {
         volume={0.3}
       />
       
-      {/* Som de vitória quando conquistar badge */}
+      {/* Som de vitória quando conquistar badge ou atingir marcos */}
       <SoundEffect 
         soundFile="/sounds/victory.mp3" 
         play={playVictorySound} 
         volume={0.4}
       />
+      
+
       
       {/* Pop-up de badge conquistado */}
       <BadgeNotification
