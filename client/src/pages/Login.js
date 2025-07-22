@@ -120,6 +120,23 @@ const ErrorMessage = styled.div`
   margin-top: 10px;
 `;
 
+const EmailInfo = styled.div`
+  background: rgba(74, 106, 138, 0.1);
+  border: 2px solid #4a6a8a;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 20px;
+`;
+
+const InfoText = styled.p`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #4a6a8a;
+  text-align: center;
+  margin: 0;
+  line-height: 1.4;
+`;
+
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -128,7 +145,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showResendButton, setShowResendButton] = useState(false);
-
+  
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -141,6 +158,7 @@ const Login = () => {
   };
 
   const handleResendConfirmation = async () => {
+    setLoading(true);
     try {
       const { error } = await supabase.auth.resend({
         type: 'signup',
@@ -148,19 +166,21 @@ const Login = () => {
       });
       
       if (error) {
-        toast.error('Erro ao reenviar e-mail: ' + error.message);
+        toast.error('Erro ao reenviar confirmação: ' + error.message);
       } else {
         toast.success('E-mail de confirmação reenviado! Verifique sua caixa de entrada.');
       }
-    } catch (error) {
-      toast.error('Erro ao reenviar e-mail');
+    } catch (err) {
+      toast.error('Erro inesperado ao reenviar confirmação');
     }
+    setLoading(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setShowResendButton(false);
 
     const result = await login(formData.email, formData.password);
     
@@ -170,7 +190,7 @@ const Login = () => {
       setError(result.error);
       if (result.error.message.includes('Email not confirmed')) {
         setShowResendButton(true);
-        toast.error('E-mail não confirmado. Verifique sua caixa de entrada ou clique em "Reenviar confirmação".');
+        toast.error('❌ E-mail não confirmado! Verifique sua caixa de entrada ou clique em "Reenviar confirmação".');
       }
     }
     
@@ -181,6 +201,13 @@ const Login = () => {
     <Container>
       <FormCard>
         <Title>Login</Title>
+        
+        <EmailInfo>
+          <InfoText>
+            📧 Primeira vez? Faça o cadastro primeiro e confirme seu e-mail!
+          </InfoText>
+        </EmailInfo>
+        
         <Form onSubmit={handleSubmit}>
           <FormGroup>
             <Label htmlFor="email">Email</Label>
@@ -213,31 +240,33 @@ const Login = () => {
           </SubmitButton>
           
           {error && <ErrorMessage>{error}</ErrorMessage>}
+          
+          {showResendButton && (
+            <div style={{ textAlign: 'center', marginTop: '10px' }}>
+              <button
+                onClick={handleResendConfirmation}
+                disabled={loading}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: 6,
+                  border: '2px solid #4a6a8a',
+                  background: 'transparent',
+                  color: '#4a6a8a',
+                  fontFamily: 'Press Start 2P, monospace',
+                  fontSize: 10,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                📧 Reenviar Confirmação
+              </button>
+            </div>
+          )}
         </Form>
         
-        {showResendButton && (
-          <div style={{ textAlign: 'center', marginTop: '10px' }}>
-            <button
-              onClick={handleResendConfirmation}
-              style={{
-                background: 'transparent',
-                border: '1px solid #4a6a8a',
-                color: '#4a6a8a',
-                padding: '8px 16px',
-                borderRadius: '4px',
-                fontFamily: 'Press Start 2P, monospace',
-                fontSize: '10px',
-                cursor: 'pointer'
-              }}
-            >
-              Reenviar Confirmação
-            </button>
-          </div>
-        )}
-
         <LinkText>
           Não tem uma conta?
-          <StyledLink to="/register">Cadastre-se</StyledLink>
+          <StyledLink to="/register">Faça o cadastro</StyledLink>
         </LinkText>
       </FormCard>
     </Container>

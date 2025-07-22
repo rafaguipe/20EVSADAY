@@ -206,29 +206,27 @@ const Navbar = () => {
       if (user) {
         console.log('Carregando perfil para usuário:', user.id);
         try {
-          // Primeiro, tentar buscar o perfil existente
           const { data, error } = await supabase
             .from('profiles')
-            .select('*')
+            .select('*') // Select all to get username, avatar_url, ev_interval_minutes, sound_enabled
             .eq('user_id', user.id)
-            .maybeSingle(); // usar maybeSingle em vez de single
-          
+            .maybeSingle(); // Use maybeSingle for robust error handling
+
           console.log('Resultado da busca:', { data, error });
-          
+
           if (error) {
             console.error('Erro detalhado ao carregar perfil:', error);
             return;
           }
-          
+
           if (data) {
             console.log('Perfil encontrado:', data);
             setProfile(data);
           } else {
             console.log('Perfil não encontrado, criando novo...');
-            // Criar perfil básico
             const nickname = user.user_metadata?.nickname || `Jogador ${user.id.slice(0, 8)}`;
             const avatar_id = user.user_metadata?.avatar_id || 1;
-            
+
             const { data: newProfile, error: createError } = await supabase
               .from('profiles')
               .insert({
@@ -241,9 +239,9 @@ const Navbar = () => {
               })
               .select()
               .single();
-            
+
             console.log('Resultado da criação:', { newProfile, createError });
-            
+
             if (createError) {
               console.error('Erro ao criar perfil:', createError);
             } else {
@@ -257,18 +255,6 @@ const Navbar = () => {
     };
     fetchProfile();
   }, [user]);
-
-  // Cronômetro regressivo
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    if (evTimer <= 0) {
-      return;
-    }
-    const interval = setInterval(() => {
-      setTimer((t) => t - 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [evTimer, isAuthenticated]);
 
   const handleLogout = () => {
     logout();

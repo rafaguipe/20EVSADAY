@@ -446,24 +446,57 @@ const Profile = () => {
   };
 
   const handleSoundToggle = async () => {
+    console.log('=== DEBUG TOGGLE ===');
+    console.log('Estado atual:', soundEnabledLocal);
+    console.log('User ID:', user?.id);
+    
     const newValue = !soundEnabledLocal;
+    console.log('Novo valor:', newValue);
+    
+    // Atualizar estado local imediatamente
     setSoundEnabledLocal(newValue);
-    updateSoundEnabled(newValue); // Atualizar contexto global
+    updateSoundEnabled(newValue);
+    
     setLoading(true);
     
-    const { error } = await supabase
-      .from('profiles')
-      .update({ sound_enabled: newValue, updated_at: new Date().toISOString() })
-      .eq('user_id', user.id);
-    
-    setLoading(false);
-    if (!error) {
-      toast.success(newValue ? 'Som ativado!' : 'Som desativado!');
-    } else {
+    try {
+      console.log('Tentando atualizar no banco...');
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({ 
+          sound_enabled: newValue, 
+          updated_at: new Date().toISOString() 
+        })
+        .eq('user_id', user.id)
+        .select();
+      
+      console.log('Resposta do Supabase:', { data, error });
+      
+      if (error) {
+        console.error('❌ ERRO:', error);
+        // Reverter em caso de erro
+        setSoundEnabledLocal(!newValue);
+        updateSoundEnabled(!newValue);
+        
+        if (error.code === '42703') {
+          toast.error('❌ Campo sound_enabled não existe. Execute o script SQL primeiro!');
+        } else {
+          toast.error(`❌ Erro: ${error.message}`);
+        }
+      } else {
+        console.log('✅ Sucesso! Som atualizado para:', newValue);
+        toast.success(newValue ? '🔊 Som ativado!' : '🔇 Som desativado!');
+      }
+    } catch (err) {
+      console.error('❌ Erro inesperado:', err);
       // Reverter em caso de erro
       setSoundEnabledLocal(!newValue);
       updateSoundEnabled(!newValue);
-      toast.error('Erro ao atualizar configuração de som');
+      toast.error('❌ Erro inesperado!');
+    } finally {
+      setLoading(false);
+      console.log('=== FIM DEBUG TOGGLE ===');
     }
   };
 

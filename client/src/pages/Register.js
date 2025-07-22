@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import styled from 'styled-components';
+import toast from 'react-hot-toast';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -150,10 +151,85 @@ const ErrorMessage = styled.div`
   margin-top: 10px;
 `;
 
-const avatars = [
-  '👤', '👨', '👩', '🧑', '👨‍🦰', '👩‍🦰', '👨‍🦱', '👩‍🦱',
-  '👨‍🦲', '👩‍🦲', '👨‍🦳', '👩‍🦳', '👴', '👵', '🧓', '👶'
-];
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+`;
+
+const ModalBox = styled.div`
+  background: #1a1a1a;
+  border: 3px solid #4a6a8a;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(74, 106, 138, 0.3);
+`;
+
+const ModalTitle = styled.h2`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 18px;
+  color: #4a6a8a;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+`;
+
+const ModalMessage = styled.p`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: #ffffff;
+  line-height: 1.6;
+  margin-bottom: 25px;
+`;
+
+const ModalIcon = styled.div`
+  font-size: 48px;
+  margin-bottom: 20px;
+`;
+
+const ModalButton = styled.button`
+  font-family: 'Press Start 2P', monospace;
+  padding: 12px 24px;
+  background: #4a6a8a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s;
+  
+  &:hover {
+    background: #357a6a;
+  }
+`;
+
+const EmailWarning = styled.div`
+  background: rgba(255, 193, 7, 0.1);
+  border: 2px solid #ffc107;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 20px;
+`;
+
+const WarningText = styled.p`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #ffc107;
+  text-align: center;
+  margin: 0;
+`;
+
+const avatars = ['😀', '😎', '🤖', '👾', '🐱', '🦊', '🐼', '🦁', '🐯', '🐸', '🐙', '🦄'];
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -165,6 +241,8 @@ const Register = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState('');
   
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -174,7 +252,6 @@ const Register = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
-    setError('');
   };
 
   const handleAvatarSelect = (avatarId) => {
@@ -216,7 +293,9 @@ const Register = () => {
     );
     
     if (result.success) {
-      navigate('/dashboard');
+      setRegisteredEmail(formData.email);
+      setShowEmailModal(true);
+      toast.success('Conta criada com sucesso! Verifique seu e-mail.');
     } else {
       setError(result.error);
     }
@@ -224,93 +303,130 @@ const Register = () => {
     setLoading(false);
   };
 
+  const handleModalClose = () => {
+    setShowEmailModal(false);
+    navigate('/login');
+  };
+
   return (
-    <Container>
-      <FormCard>
-        <Title>Cadastro</Title>
-        <Form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              placeholder="seu@email.com"
-            />
-          </FormGroup>
+    <>
+      <Container>
+        <FormCard>
+          <Title>Cadastro</Title>
           
-          <FormGroup>
-            <Label htmlFor="nickname">Apelido</Label>
-            <Input
-              type="text"
-              id="nickname"
-              name="nickname"
-              value={formData.nickname}
-              onChange={handleChange}
-              required
-              placeholder="Seu apelido"
-              maxLength={20}
-            />
-          </FormGroup>
+          <EmailWarning>
+            <WarningText>
+              ⚠️ IMPORTANTE: Após o cadastro, você receberá um e-mail de confirmação. 
+              Clique no link para ativar sua conta!
+            </WarningText>
+          </EmailWarning>
           
-          <FormGroup>
-            <Label htmlFor="password">Senha</Label>
-            <Input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              placeholder="••••••••"
-              minLength={6}
-            />
-          </FormGroup>
+          <Form onSubmit={handleSubmit}>
+            <FormGroup>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                placeholder="seu@email.com"
+              />
+            </FormGroup>
+            
+            <FormGroup>
+              <Label htmlFor="nickname">Apelido</Label>
+              <Input
+                type="text"
+                id="nickname"
+                name="nickname"
+                value={formData.nickname}
+                onChange={handleChange}
+                required
+                placeholder="Seu apelido"
+                maxLength={20}
+              />
+            </FormGroup>
+            
+            <FormGroup>
+              <Label htmlFor="password">Senha</Label>
+              <Input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                placeholder="••••••••"
+                minLength={6}
+              />
+            </FormGroup>
+            
+            <FormGroup>
+              <Label htmlFor="confirmPassword">Confirmar Senha</Label>
+              <Input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+                placeholder="••••••••"
+              />
+            </FormGroup>
+            
+            <AvatarSection>
+              <Label>Escolha seu Avatar</Label>
+              <AvatarGrid>
+                {avatars.map((avatar, index) => (
+                  <AvatarOption
+                    key={index}
+                    selected={formData.avatar_id === index + 1}
+                    onClick={() => handleAvatarSelect(index + 1)}
+                  >
+                    {avatar}
+                  </AvatarOption>
+                ))}
+              </AvatarGrid>
+            </AvatarSection>
+            
+            <SubmitButton type="submit" disabled={loading}>
+              {loading ? 'Criando conta...' : 'Criar Conta'}
+            </SubmitButton>
+            
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+          </Form>
           
-          <FormGroup>
-            <Label htmlFor="confirmPassword">Confirmar Senha</Label>
-            <Input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              placeholder="••••••••"
-            />
-          </FormGroup>
-          
-          <AvatarSection>
-            <Label>Escolha seu Avatar</Label>
-            <AvatarGrid>
-              {avatars.map((avatar, index) => (
-                <AvatarOption
-                  key={index}
-                  selected={formData.avatar_id === index + 1}
-                  onClick={() => handleAvatarSelect(index + 1)}
-                >
-                  {avatar}
-                </AvatarOption>
-              ))}
-            </AvatarGrid>
-          </AvatarSection>
-          
-          <SubmitButton type="submit" disabled={loading}>
-            {loading ? 'Criando conta...' : 'Criar Conta'}
-          </SubmitButton>
-          
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-        </Form>
-        
-        <LinkText>
-          Já tem uma conta?
-          <StyledLink to="/login">Faça login</StyledLink>
-        </LinkText>
-      </FormCard>
-    </Container>
+          <LinkText>
+            Já tem uma conta?
+            <StyledLink to="/login">Faça login</StyledLink>
+          </LinkText>
+        </FormCard>
+      </Container>
+
+      {showEmailModal && (
+        <ModalOverlay>
+          <ModalBox>
+            <ModalIcon>📧</ModalIcon>
+            <ModalTitle>Verifique seu E-mail!</ModalTitle>
+            <ModalMessage>
+              Enviamos um link de confirmação para:<br />
+              <strong style={{ color: '#4a6a8a' }}>{registeredEmail}</strong><br /><br />
+              
+              <span style={{ color: '#ffc107' }}>
+                ⚠️ IMPORTANTE: Você precisa clicar no link do e-mail para ativar sua conta antes de fazer login!
+              </span><br /><br />
+              
+              Verifique sua caixa de entrada e pasta de spam.
+            </ModalMessage>
+            <ModalButton onClick={handleModalClose}>
+              Entendi, vou verificar!
+            </ModalButton>
+          </ModalBox>
+        </ModalOverlay>
+      )}
+    </>
   );
 };
 
