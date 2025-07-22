@@ -254,10 +254,9 @@ const Leaderboard = () => {
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
                 max_score: Math.max(...stats.scores)
               }))
-              .sort((a, b) => b.total_points - a.total_points)
-              .slice(0, 10);
+              .sort((a, b) => b.total_points - a.total_points);
           }
-          info = `Data: ${today.toLocaleDateString('pt-BR')}`;
+          info = `Data: ${today.toLocaleDateString('pt-BR')} • ${leaderboard.length} jogadores`;
           break;
 
         case 'weekly':
@@ -290,10 +289,9 @@ const Leaderboard = () => {
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
                 max_score: Math.max(...stats.scores)
               }))
-              .sort((a, b) => b.total_points - a.total_points)
-              .slice(0, 10);
+              .sort((a, b) => b.total_points - a.total_points);
           }
-          info = `${weekAgo.toLocaleDateString('pt-BR')} a ${new Date().toLocaleDateString('pt-BR')}`;
+          info = `${weekAgo.toLocaleDateString('pt-BR')} a ${new Date().toLocaleDateString('pt-BR')} • ${leaderboard.length} jogadores`;
           break;
 
         case 'monthly':
@@ -326,10 +324,9 @@ const Leaderboard = () => {
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
                 max_score: Math.max(...stats.scores)
               }))
-              .sort((a, b) => b.total_points - a.total_points)
-              .slice(0, 10);
+              .sort((a, b) => b.total_points - a.total_points);
           }
-          info = `${monthAgo.toLocaleDateString('pt-BR')} a ${new Date().toLocaleDateString('pt-BR')}`;
+          info = `${monthAgo.toLocaleDateString('pt-BR')} a ${new Date().toLocaleDateString('pt-BR')} • ${leaderboard.length} jogadores`;
           break;
 
         case 'all-time':
@@ -359,10 +356,9 @@ const Leaderboard = () => {
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
                 max_score: Math.max(...stats.scores)
               }))
-              .sort((a, b) => b.total_points - a.total_points)
-              .slice(0, 10);
+              .sort((a, b) => b.total_points - a.total_points);
           }
-          info = 'Todos os tempos';
+          info = `Todos os tempos • ${leaderboard.length} jogadores`;
           break;
 
         case 'consistency':
@@ -392,10 +388,9 @@ const Leaderboard = () => {
                 evs_count: stats.evs_count,
                 total_points: stats.total_points
               }))
-              .sort((a, b) => parseFloat(b.average_score) - parseFloat(a.average_score))
-              .slice(0, 10);
+              .sort((a, b) => parseFloat(b.average_score) - parseFloat(a.average_score));
           }
-          info = 'Mínimo 10 EVs';
+          info = `Mínimo 10 EVs • ${leaderboard.length} jogadores`;
           break;
 
         case 'dedication':
@@ -424,10 +419,9 @@ const Leaderboard = () => {
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
                 total_points: stats.total_points
               }))
-              .sort((a, b) => b.evs_count - a.evs_count)
-              .slice(0, 10);
+              .sort((a, b) => b.evs_count - a.evs_count);
           }
-          info = 'Mais EVs registrados';
+          info = `Mais EVs registrados • ${leaderboard.length} jogadores`;
           break;
       }
 
