@@ -7,6 +7,7 @@ import SoundEffect from '../components/SoundEffect';
 import BadgeNotification from '../components/BadgeNotification';
 import DailyProgressBar from '../components/DailyProgressBar';
 import EVReminder from '../components/EVReminder';
+import DailyReportTester from '../components/DailyReportTester';
 
 const Container = styled.div`
   padding: 20px;
@@ -383,8 +384,7 @@ const Dashboard = () => {
       }
       
       // Verificar se atingiu 20 EVs no dia e atribuir badge de Mestre Diário
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const today = getBrasiliaDayStart();
       const { data: todayEVs } = await supabase
         .from('evs')
         .select('id', { count: 'exact' })
@@ -513,13 +513,7 @@ const Dashboard = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    return formatBrasiliaDate(dateString);
   };
 
   const checkAndAwardBadges = async () => {
@@ -577,10 +571,12 @@ const Dashboard = () => {
         await awardBadge('Sábio Consciencial', 'Primeiros 1000 EVs registrados', '🧙‍♀️');
       }
 
-      // 2. Verificar badges de EVs em um único dia
+      // 2. Verificar badges de EVs em um único dia (usando fuso horário de Brasília)
       const dailyEVCounts = {};
       userEVs.forEach(ev => {
-        const date = new Date(ev.created_at).toDateString();
+        const brasiliaDate = new Date(ev.created_at);
+        brasiliaDate.setHours(brasiliaDate.getHours() - 3); // Ajustar para UTC-3
+        const date = brasiliaDate.toDateString();
         dailyEVCounts[date] = (dailyEVCounts[date] || 0) + 1;
       });
 
@@ -617,7 +613,13 @@ const Dashboard = () => {
   const calculateConsecutiveDays = (evs) => {
     if (!evs || evs.length === 0) return 0;
     
-    const dates = [...new Set(evs.map(ev => new Date(ev.created_at).toDateString()))].sort();
+    // Usar fuso horário de Brasília para calcular dias consecutivos
+    const dates = [...new Set(evs.map(ev => {
+      const brasiliaDate = new Date(ev.created_at);
+      brasiliaDate.setHours(brasiliaDate.getHours() - 3); // Ajustar para UTC-3
+      return brasiliaDate.toDateString();
+    }))].sort();
+    
     let maxConsecutive = 0;
     let currentConsecutive = 1;
     
@@ -641,6 +643,8 @@ const Dashboard = () => {
     <Container>
       <EVReminder />
       <Title>Dashboard</Title>
+      
+      <DailyReportTester />
       
       <StatsGrid>
         <StatCard>
