@@ -5,9 +5,6 @@ import toast from 'react-hot-toast';
 import styled from 'styled-components';
 import { useTheme } from '../contexts/ThemeContext';
 import { useEVTimer } from '../contexts/EVTimerContext';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-import Papa from 'papaparse';
 
 const Container = styled.div`
   padding: 20px;
@@ -301,9 +298,21 @@ const ExportButtons = styled.div`
 const ExportButton = styled.button`
   font-family: 'Press Start 2P', monospace;
   padding: 12px 20px;
-  border: 2px solid ${({ variant }) => variant === 'pdf' ? '#dc3545' : '#28a745'};
-  background: ${({ variant }) => variant === 'pdf' ? 'rgba(220, 53, 69, 0.1)' : 'rgba(40, 167, 69, 0.1)'};
-  color: ${({ variant }) => variant === 'pdf' ? '#dc3545' : '#28a745'};
+  border: 2px solid ${({ variant }) => {
+    if (variant === 'txt') return '#ffc107';
+    if (variant === 'csv') return '#28a745';
+    return '#4a6a8a';
+  }};
+  background: ${({ variant }) => {
+    if (variant === 'txt') return 'rgba(255, 193, 7, 0.1)';
+    if (variant === 'csv') return 'rgba(40, 167, 69, 0.1)';
+    return 'rgba(74, 106, 138, 0.1)';
+  }};
+  color: ${({ variant }) => {
+    if (variant === 'txt') return '#ffc107';
+    if (variant === 'csv') return '#28a745';
+    return '#4a6a8a';
+  }};
   border-radius: 6px;
   cursor: pointer;
   font-size: 12px;
@@ -313,7 +322,11 @@ const ExportButton = styled.button`
   gap: 8px;
   
   &:hover {
-    background: ${({ variant }) => variant === 'pdf' ? '#dc3545' : '#28a745'};
+    background: ${({ variant }) => {
+      if (variant === 'txt') return '#ffc107';
+      if (variant === 'csv') return '#28a745';
+      return '#4a6a8a';
+    }};
     color: white;
     transform: translateY(-2px);
   }
@@ -612,7 +625,7 @@ const Profile = () => {
     return intensities[score] || 'N/A';
   };
 
-  const exportToPDF = async () => {
+  const exportToCSV = async () => {
     if (evData.length === 0) {
       toast.error('Nenhum EV registrado para exportar');
       return;
@@ -620,71 +633,78 @@ const Profile = () => {
 
     setExportLoading(true);
     try {
-      const doc = new jsPDF();
-      
-      // Título
-      doc.setFontSize(20);
-      doc.setTextColor(74, 106, 138);
-      doc.text('Relatório de Estados Vibracionais', 20, 20);
-      
-      // Informações do usuário
-      doc.setFontSize(12);
-      doc.setTextColor(100, 100, 100);
-      doc.text(`Usuário: ${profile?.username || user.email}`, 20, 35);
-      doc.text(`Período: ${formatDate(evData[evData.length - 1]?.created_at)} a ${formatDate(evData[0]?.created_at)}`, 20, 45);
-      doc.text(`Total de EVs: ${evData.length}`, 20, 55);
-      
-      // Tabela
-      const tableData = evData.map(ev => [
-        formatDate(ev.created_at),
-        getIntensityText(ev.score),
-        ev.score,
-        ev.notes || '-'
-      ]);
+      // Criar cabeçalho CSV
+      const headers = ['Data/Hora', 'Intensidade', 'Pontuação', 'Comentários'];
+      const csvRows = [headers.join(',')];
 
-      doc.autoTable({
-        startY: 70,
-        head: [['Data/Hora', 'Intensidade', 'Pontuação', 'Comentários']],
-        body: tableData,
-        theme: 'grid',
-        headStyles: {
-          fillColor: [74, 106, 138],
-          textColor: 255,
-          fontStyle: 'bold'
-        },
-        styles: {
-          fontSize: 10,
-          cellPadding: 5
-        },
-        columnStyles: {
-          0: { cellWidth: 40 },
-          1: { cellWidth: 30 },
-          2: { cellWidth: 20 },
-          3: { cellWidth: 'auto' }
-        }
+      // Adicionar dados
+      evData.forEach(ev => {
+        const row = [
+          `"${formatDate(ev.created_at)}"`,
+          `"${getIntensityText(ev.score)}"`,
+          ev.score,
+          `"${(ev.notes || '').replace(/"/g, '""')}"` // Escapar aspas duplas
+        ];
+        csvRows.push(row.join(','));
       });
 
+      const csvContent = csvRows.join('\n');
+      const filename = `EV_${profile?.username || 'user'}_${new Date().toISOString().split('T')[0]}.csv`;
+      
+      downloadFile(csvContent, filename, 'text/csv;charset=utf-8;');
+      
+      toast.success('📊 CSV exportado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao gerar CSV:', error);
+      toast.error('Erro ao gerar CSV');
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
+  const exportToTXT = async () => {
+    if (evData.length === 0) {
+      toast.error('Nenhum EV registrado para exportar');
+      return;
+    }
+
+    setExportLoading(true);
+    try {
+      let content = 'RELATÓRIO DE ESTADOS VIBRACIONAIS\n';
+      content += '=====================================\n\n';
+      content += `Usuário: ${profile?.username || user.email}\n`;
+      content += `Período: ${formatDate(evData[evData.length - 1]?.created_at)} a ${formatDate(evData[0]?.created_at)}\n`;
+      content += `Total de EVs: ${evData.length}\n\n`;
+      
       // Estatísticas
       const avgScore = (evData.reduce((sum, ev) => sum + ev.score, 0) / evData.length).toFixed(2);
       const maxScore = Math.max(...evData.map(ev => ev.score));
       const minScore = Math.min(...evData.map(ev => ev.score));
-
-      const finalY = doc.lastAutoTable.finalY + 10;
-      doc.setFontSize(12);
-      doc.setTextColor(74, 106, 138);
-      doc.text('Estatísticas:', 20, finalY);
-      doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100);
-      doc.text(`Média: ${avgScore} | Máxima: ${maxScore} | Mínima: ${minScore}`, 20, finalY + 10);
-
-      // Salvar arquivo
-      const filename = `EV_${profile?.username || 'user'}_${new Date().toISOString().split('T')[0]}.pdf`;
-      doc.save(filename);
       
-      toast.success('📄 PDF exportado com sucesso!');
+      content += 'ESTATÍSTICAS:\n';
+      content += `Média: ${avgScore}\n`;
+      content += `Máxima: ${maxScore}\n`;
+      content += `Mínima: ${minScore}\n\n`;
+      
+      content += 'REGISTROS:\n';
+      content += '==========\n\n';
+      
+      evData.forEach((ev, index) => {
+        content += `${index + 1}. ${formatDate(ev.created_at)}\n`;
+        content += `   Intensidade: ${getIntensityText(ev.score)} (${ev.score}/4)\n`;
+        if (ev.notes) {
+          content += `   Comentário: ${ev.notes}\n`;
+        }
+        content += '\n';
+      });
+
+      const filename = `EV_${profile?.username || 'user'}_${new Date().toISOString().split('T')[0]}.txt`;
+      downloadFile(content, filename, 'text/plain;charset=utf-8;');
+      
+      toast.success('📄 Relatório exportado com sucesso!');
     } catch (error) {
-      console.error('Erro ao gerar PDF:', error);
-      toast.error('Erro ao gerar PDF');
+      console.error('Erro ao gerar relatório:', error);
+      toast.error('Erro ao gerar relatório');
     } finally {
       setExportLoading(false);
     }
@@ -700,35 +720,6 @@ const Profile = () => {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  };
-
-  const exportToCSV = async () => {
-    if (evData.length === 0) {
-      toast.error('Nenhum EV registrado para exportar');
-      return;
-    }
-
-    setExportLoading(true);
-    try {
-      const csvData = evData.map(ev => ({
-        'Data/Hora': formatDate(ev.created_at),
-        'Intensidade': getIntensityText(ev.score),
-        'Pontuação': ev.score,
-        'Comentários': ev.notes || ''
-      }));
-
-      const csv = Papa.unparse(csvData);
-      const filename = `EV_${profile?.username || 'user'}_${new Date().toISOString().split('T')[0]}.csv`;
-      
-      downloadFile(csv, filename, 'text/csv;charset=utf-8;');
-      
-      toast.success('📊 CSV exportado com sucesso!');
-    } catch (error) {
-      console.error('Erro ao gerar CSV:', error);
-      toast.error('Erro ao gerar CSV');
-    } finally {
-      setExportLoading(false);
-    }
   };
 
   if (!user) {
@@ -895,11 +886,11 @@ const Profile = () => {
             <ExportTitle>Exportar Dados</ExportTitle>
             <ExportButtons>
               <ExportButton 
-                variant="pdf" 
-                onClick={exportToPDF} 
+                variant="txt" 
+                onClick={exportToTXT} 
                 disabled={exportLoading || evData.length === 0}
               >
-                📄 Exportar PDF
+                📄 Exportar Relatório
               </ExportButton>
               <ExportButton 
                 variant="csv" 
