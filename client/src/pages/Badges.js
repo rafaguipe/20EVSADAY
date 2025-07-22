@@ -368,6 +368,81 @@ const Badges = () => {
             current = foundationEVs.length;
             target = 1; // Apenas 1 EV no período já é suficiente
             break;
+          // Novos badges - EVs em um único dia
+          case 'Maratonista EV':
+            const maxDailyEVs30 = Math.max(...Object.values(
+              userEVs?.reduce((acc, ev) => {
+                const date = new Date(ev.created_at).toDateString();
+                acc[date] = (acc[date] || 0) + 1;
+                return acc;
+              }, {}) || {}
+            ));
+            earned = maxDailyEVs30 >= 30;
+            progress = Math.min((maxDailyEVs30 / 30) * 100, 100);
+            current = maxDailyEVs30;
+            target = 30;
+            break;
+          case 'Ultra Maratonista EV':
+            const maxDailyEVs40 = Math.max(...Object.values(
+              userEVs?.reduce((acc, ev) => {
+                const date = new Date(ev.created_at).toDateString();
+                acc[date] = (acc[date] || 0) + 1;
+                return acc;
+              }, {}) || {}
+            ));
+            earned = maxDailyEVs40 >= 40;
+            progress = Math.min((maxDailyEVs40 / 40) * 100, 100);
+            current = maxDailyEVs40;
+            target = 40;
+            break;
+          case 'Mega Maratonista EV':
+            const maxDailyEVs50 = Math.max(...Object.values(
+              userEVs?.reduce((acc, ev) => {
+                const date = new Date(ev.created_at).toDateString();
+                acc[date] = (acc[date] || 0) + 1;
+                return acc;
+              }, {}) || {}
+            ));
+            earned = maxDailyEVs50 >= 50;
+            progress = Math.min((maxDailyEVs50 / 50) * 100, 100);
+            current = maxDailyEVs50;
+            target = 50;
+            break;
+          // Novos badges - Total de EVs
+          case 'Mestre Consciencial':
+            progress = Math.min((total_evs / 500) * 100, 100);
+            current = total_evs;
+            target = 500;
+            earned = total_evs >= 500;
+            break;
+          case 'Sábio Consciencial':
+            progress = Math.min((total_evs / 1000) * 100, 100);
+            current = total_evs;
+            target = 1000;
+            earned = total_evs >= 1000;
+            break;
+          // Novos badges - Dias consecutivos
+          case 'Mestre da Persistência':
+            const consecutiveDays90 = calculateConsecutiveDays(userEVs);
+            progress = Math.min((consecutiveDays90 / 90) * 100, 100);
+            current = consecutiveDays90;
+            target = 90;
+            earned = consecutiveDays90 >= 90;
+            break;
+          case 'Semi-Anual Consciencial':
+            const consecutiveDays180 = calculateConsecutiveDays(userEVs);
+            progress = Math.min((consecutiveDays180 / 180) * 100, 100);
+            current = consecutiveDays180;
+            target = 180;
+            earned = consecutiveDays180 >= 180;
+            break;
+          case 'Anual Consciencial':
+            const consecutiveDays360 = calculateConsecutiveDays(userEVs);
+            progress = Math.min((consecutiveDays360 / 360) * 100, 100);
+            current = consecutiveDays360;
+            target = 360;
+            earned = consecutiveDays360 >= 360;
+            break;
           default:
             progress = 0;
             current = 0;

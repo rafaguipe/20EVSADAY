@@ -500,6 +500,10 @@ const Dashboard = () => {
       
       // Resetar o som após tocar
       setTimeout(() => setPlayCoinSound(false), 100);
+
+      // Verificar novos badges
+      await checkAndAwardBadges();
+
     } catch (error) {
       console.error('Erro ao registrar EV:', error);
       toast.error('Erro ao registrar EV');
@@ -516,6 +520,121 @@ const Dashboard = () => {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const checkAndAwardBadges = async () => {
+    try {
+      // Buscar todos os EVs do usuário
+      const { data: userEVs } = await supabase
+        .from('evs')
+        .select('score, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (!userEVs) return;
+
+      const totalEVs = userEVs.length;
+      
+      // Buscar badges já conquistados
+      const { data: userBadges } = await supabase
+        .from('user_badges')
+        .select('badge_id')
+        .eq('user_id', user.id);
+
+      const earnedBadgeIds = userBadges?.map(ub => ub.badge_id) || [];
+
+      // Função para atribuir badge
+      const awardBadge = async (badgeName, description, icon) => {
+        const { data: badge } = await supabase
+          .from('badges')
+          .select('id')
+          .eq('name', badgeName)
+          .single();
+
+        if (badge && !earnedBadgeIds.includes(badge.id)) {
+          await supabase
+            .from('user_badges')
+            .insert([{
+              user_id: user.id,
+              badge_id: badge.id,
+              awarded_at: new Date().toISOString()
+            }]);
+
+          setEarnedBadge({ name: badgeName, description, icon });
+          setShowBadgeNotification(true);
+          setPlayVictorySound(true);
+          toast.success(`🎉 Badge "${badgeName}" conquistado!`);
+          return true;
+        }
+        return false;
+      };
+
+      // 1. Verificar badges de total de EVs
+      if (totalEVs >= 500) {
+        await awardBadge('Mestre Consciencial', 'Primeiros 500 EVs registrados', '🧙‍♂️');
+      }
+      if (totalEVs >= 1000) {
+        await awardBadge('Sábio Consciencial', 'Primeiros 1000 EVs registrados', '🧙‍♀️');
+      }
+
+      // 2. Verificar badges de EVs em um único dia
+      const dailyEVCounts = {};
+      userEVs.forEach(ev => {
+        const date = new Date(ev.created_at).toDateString();
+        dailyEVCounts[date] = (dailyEVCounts[date] || 0) + 1;
+      });
+
+      const maxDailyEVs = Math.max(...Object.values(dailyEVCounts));
+      
+      if (maxDailyEVs >= 30) {
+        await awardBadge('Maratonista EV', '30 EVs registrados em um único dia', '🏃');
+      }
+      if (maxDailyEVs >= 40) {
+        await awardBadge('Ultra Maratonista EV', '40 EVs registrados em um único dia', '🏃‍♂️');
+      }
+      if (maxDailyEVs >= 50) {
+        await awardBadge('Mega Maratonista EV', '50 EVs registrados em um único dia', '🏃‍♀️');
+      }
+
+      // 3. Verificar badges de dias consecutivos
+      const consecutiveDays = calculateConsecutiveDays(userEVs);
+      
+      if (consecutiveDays >= 90) {
+        await awardBadge('Mestre da Persistência', '90 dias consecutivos de EVs', '🎯');
+      }
+      if (consecutiveDays >= 180) {
+        await awardBadge('Semi-Anual Consciencial', '180 dias consecutivos de EVs', '📅');
+      }
+      if (consecutiveDays >= 360) {
+        await awardBadge('Anual Consciencial', '360 dias consecutivos de EVs', '🗓️');
+      }
+
+    } catch (error) {
+      console.error('Erro ao verificar badges:', error);
+    }
+  };
+
+  const calculateConsecutiveDays = (evs) => {
+    if (!evs || evs.length === 0) return 0;
+    
+    const dates = [...new Set(evs.map(ev => new Date(ev.created_at).toDateString()))].sort();
+    let maxConsecutive = 0;
+    let currentConsecutive = 1;
+    
+    for (let i = 1; i < dates.length; i++) {
+      const prevDate = new Date(dates[i - 1]);
+      const currDate = new Date(dates[i]);
+      const diffDays = (currDate - prevDate) / (1000 * 60 * 60 * 24);
+      
+      if (diffDays === 1) {
+        currentConsecutive++;
+      } else {
+        maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
+        currentConsecutive = 1;
+      }
+    }
+    
+    return Math.max(maxConsecutive, currentConsecutive);
   };
 
   return (
