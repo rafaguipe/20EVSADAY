@@ -205,17 +205,49 @@ const Navbar = () => {
     const fetchProfile = async () => {
       if (user) {
         console.log('Carregando perfil para usuário:', user.id);
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('username, avatar_url, ev_interval_minutes')
-          .eq('user_id', user.id)
-          .single();
-        
-        if (error) {
-          console.error('Erro ao carregar perfil:', error);
-        } else {
-          console.log('Perfil carregado:', data);
-          setProfile(data);
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('username, avatar_url, ev_interval_minutes')
+            .eq('user_id', user.id)
+            .single();
+          
+          if (error) {
+            console.error('Erro ao carregar perfil:', error);
+            // Se o perfil não existe, criar um básico
+            if (error.code === 'PGRST116') {
+              console.log('Perfil não encontrado, criando perfil básico...');
+              const nickname = user.user_metadata?.nickname || `Jogador ${user.id.slice(0, 8)}`;
+              const avatar_id = user.user_metadata?.avatar_id || 1;
+              
+              const { data: newProfile, error: createError } = await supabase
+                .from('profiles')
+                .insert([
+                  {
+                    user_id: user.id,
+                    username: nickname,
+                    full_name: nickname,
+                    avatar_url: `avatar_${avatar_id}.png`,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                  }
+                ])
+                .select()
+                .single();
+              
+              if (createError) {
+                console.error('Erro ao criar perfil:', createError);
+              } else {
+                console.log('Perfil criado:', newProfile);
+                setProfile(newProfile);
+              }
+            }
+          } else {
+            console.log('Perfil carregado:', data);
+            setProfile(data);
+          }
+        } catch (err) {
+          console.error('Erro inesperado ao carregar perfil:', err);
         }
       }
     };
