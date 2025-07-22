@@ -3,17 +3,19 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../supabaseClient';
 import toast from 'react-hot-toast';
 import styled from 'styled-components';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Container = styled.div`
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  background: ${({ theme }) => theme.background};
 `;
 
 const Title = styled.h1`
   font-family: 'Press Start 2P', monospace;
   font-size: 24px;
-  color: #ffffff;
+  color: ${({ theme }) => theme.text};
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -31,8 +33,8 @@ const Grid = styled.div`
 `;
 
 const Card = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
+  background: ${({ theme }) => theme.card};
+  border: 2px solid ${({ theme }) => theme.secondary};
   border-radius: 8px;
   padding: 25px;
   backdrop-filter: blur(10px);
@@ -205,6 +207,7 @@ const avatars = [
 
 const Profile = () => {
   const { user, updateAvatar } = useAuth();
+  const { themeName, toggleTheme } = useTheme();
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState({
     total_evs: 0,
@@ -456,6 +459,29 @@ const Profile = () => {
               ))
             )}
           </HistoryChart>
+        </Card>
+        <Card>
+          <CardTitle>Ajustes</CardTitle>
+          <div style={{ marginBottom: 16 }}>
+            <strong>Tema:</strong> {themeName === 'dark' ? 'Escuro' : 'Claro'}
+            <button
+              style={{
+                marginLeft: 16,
+                padding: '8px 20px',
+                borderRadius: 8,
+                border: 'none',
+                background: themeName === 'dark' ? '#4a6a8a' : '#d1d1d1',
+                color: themeName === 'dark' ? '#fff' : '#222',
+                fontFamily: 'Press Start 2P, monospace',
+                fontSize: 12,
+                cursor: 'pointer',
+                transition: 'background 0.2s',
+              }}
+              onClick={toggleTheme}
+            >
+              Alternar Tema
+            </button>
+          </div>
         </Card>
       </Grid>
     </Container>

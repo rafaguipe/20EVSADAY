@@ -12,12 +12,13 @@ const Container = styled.div`
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  background: ${({ theme }) => theme.background};
 `;
 
 const Title = styled.h1`
   font-family: 'Press Start 2P', monospace;
   font-size: 24px;
-  color: #ffffff;
+  color: ${({ theme }) => theme.text};
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -35,8 +36,8 @@ const Grid = styled.div`
 `;
 
 const Card = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
+  background: ${({ theme }) => theme.card};
+  border: 2px solid ${({ theme }) => theme.secondary};
   border-radius: 8px;
   padding: 25px;
   backdrop-filter: blur(10px);

@@ -221,6 +221,9 @@ const Navbar = () => {
             <NavLink to="/profile" active={isActive('/profile')}>
               Perfil
             </NavLink>
+            <NavLink to="/multimidia" active={isActive('/multimidia')}>
+              Multimídia
+            </NavLink>
           </NavLinks>
           
           <UserSection>
@@ -247,6 +250,9 @@ const Navbar = () => {
               </NavLink>
               <NavLink to="/profile" active={isActive('/profile')}>
                 Perfil
+              </NavLink>
+              <NavLink to="/multimidia" active={isActive('/multimidia')}>
+                Multimídia
               </NavLink>
               <LogoutBtn onClick={handleLogout}>Sair</LogoutBtn>
             </MobileMenuContent>
