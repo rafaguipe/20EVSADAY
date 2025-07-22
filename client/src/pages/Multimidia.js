@@ -95,6 +95,10 @@ const videos = [
   {
     title: "O poder do Estado Vibracional",
     url: "https://www.youtube.com/watch?v=nkUoL-pMDi0"
+  },
+  {
+    title: "MBE + EV: Técnica da Mobilização Básica das Energias",
+    url: "https://youtu.be/FPjtUkKkVUs?si=wpsKx-Dz0h6BuAjc"
   }
 ];
 
