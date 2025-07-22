@@ -4,6 +4,7 @@ import { supabase } from '../supabaseClient';
 import toast from 'react-hot-toast';
 import styled from 'styled-components';
 import { useTheme } from '../contexts/ThemeContext';
+import { useEVTimer } from '../contexts/EVTimerContext';
 
 const Container = styled.div`
   padding: 20px;
@@ -220,6 +221,7 @@ const Profile = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [evInterval, setEvInterval] = useState(25);
+  const { intervalMinutes, setIntervalMinutes, updateInterval } = useEVTimer();
 
   useEffect(() => {
     if (user) {
@@ -357,8 +359,9 @@ const Profile = () => {
   };
 
   const handleEvIntervalChange = async (e) => {
-    const value = Math.max(5, Math.min(120, Number(e.target.value)));
+    const value = Math.max(1, Math.min(120, Number(e.target.value))); // mínimo 1 minuto
     setEvInterval(value);
+    updateInterval(value); // atualiza o timer em tempo real
     setLoading(true);
     const { error } = await supabase
       .from('profiles')
@@ -505,7 +508,7 @@ const Profile = () => {
             <strong>Intervalo entre EVs:</strong>
             <input
               type="number"
-              min={5}
+              min={1} // mínimo 1 minuto
               max={120}
               value={evInterval}
               onChange={handleEvIntervalChange}

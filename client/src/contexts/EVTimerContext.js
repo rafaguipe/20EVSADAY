@@ -55,8 +55,20 @@ export const EVTimerProvider = ({ children }) => {
     return `${m}:${s}`;
   };
 
+  const updateInterval = (newInterval) => {
+    setIntervalMinutes(newInterval);
+    setTimer(newInterval * 60);
+  };
+
   return (
-    <EVTimerContext.Provider value={{ timer, formatTime, intervalMinutes, shouldTriggerReminder, consumeReminder }}>
+    <EVTimerContext.Provider value={{ 
+      timer, 
+      formatTime, 
+      intervalMinutes, 
+      shouldTriggerReminder, 
+      consumeReminder,
+      updateInterval 
+    }}>
       {children}
     </EVTimerContext.Provider>
   );

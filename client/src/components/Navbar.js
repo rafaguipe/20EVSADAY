@@ -199,8 +199,6 @@ const Navbar = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profile, setProfile] = useState(null);
-  const [evInterval, setEvInterval] = useState(25); // minutos
-  const [timer, setTimer] = useState(evInterval * 60); // segundos
   const { timer: evTimer, formatTime } = useEVTimer();
 
   useEffect(() => {
@@ -217,29 +215,17 @@ const Navbar = () => {
     fetchProfile();
   }, [user]);
 
-  // Atualiza o intervalo quando carregar o perfil
-  useEffect(() => {
-    if (profile?.ev_interval_minutes) {
-      setEvInterval(profile.ev_interval_minutes);
-      setTimer(profile.ev_interval_minutes * 60);
-    } else {
-      setEvInterval(25);
-      setTimer(25 * 60);
-    }
-  }, [profile]);
-
   // Cronômetro regressivo
   useEffect(() => {
     if (!isAuthenticated) return;
-    if (timer <= 0) {
-      setTimer(evInterval * 60); // reinicia
+    if (evTimer <= 0) {
       return;
     }
     const interval = setInterval(() => {
       setTimer((t) => t - 1);
     }, 1000);
     return () => clearInterval(interval);
-  }, [timer, evInterval, isAuthenticated]);
+  }, [evTimer, isAuthenticated]);
 
   const handleLogout = () => {
     logout();
