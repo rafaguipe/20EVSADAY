@@ -513,7 +513,14 @@ const Dashboard = () => {
   };
 
   const formatDate = (dateString) => {
-    return formatBrasiliaDate(dateString);
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   const checkAndAwardBadges = async () => {
@@ -571,12 +578,10 @@ const Dashboard = () => {
         await awardBadge('Sábio Consciencial', 'Primeiros 1000 EVs registrados', '🧙‍♀️');
       }
 
-      // 2. Verificar badges de EVs em um único dia (usando fuso horário de Brasília)
+      // 2. Verificar badges de EVs em um único dia
       const dailyEVCounts = {};
       userEVs.forEach(ev => {
-        const brasiliaDate = new Date(ev.created_at);
-        brasiliaDate.setHours(brasiliaDate.getHours() - 3); // Ajustar para UTC-3
-        const date = brasiliaDate.toDateString();
+        const date = new Date(ev.created_at).toDateString();
         dailyEVCounts[date] = (dailyEVCounts[date] || 0) + 1;
       });
 
@@ -613,13 +618,7 @@ const Dashboard = () => {
   const calculateConsecutiveDays = (evs) => {
     if (!evs || evs.length === 0) return 0;
     
-    // Usar fuso horário de Brasília para calcular dias consecutivos
-    const dates = [...new Set(evs.map(ev => {
-      const brasiliaDate = new Date(ev.created_at);
-      brasiliaDate.setHours(brasiliaDate.getHours() - 3); // Ajustar para UTC-3
-      return brasiliaDate.toDateString();
-    }))].sort();
-    
+    const dates = [...new Set(evs.map(ev => new Date(ev.created_at).toDateString()))].sort();
     let maxConsecutive = 0;
     let currentConsecutive = 1;
     
