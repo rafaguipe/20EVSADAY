@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../supabaseClient';
 import styled from 'styled-components';
 
 const Nav = styled.nav`
@@ -186,11 +187,31 @@ const MobileMenuContent = styled.div`
   gap: 15px;
 `;
 
+const avatars = [
+  '👤', '👨', '👩', '🧑', '👨‍🦰', '👩‍🦰', '👨‍🦱', '👩‍🦱',
+  '👨‍🦲', '👩‍🦲', '👨‍🦳', '👩‍🦳', '👴', '👵', '🧓', '👶'
+];
+
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (user) {
+        const { data } = await supabase
+          .from('profiles')
+          .select('username, avatar_url')
+          .eq('user_id', user.id)
+          .single();
+        setProfile(data);
+      }
+    };
+    fetchProfile();
+  }, [user]);
 
   const handleLogout = () => {
     logout();
@@ -198,6 +219,14 @@ const Navbar = () => {
   };
 
   const isActive = (path) => location.pathname === path;
+
+  // Extrair o emoji do avatar_url
+  const getAvatarEmoji = () => {
+    if (!profile?.avatar_url) return avatars[0];
+    const match = profile.avatar_url.match(/avatar_(\d+)\.png/);
+    const idx = match ? parseInt(match[1], 10) - 1 : 0;
+    return avatars[idx] || avatars[0];
+  };
 
   return (
     <Nav>
@@ -228,8 +257,8 @@ const Navbar = () => {
           
           <UserSection>
             <UserInfo>
-              <Avatar>👤</Avatar>
-              <Username>{user?.nickname}</Username>
+              <Avatar>{getAvatarEmoji()}</Avatar>
+              <Username>{profile?.username || user?.email}</Username>
             </UserInfo>
             <LogoutBtn onClick={handleLogout}>Sair</LogoutBtn>
           </UserSection>

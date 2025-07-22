@@ -52,6 +52,9 @@ const Multimidia = () => (
           <Link href="https://www.youtube.com/watch?v=bqvBu3DIMQ4" target="_blank" rel="noopener noreferrer">
             O que é Estado Vibracional? (YouTube)
           </Link>
+          <Link href="https://www.youtube.com/watch?v=nkUoL-pMDi0" target="_blank" rel="noopener noreferrer">
+            O poder do Estado Vibracional (YouTube)
+          </Link>
         </li>
       </List>
     </Section>
