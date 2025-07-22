@@ -247,9 +247,11 @@ const Dashboard = () => {
   // Reset do som de vitória após tocar
   useEffect(() => {
     if (playVictorySound) {
+      console.log('🎵 Som de vitória ativado, resetando em 3 segundos...');
       const timer = setTimeout(() => {
+        console.log('🎵 Resetando som de vitória');
         setPlayVictorySound(false);
-      }, 2000);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [playVictorySound]);
@@ -402,16 +404,21 @@ const Dashboard = () => {
         .gte('created_at', today.toISOString());
       
       if (todayEVs && todayEVs.length > 0) {
-        // Tocar som de vitória apenas em marcos especiais (20, 30, 40, 50 EVs)
+        // Tocar som de vitória apenas quando ACABAR de atingir marcos especiais (20, 30, 40, 50 EVs)
         const specialMilestones = [20, 30, 40, 50];
-        if (specialMilestones.includes(todayEVs.length)) {
+        const currentEVs = todayEVs.length;
+        
+        // Verificar se acabou de atingir um marco (antes tinha menos, agora tem exatamente o marco)
+        if (specialMilestones.includes(currentEVs)) {
+          console.log(`🎉 Marco atingido: ${currentEVs} EVs hoje!`);
           setPlayVictorySound(true);
-          toast.success(`🎉 Parabéns! Você atingiu ${todayEVs.length} EVs hoje!`);
+          toast.success(`🎉 Parabéns! Você atingiu ${currentEVs} EVs hoje!`);
         }
       }
 
       // Verificação de badges movida para função separada para evitar erros
       try {
+        console.log('🔍 Verificando badges...');
         await checkAndAwardBadges();
       } catch (error) {
         console.log('Erro ao verificar badges (não crítico):', error);
@@ -674,6 +681,22 @@ const Dashboard = () => {
         play={playVictorySound} 
         volume={0.4}
       />
+      
+      {/* Debug: Mostrar status do som de vitória */}
+      {playVictorySound && (
+        <div style={{ 
+          position: 'fixed', 
+          top: '10px', 
+          right: '10px', 
+          background: 'red', 
+          color: 'white', 
+          padding: '10px', 
+          zIndex: 9999,
+          fontSize: '12px'
+        }}>
+          🎵 TOCANDO VITÓRIA
+        </div>
+      )}
       
 
       
