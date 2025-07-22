@@ -390,6 +390,11 @@ const Dashboard = () => {
         .eq('user_id', user.id)
         .gte('created_at', today.toISOString());
       
+      if (todayEVs && todayEVs.length >= 20 && todayEVs.length % 10 === 0) {
+        setPlayVictorySound(true);
+        toast.success(`Parabéns! Você atingiu ${todayEVs.length} EVs hoje! 🎉`);
+      }
+
       if (todayEVs && todayEVs.length === 20) {
         // Verificar se já tem o badge de Mestre Diário
         const { data: existingBadge } = await supabase
