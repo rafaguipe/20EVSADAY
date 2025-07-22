@@ -383,7 +383,8 @@ const Dashboard = () => {
       }
       
       // Verificar se atingiu 20 EVs no dia e atribuir badge de Mestre Diário
-      const today = getBrasiliaDayStart();
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
       const { data: todayEVs } = await supabase
         .from('evs')
         .select('id', { count: 'exact' })
