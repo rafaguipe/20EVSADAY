@@ -25,14 +25,28 @@ export const EVTimerProvider = ({ children }) => {
         
         if (data?.ev_interval_minutes) {
           setIntervalMinutes(data.ev_interval_minutes);
-          // Carregar timer salvo ou usar o padrão
-          const savedTimer = localStorage.getItem(`ev_timer_${user.id}`);
-          if (savedTimer) {
-            const savedTime = parseInt(savedTimer);
-            const now = Date.now();
-            const elapsed = Math.floor((now - savedTime) / 1000);
-            const remaining = (data.ev_interval_minutes * 60) - elapsed;
-            setTimer(Math.max(0, remaining));
+          
+          // Carregar timer salvo do localStorage
+          const savedTimerData = localStorage.getItem(`ev_timer_${user.id}`);
+          if (savedTimerData) {
+            try {
+              const { startTime, interval } = JSON.parse(savedTimerData);
+              const now = Date.now();
+              const elapsedSeconds = Math.floor((now - startTime) / 1000);
+              const totalSeconds = interval * 60;
+              const remainingSeconds = totalSeconds - elapsedSeconds;
+              
+              if (remainingSeconds > 0) {
+                setTimer(remainingSeconds);
+              } else {
+                // Timer já expirou, reiniciar
+                setTimer(interval * 60);
+                localStorage.removeItem(`ev_timer_${user.id}`);
+              }
+            } catch (error) {
+              console.error('Erro ao carregar timer salvo:', error);
+              setTimer(data.ev_interval_minutes * 60);
+            }
           } else {
             setTimer(data.ev_interval_minutes * 60);
           }
@@ -49,18 +63,21 @@ export const EVTimerProvider = ({ children }) => {
     fetchUserPreferences();
   }, [user]);
 
-  // Salvar timer no localStorage
+  // Salvar timer no localStorage quando mudar
   useEffect(() => {
     if (user && timer > 0) {
-      const now = Date.now();
-      const startTime = now - ((intervalMinutes * 60 - timer) * 1000);
-      localStorage.setItem(`ev_timer_${user.id}`, startTime.toString());
+      const timerData = {
+        startTime: Date.now() - ((intervalMinutes * 60 - timer) * 1000),
+        interval: intervalMinutes
+      };
+      localStorage.setItem(`ev_timer_${user.id}`, JSON.stringify(timerData));
     }
   }, [timer, user, intervalMinutes]);
 
   // Cronômetro regressivo
   useEffect(() => {
     if (!user) return;
+    
     if (timer <= 0) {
       // Tocar som apenas se estiver habilitado
       if (soundEnabled && audioRef.current) {
@@ -73,11 +90,56 @@ export const EVTimerProvider = ({ children }) => {
       localStorage.removeItem(`ev_timer_${user.id}`);
       return;
     }
+    
     timerRef.current = setInterval(() => {
       setTimer((t) => t - 1);
     }, 1000);
-    return () => clearInterval(timerRef.current);
+    
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
   }, [timer, intervalMinutes, user, soundEnabled]);
+
+  // Listener para quando a aba voltar a ficar ativa
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && user) {
+        // Recalcular timer quando a aba voltar a ficar ativa
+        const savedTimerData = localStorage.getItem(`ev_timer_${user.id}`);
+        if (savedTimerData) {
+          try {
+            const { startTime, interval } = JSON.parse(savedTimerData);
+            const now = Date.now();
+            const elapsedSeconds = Math.floor((now - startTime) / 1000);
+            const totalSeconds = interval * 60;
+            const remainingSeconds = totalSeconds - elapsedSeconds;
+            
+            if (remainingSeconds > 0) {
+              setTimer(remainingSeconds);
+            } else {
+              // Timer já expirou, tocar som e reiniciar
+              if (soundEnabled && audioRef.current) {
+                audioRef.current.currentTime = 0;
+                audioRef.current.play().catch(e => console.log('Erro ao tocar som:', e));
+              }
+              setShouldTriggerReminder(true);
+              setTimer(interval * 60);
+              localStorage.removeItem(`ev_timer_${user.id}`);
+            }
+          } catch (error) {
+            console.error('Erro ao recalcular timer:', error);
+          }
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [user, soundEnabled]);
 
   // Função para consumir o lembrete
   const consumeReminder = () => setShouldTriggerReminder(false);

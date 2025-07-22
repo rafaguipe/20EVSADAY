@@ -221,11 +221,10 @@ const Home = () => {
 
         <FeatureCard>
           <FeatureIcon>🏆</FeatureIcon>
-          <FeatureTitle>Rankings Competitivos</FeatureTitle>
+          <FeatureTitle>Rankings Colaborativos</FeatureTitle>
           <FeatureText>
             Participe dos rankings diário, semanal, mensal 
-            e anual. Compare seu progresso com outros 
-            praticantes.
+            e anual. Incentive seus amigos evolutivos a fazerem mais EVs!
           </FeatureText>
         </FeatureCard>
 
