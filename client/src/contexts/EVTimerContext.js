@@ -10,6 +10,7 @@ export const EVTimerProvider = ({ children }) => {
   const [timer, setTimer] = useState(intervalMinutes * 60); // segundos
   const [shouldTriggerReminder, setShouldTriggerReminder] = useState(false);
   const timerRef = useRef();
+  const audioRef = useRef();
 
   // Carregar intervalo do perfil
   useEffect(() => {
@@ -36,6 +37,11 @@ export const EVTimerProvider = ({ children }) => {
   useEffect(() => {
     if (!user) return;
     if (timer <= 0) {
+      // Tocar som de reminder
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(e => console.log('Erro ao tocar som:', e));
+      }
       setShouldTriggerReminder(true);
       setTimer(intervalMinutes * 60); // reinicia
       return;
@@ -69,6 +75,7 @@ export const EVTimerProvider = ({ children }) => {
       consumeReminder,
       updateInterval 
     }}>
+      <audio ref={audioRef} src="/sounds/reminder.mp3" preload="auto" />
       {children}
     </EVTimerContext.Provider>
   );

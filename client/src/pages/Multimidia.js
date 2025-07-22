@@ -27,36 +27,106 @@ const SectionTitle = styled.h2`
   margin-bottom: 16px;
 `;
 
-const List = styled.ul`
-  list-style: disc inside;
-  color: ${({ theme }) => theme.text};
+const VideoGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 16px;
 `;
 
-const Link = styled.a`
-  color: #4a6a8a;
-  text-decoration: underline;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 1rem;
+const VideoCard = styled.div`
+  background: ${({ theme }) => theme.card};
+  border: 2px solid ${({ theme }) => theme.secondary};
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s;
+  
   &:hover {
-    color: #357a6a;
+    transform: translateY(-2px);
   }
 `;
+
+const VideoThumbnail = styled.img`
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+`;
+
+const VideoInfo = styled.div`
+  padding: 16px;
+`;
+
+const VideoTitle = styled.h3`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.text};
+  margin-bottom: 8px;
+  line-height: 1.4;
+`;
+
+const VideoLink = styled.a`
+  color: #4a6a8a;
+  text-decoration: none;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.7rem;
+  
+  &:hover {
+    color: #357a6a;
+    text-decoration: underline;
+  }
+`;
+
+// Função para extrair o ID do vídeo do YouTube
+const getYouTubeVideoId = (url) => {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+  return match ? match[1] : null;
+};
+
+// Função para gerar URL da thumbnail
+const getYouTubeThumbnail = (videoId) => {
+  return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+};
+
+const videos = [
+  {
+    title: "O que é Estado Vibracional?",
+    url: "https://www.youtube.com/watch?v=bqvBu3DIMQ4"
+  },
+  {
+    title: "O poder do Estado Vibracional",
+    url: "https://www.youtube.com/watch?v=nkUoL-pMDi0"
+  }
+];
 
 const Multimidia = () => (
   <Container>
     <Title>Referências Multimídia sobre EV</Title>
     <Section>
       <SectionTitle>Vídeos</SectionTitle>
-      <List>
-        <li>
-          <Link href="https://www.youtube.com/watch?v=bqvBu3DIMQ4" target="_blank" rel="noopener noreferrer">
-            O que é Estado Vibracional? (YouTube)
-          </Link>
-          <Link href="https://www.youtube.com/watch?v=nkUoL-pMDi0" target="_blank" rel="noopener noreferrer">
-            O poder do Estado Vibracional (YouTube)
-          </Link>
-        </li>
-      </List>
+      <VideoGrid>
+        {videos.map((video, index) => {
+          const videoId = getYouTubeVideoId(video.url);
+          return (
+            <VideoCard key={index}>
+              <VideoLink href={video.url} target="_blank" rel="noopener noreferrer">
+                <VideoThumbnail 
+                  src={getYouTubeThumbnail(videoId)} 
+                  alt={video.title}
+                  onError={(e) => {
+                    e.target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                  }}
+                />
+                <VideoInfo>
+                  <VideoTitle>{video.title}</VideoTitle>
+                  <VideoLink href={video.url} target="_blank" rel="noopener noreferrer">
+                    Assistir no YouTube →
+                  </VideoLink>
+                </VideoInfo>
+              </VideoLink>
+            </VideoCard>
+          );
+        })}
+      </VideoGrid>
     </Section>
   </Container>
 );

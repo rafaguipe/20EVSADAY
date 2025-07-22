@@ -204,12 +204,19 @@ const Navbar = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       if (user) {
-        const { data } = await supabase
+        console.log('Carregando perfil para usuário:', user.id);
+        const { data, error } = await supabase
           .from('profiles')
           .select('username, avatar_url, ev_interval_minutes')
           .eq('user_id', user.id)
           .single();
-        setProfile(data);
+        
+        if (error) {
+          console.error('Erro ao carregar perfil:', error);
+        } else {
+          console.log('Perfil carregado:', data);
+          setProfile(data);
+        }
       }
     };
     fetchProfile();
@@ -236,9 +243,14 @@ const Navbar = () => {
 
   // Extrair o emoji do avatar_url
   const getAvatarEmoji = () => {
-    if (!profile?.avatar_url) return avatars[0];
+    console.log('Profile no getAvatarEmoji:', profile);
+    if (!profile?.avatar_url) {
+      console.log('Avatar não encontrado, usando padrão');
+      return avatars[0];
+    }
     const match = profile.avatar_url.match(/avatar_(\d+)\.png/);
     const idx = match ? parseInt(match[1], 10) - 1 : 0;
+    console.log('Avatar encontrado, índice:', idx, 'emoji:', avatars[idx]);
     return avatars[idx] || avatars[0];
   };
 
@@ -273,7 +285,7 @@ const Navbar = () => {
             <UserInfo>
               <Avatar>{getAvatarEmoji()}</Avatar>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <Username>{profile?.username || user?.email}</Username>
+                <Username>{profile?.username || 'Carregando...'}</Username>
                 <span style={{ fontFamily: 'Press Start 2P, monospace', fontSize: 10, color: '#6a6a6a', marginTop: 2 }}>
                   Próximo EV: {formatTime(evTimer)}
                 </span>

@@ -52,16 +52,12 @@ const OkButton = styled.button`
 
 const EVReminder = () => {
   const [show, setShow] = useState(false);
-  const audioRef = useRef(null);
-  const { shouldTriggerReminder, consumeReminder } = useEVTimer();
+  const { shouldTriggerReminder, consumeReminder, intervalMinutes } = useEVTimer();
 
   useEffect(() => {
     if (shouldTriggerReminder) {
       setShow(true);
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play();
-      }
+      // O som já foi tocado no contexto EVTimer
     }
   }, [shouldTriggerReminder]);
 
@@ -72,13 +68,12 @@ const EVReminder = () => {
 
   return (
     <>
-      <audio ref={audioRef} src="/sounds/reminder.mp3" preload="auto" />
       {show && (
         <ModalOverlay>
           <ModalBox>
             <Title>Lembrete de EV</Title>
             <Message>
-              Já se passaram 25 minutos!<br />
+              Já se passaram {intervalMinutes} minutos!<br />
               Que tal registrar um EV e avançar na sua meta diária?
             </Message>
             <OkButton onClick={handleOk}>OK</OkButton>
