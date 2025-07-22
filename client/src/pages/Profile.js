@@ -201,6 +201,73 @@ const LoadingText = styled.div`
   padding: 40px;
 `;
 
+const ToggleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+`;
+
+const ToggleLabel = styled.span`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: ${({ theme }) => theme.text};
+  font-weight: bold;
+`;
+
+const ToggleSwitch = styled.label`
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  cursor: pointer;
+`;
+
+const ToggleSlider = styled.span`
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #8a4a4a;
+  transition: 0.4s;
+  border-radius: 34px;
+  
+  &:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+  
+  ${({ checked }) => checked && `
+    background-color: #4a8a4a;
+    
+    &:before {
+      transform: translateX(26px);
+    }
+  `}
+`;
+
+const ToggleInput = styled.input`
+  opacity: 0;
+  width: 0;
+  height: 0;
+`;
+
+const ToggleStatus = styled.span`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: ${({ enabled }) => enabled ? '#4a8a4a' : '#8a4a4a'};
+  margin-left: 8px;
+`;
+
 const avatars = [
   '👤', '👨', '👩', '🧑', '👨‍🦰', '👩‍🦰', '👨‍🦱', '👩‍🦱',
   '👨‍🦲', '👩‍🦲', '👨‍🦳', '👩‍🦳', '👴', '👵', '🧓', '👶'
@@ -221,8 +288,8 @@ const Profile = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [evInterval, setEvInterval] = useState(25);
-  const { intervalMinutes, setIntervalMinutes, updateInterval } = useEVTimer();
-  const [soundEnabled, setSoundEnabled] = useState(true);
+  const { intervalMinutes, setIntervalMinutes, updateInterval, soundEnabled, updateSoundEnabled } = useEVTimer();
+  const [soundEnabledLocal, setSoundEnabledLocal] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -240,7 +307,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (profile?.sound_enabled !== undefined) {
-      setSoundEnabled(profile.sound_enabled);
+      setSoundEnabledLocal(profile.sound_enabled);
     }
   }, [profile]);
 
@@ -379,15 +446,25 @@ const Profile = () => {
   };
 
   const handleSoundToggle = async () => {
-    const newValue = !soundEnabled;
-    setSoundEnabled(newValue);
+    const newValue = !soundEnabledLocal;
+    setSoundEnabledLocal(newValue);
+    updateSoundEnabled(newValue); // Atualizar contexto global
     setLoading(true);
+    
     const { error } = await supabase
       .from('profiles')
       .update({ sound_enabled: newValue, updated_at: new Date().toISOString() })
       .eq('user_id', user.id);
+    
     setLoading(false);
-    if (!error) toast.success(newValue ? 'Som ativado!' : 'Som desativado!');
+    if (!error) {
+      toast.success(newValue ? 'Som ativado!' : 'Som desativado!');
+    } else {
+      // Reverter em caso de erro
+      setSoundEnabledLocal(!newValue);
+      updateSoundEnabled(!newValue);
+      toast.error('Erro ao atualizar configuração de som');
+    }
   };
 
   const getMaxValue = () => {
@@ -546,27 +623,21 @@ const Profile = () => {
             />
             <span style={{ marginLeft: 8, fontSize: 12 }}>min</span>
           </div>
-          <div style={{ marginBottom: 16 }}>
-            <strong>Notificações Sonoras:</strong>
-            <button
-              style={{
-                marginLeft: 16,
-                padding: '8px 20px',
-                borderRadius: 8,
-                border: 'none',
-                background: soundEnabled ? '#4a8a4a' : '#8a4a4a',
-                color: '#fff',
-                fontFamily: 'Press Start 2P, monospace',
-                fontSize: 12,
-                cursor: 'pointer',
-                transition: 'background 0.2s',
-              }}
-              onClick={handleSoundToggle}
-              disabled={loading}
-            >
-              {soundEnabled ? 'Ligado' : 'Desligado'}
-            </button>
-          </div>
+          <ToggleContainer>
+            <ToggleLabel>Notificações Sonoras:</ToggleLabel>
+            <ToggleSwitch>
+              <ToggleInput
+                type="checkbox"
+                checked={soundEnabledLocal}
+                onChange={handleSoundToggle}
+                disabled={loading}
+              />
+              <ToggleSlider checked={soundEnabledLocal} />
+            </ToggleSwitch>
+            <ToggleStatus enabled={soundEnabledLocal}>
+              {soundEnabledLocal ? 'LIGADO' : 'DESLIGADO'}
+            </ToggleStatus>
+          </ToggleContainer>
         </Card>
       </Grid>
     </Container>

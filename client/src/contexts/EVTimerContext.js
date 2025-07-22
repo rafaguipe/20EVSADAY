@@ -155,6 +155,10 @@ export const EVTimerProvider = ({ children }) => {
     setTimer(newInterval * 60);
   };
 
+  const updateSoundEnabled = (enabled) => {
+    setSoundEnabled(enabled);
+  };
+
   return (
     <EVTimerContext.Provider value={{ 
       timer, 
@@ -163,7 +167,8 @@ export const EVTimerProvider = ({ children }) => {
       shouldTriggerReminder, 
       consumeReminder,
       updateInterval,
-      soundEnabled 
+      soundEnabled,
+      updateSoundEnabled
     }}>
       <audio ref={audioRef} src="/sounds/reminder.mp3" preload="auto" />
       {children}
