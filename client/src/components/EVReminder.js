@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { useEVTimer } from '../contexts/EVTimerContext';
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -52,26 +53,21 @@ const OkButton = styled.button`
 const EVReminder = () => {
   const [show, setShow] = useState(false);
   const audioRef = useRef(null);
-  const timerRef = useRef(null);
+  const { shouldTriggerReminder, consumeReminder } = useEVTimer();
 
   useEffect(() => {
-    // Função para mostrar o lembrete
-    const triggerReminder = () => {
+    if (shouldTriggerReminder) {
       setShow(true);
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
         audioRef.current.play();
       }
-    };
-    // Inicia o timer de 25 minutos
-    timerRef.current = setInterval(triggerReminder, 25 * 60 * 1000);
-    // Opcional: dispara o primeiro lembrete logo ao entrar
-    // triggerReminder();
-    return () => clearInterval(timerRef.current);
-  }, []);
+    }
+  }, [shouldTriggerReminder]);
 
   const handleOk = () => {
     setShow(false);
+    consumeReminder();
   };
 
   return (

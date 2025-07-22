@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../supabaseClient';
 import styled from 'styled-components';
+import { useEVTimer } from '../contexts/EVTimerContext';
 
 const Nav = styled.nav`
   position: fixed;
@@ -198,13 +199,16 @@ const Navbar = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profile, setProfile] = useState(null);
+  const [evInterval, setEvInterval] = useState(25); // minutos
+  const [timer, setTimer] = useState(evInterval * 60); // segundos
+  const { timer: evTimer, formatTime } = useEVTimer();
 
   useEffect(() => {
     const fetchProfile = async () => {
       if (user) {
         const { data } = await supabase
           .from('profiles')
-          .select('username, avatar_url')
+          .select('username, avatar_url, ev_interval_minutes')
           .eq('user_id', user.id)
           .single();
         setProfile(data);
@@ -212,6 +216,30 @@ const Navbar = () => {
     };
     fetchProfile();
   }, [user]);
+
+  // Atualiza o intervalo quando carregar o perfil
+  useEffect(() => {
+    if (profile?.ev_interval_minutes) {
+      setEvInterval(profile.ev_interval_minutes);
+      setTimer(profile.ev_interval_minutes * 60);
+    } else {
+      setEvInterval(25);
+      setTimer(25 * 60);
+    }
+  }, [profile]);
+
+  // Cronômetro regressivo
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    if (timer <= 0) {
+      setTimer(evInterval * 60); // reinicia
+      return;
+    }
+    const interval = setInterval(() => {
+      setTimer((t) => t - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timer, evInterval, isAuthenticated]);
 
   const handleLogout = () => {
     logout();
@@ -258,7 +286,12 @@ const Navbar = () => {
           <UserSection>
             <UserInfo>
               <Avatar>{getAvatarEmoji()}</Avatar>
-              <Username>{profile?.username || user?.email}</Username>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                <Username>{profile?.username || user?.email}</Username>
+                <span style={{ fontFamily: 'Press Start 2P, monospace', fontSize: 10, color: '#6a6a6a', marginTop: 2 }}>
+                  Próximo EV: {formatTime(evTimer)}
+                </span>
+              </div>
             </UserInfo>
             <LogoutBtn onClick={handleLogout}>Sair</LogoutBtn>
           </UserSection>

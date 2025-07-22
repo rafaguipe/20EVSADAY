@@ -219,6 +219,7 @@ const Profile = () => {
   });
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [evInterval, setEvInterval] = useState(25);
 
   useEffect(() => {
     if (user) {
@@ -227,6 +228,12 @@ const Profile = () => {
       loadHistory();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (profile?.ev_interval_minutes) {
+      setEvInterval(profile.ev_interval_minutes);
+    }
+  }, [profile]);
 
   const loadProfile = async () => {
     try {
@@ -347,6 +354,18 @@ const Profile = () => {
       console.error('Erro ao atualizar avatar:', error);
     }
     setLoading(false);
+  };
+
+  const handleEvIntervalChange = async (e) => {
+    const value = Math.max(5, Math.min(120, Number(e.target.value)));
+    setEvInterval(value);
+    setLoading(true);
+    const { error } = await supabase
+      .from('profiles')
+      .update({ ev_interval_minutes: value, updated_at: new Date().toISOString() })
+      .eq('user_id', user.id);
+    setLoading(false);
+    if (!error) toast.success('Intervalo salvo!');
   };
 
   const getMaxValue = () => {
@@ -481,6 +500,29 @@ const Profile = () => {
             >
               Alternar Tema
             </button>
+          </div>
+          <div style={{ marginBottom: 16 }}>
+            <strong>Intervalo entre EVs:</strong>
+            <input
+              type="number"
+              min={5}
+              max={120}
+              value={evInterval}
+              onChange={handleEvIntervalChange}
+              style={{
+                marginLeft: 16,
+                width: 60,
+                padding: '6px 10px',
+                borderRadius: 8,
+                border: '1px solid #4a4a4a',
+                fontFamily: 'Press Start 2P, monospace',
+                fontSize: 12,
+                background: 'transparent',
+                color: themeName === 'dark' ? '#fff' : '#222',
+              }}
+              disabled={loading}
+            />
+            <span style={{ marginLeft: 8, fontSize: 12 }}>min</span>
           </div>
         </Card>
       </Grid>
