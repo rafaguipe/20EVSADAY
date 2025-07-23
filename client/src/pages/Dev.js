@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import styled from 'styled-components';
 import toast from 'react-hot-toast';
 import DailyReportTester from '../components/DailyReportTester';
+import WelcomeEmailTester from '../components/WelcomeEmailTester';
 
 const Container = styled.div`
   padding: 20px;
@@ -402,6 +403,7 @@ const Dev = () => {
       </Grid>
 
       <DailyReportTester />
+      <WelcomeEmailTester />
     </Container>
   );
 };
