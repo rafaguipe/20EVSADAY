@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import toast from 'react-hot-toast';
 import DailyReportTester from '../components/DailyReportTester';
 import WelcomeEmailTester from '../components/WelcomeEmailTester';
+import BulkEmailSender from '../components/BulkEmailSender';
 
 const Container = styled.div`
   padding: 20px;
@@ -404,6 +405,7 @@ const Dev = () => {
 
       <DailyReportTester />
       <WelcomeEmailTester />
+      <BulkEmailSender />
     </Container>
   );
 };
