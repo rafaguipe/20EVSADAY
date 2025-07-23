@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    console.log('=== WELCOME EMAIL FUNCTION STARTED ===')
+    console.log('=== BULK WELCOME EMAIL FUNCTION STARTED ===')
     
     // Create a Supabase client with service role key for database access
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
@@ -23,9 +23,6 @@ serve(async (req) => {
       console.error('Missing Supabase environment variables')
       throw new Error('Missing Supabase environment variables')
     }
-
-    console.log('Supabase URL:', supabaseUrl)
-    console.log('Service key exists:', !!supabaseServiceKey)
 
     const supabaseClient = createClient(supabaseUrl, supabaseServiceKey)
 
@@ -40,7 +37,6 @@ serve(async (req) => {
     }
 
     const token = authHeader.replace('Bearer ', '')
-    console.log('Token received, length:', token.length)
     
     // Verify the user token
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser(token)
@@ -54,110 +50,185 @@ serve(async (req) => {
     }
 
     console.log('User authenticated:', user.id)
-    console.log('User email:', user.email)
 
-    // Get user profile (only username, no email column)
-    console.log('Fetching profile for user:', user.id)
-    let { data: profile, error: profileError } = await supabaseClient
+    // Check if user is admin
+    const { data: profile, error: profileError } = await supabaseClient
       .from('profiles')
-      .select('username')
+      .select('is_admin')
       .eq('user_id', user.id)
       .single()
 
-    console.log('Profile fetch result:', { profile, error: profileError })
-
-    // If profile doesn't exist, create it
-    if (profileError && profileError.code === 'PGRST116') {
-      console.log('Profile not found, creating new profile for user:', user.id)
-      
-      const newProfileData = {
-        user_id: user.id,
-        username: user.user_metadata?.nickname || user.email?.split('@')[0] || 'Usuário',
-        full_name: user.user_metadata?.full_name || user.user_metadata?.nickname || user.email?.split('@')[0] || 'Usuário',
-        avatar_url: 'avatar_1.png',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      }
-      
-      console.log('Creating profile with data:', newProfileData)
-      
-      const { data: newProfile, error: createError } = await supabaseClient
-        .from('profiles')
-        .insert(newProfileData)
-        .select('username')
-        .single()
-
-      console.log('Profile creation result:', { newProfile, error: createError })
-
-      if (createError) {
-        console.error('Error creating profile:', createError)
-        return new Response(
-          JSON.stringify({ error: 'Failed to create profile: ' + createError.message }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
-      }
-
-      profile = newProfile;
-    } else if (profileError) {
-      console.error('Error fetching profile:', profileError)
+    if (profileError || !profile?.is_admin) {
+      console.error('User is not admin')
       return new Response(
-        JSON.stringify({ error: 'Profile error: ' + profileError.message }),
+        JSON.stringify({ error: 'Unauthorized - Admin access required' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    console.log('Admin access confirmed')
+
+    // Get pending users
+    const { data: pendingUsers, error: pendingError } = await supabaseClient
+      .rpc('get_pending_users_list')
+
+    if (pendingError) {
+      console.error('Error getting pending users:', pendingError)
+      return new Response(
+        JSON.stringify({ error: 'Failed to get pending users: ' + pendingError.message }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    if (!profile) {
-      console.error('Profile is null after fetch/create')
+    console.log('Found pending users:', pendingUsers?.length || 0)
+
+    if (!pendingUsers || pendingUsers.length === 0) {
       return new Response(
-        JSON.stringify({ error: 'Profile not found and could not be created' }),
-        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ 
+          success: true, 
+          message: 'Nenhum usuário pendente de email de boas-vindas',
+          processed: 0,
+          success_count: 0,
+          error_count: 0
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    console.log('Profile ready:', profile)
+    // Process each pending user
+    let successCount = 0;
+    let errorCount = 0;
+    const results = [];
 
-    // Generate welcome email HTML
-    const htmlContent = generateWelcomeEmailHTML(profile.username)
-    console.log('HTML content generated, length:', htmlContent.length)
+    for (const pendingUser of pendingUsers) {
+      try {
+        console.log('Processing user:', pendingUser.user_id, pendingUser.email)
 
-    // Send welcome email (use user.email, not profile.email)
-    console.log('Sending welcome email to:', user.email)
-    const emailSent = await sendWelcomeEmail(user.email, profile.username, htmlContent)
-    console.log('Email send result:', emailSent)
+        // Get or create user profile
+        let { data: userProfile, error: profileError } = await supabaseClient
+          .from('profiles')
+          .select('username')
+          .eq('user_id', pendingUser.user_id)
+          .single()
 
-    // Log the email attempt
-    const logData = {
-      user_id: user.id,
-      username: profile.username,
-      email: user.email,
-      status: emailSent ? 'sent' : 'failed',
-      sent_at: new Date().toISOString(),
-    }
-    
-    console.log('Logging email attempt:', logData)
-    
-    const { error: logError } = await supabaseClient
-      .from('welcome_email_logs')
-      .insert(logData)
+        if (profileError && profileError.code === 'PGRST116') {
+          console.log('Creating profile for user:', pendingUser.user_id)
+          
+          const newProfileData = {
+            user_id: pendingUser.user_id,
+            username: pendingUser.username,
+            full_name: pendingUser.username,
+            avatar_url: 'avatar_1.png',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+          
+          const { data: newProfile, error: createError } = await supabaseClient
+            .from('profiles')
+            .insert(newProfileData)
+            .select('username')
+            .single()
 
-    if (logError) {
-      console.error('Error logging email:', logError)
-    } else {
-      console.log('Email logged successfully')
-    }
+          if (createError) {
+            console.error('Error creating profile:', createError)
+            errorCount++;
+            results.push({
+              user_id: pendingUser.user_id,
+              email: pendingUser.email,
+              success: false,
+              error: 'Failed to create profile: ' + createError.message
+            });
+            continue;
+          }
 
-    const response = {
-      success: true, 
-      message: emailSent ? 'Email de boas-vindas enviado com sucesso!' : 'Erro ao enviar email de boas-vindas',
-      email_sent: emailSent,
-      user: {
-        id: user.id,
-        username: profile.username,
-        email: user.email
+          userProfile = newProfile;
+        } else if (profileError) {
+          console.error('Error fetching profile:', profileError)
+          errorCount++;
+          results.push({
+            user_id: pendingUser.user_id,
+            email: pendingUser.email,
+            success: false,
+            error: 'Profile error: ' + profileError.message
+          });
+          continue;
+        }
+
+        if (!userProfile) {
+          console.error('Profile is null for user:', pendingUser.user_id)
+          errorCount++;
+          results.push({
+            user_id: pendingUser.user_id,
+            email: pendingUser.email,
+            success: false,
+            error: 'Profile not found and could not be created'
+          });
+          continue;
+        }
+
+        // Generate welcome email HTML
+        const htmlContent = generateWelcomeEmailHTML(userProfile.username)
+
+        // Send welcome email
+        const emailSent = await sendWelcomeEmail(pendingUser.email, userProfile.username, htmlContent)
+
+        // Log the email attempt
+        const logData = {
+          user_id: pendingUser.user_id,
+          username: userProfile.username,
+          email: pendingUser.email,
+          status: emailSent ? 'sent' : 'failed',
+          sent_at: new Date().toISOString(),
+        }
+        
+        const { error: logError } = await supabaseClient
+          .from('welcome_email_logs')
+          .insert(logData)
+
+        if (logError) {
+          console.error('Error logging email:', logError)
+        }
+
+        if (emailSent) {
+          successCount++;
+          results.push({
+            user_id: pendingUser.user_id,
+            email: pendingUser.email,
+            success: true,
+            message: 'Email sent successfully'
+          });
+        } else {
+          errorCount++;
+          results.push({
+            user_id: pendingUser.user_id,
+            email: pendingUser.email,
+            success: false,
+            error: 'Failed to send email'
+          });
+        }
+
+      } catch (error) {
+        console.error('Error processing user:', pendingUser.user_id, error)
+        errorCount++;
+        results.push({
+          user_id: pendingUser.user_id,
+          email: pendingUser.email,
+          success: false,
+          error: error.message
+        });
       }
     }
 
-    console.log('Returning response:', response)
+    const response = {
+      success: true,
+      message: `Processamento concluído: ${successCount} sucessos, ${errorCount} erros`,
+      processed: pendingUsers.length,
+      success_count: successCount,
+      error_count: errorCount,
+      results: results
+    }
+
+    console.log('Bulk email processing completed:', response)
 
     return new Response(
       JSON.stringify(response),
@@ -165,7 +236,7 @@ serve(async (req) => {
     )
 
   } catch (error) {
-    console.error('Error in welcome email function:', error)
+    console.error('Error in bulk welcome email function:', error)
     return new Response(
       JSON.stringify({ error: 'Internal server error: ' + error.message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -180,7 +251,7 @@ function generateWelcomeEmailHTML(username) {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Bem-vindo ao EVSADAY!</title>
+      <title>Bem-vindo ao #20EVSADAY!</title>
       <style>
         body {
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -263,7 +334,7 @@ function generateWelcomeEmailHTML(username) {
           <div class="logo">🎮 #20EVSADAY</div>
           <h2>Olá, ${username}! 👋</h2>
           
-          <p>Seja muito bem-vindo(a) ao <strong>EVSADAY</strong> - o sistema gamificado para registro e acompanhamento dos seus Estados Vibracionais (EVs)!</p>
+          <p>Seja muito bem-vindo(a) ao <strong>#20EVSADAY</strong> - o sistema gamificado para registro e acompanhamento dos seus Estados Vibracionais (EVs)!</p>
 
           <div class="highlight">
             <strong>🎉 Parabéns!</strong> Seu email foi validado com sucesso e você já pode começar a registrar seus EVs!
@@ -331,14 +402,14 @@ async function sendWelcomeEmail(email, username, htmlContent) {
       console.log('RESEND_API_KEY not configured, skipping email send')
       console.log('Email would be sent to:', email)
       console.log('Username:', username)
-      console.log('Subject: 🎮 Bem-vindo ao EVSADAY, ' + username + '!')
+      console.log('Subject: 🎮 Bem-vindo ao #20EVSADAY, ' + username + '!')
       console.log('HTML Content length:', htmlContent.length)
       
       // Para teste, vamos simular o envio
       console.log('=== SIMULAÇÃO DE ENVIO DE EMAIL ===')
-      console.log('De: EVSADAY <noreply@evsaday.com>')
+      console.log('De: #20EVSADAY <noreply@evsaday.com>')
       console.log('Para:', email)
-      console.log('Assunto: 🎮 Bem-vindo ao EVSADAY, ' + username + '!')
+      console.log('Assunto: 🎮 Bem-vindo ao #20EVSADAY, ' + username + '!')
       console.log('=== FIM DA SIMULAÇÃO ===')
       
       return true // Return true for testing purposes
@@ -351,7 +422,7 @@ async function sendWelcomeEmail(email, username, htmlContent) {
     const { data, error } = await resend.emails.send({
       from: 'onboarding@resend.dev', // Use o email padrão do Resend para testes
       to: [email],
-      subject: `🎮 Bem-vindo ao EVSADAY, ${username}!`,
+      subject: `🎮 Bem-vindo ao #20EVSADAY, ${username}!`,
       html: htmlContent,
     })
 
