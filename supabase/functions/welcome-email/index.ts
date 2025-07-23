@@ -13,19 +13,26 @@ serve(async (req) => {
   }
 
   try {
+    console.log('=== WELCOME EMAIL FUNCTION STARTED ===')
+    
     // Create a Supabase client with service role key for database access
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
     
     if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('Missing Supabase environment variables')
       throw new Error('Missing Supabase environment variables')
     }
+
+    console.log('Supabase URL:', supabaseUrl)
+    console.log('Service key exists:', !!supabaseServiceKey)
 
     const supabaseClient = createClient(supabaseUrl, supabaseServiceKey)
 
     // Get the user from the Authorization header
     const authHeader = req.headers.get('Authorization')
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.error('Missing or invalid authorization header')
       return new Response(
         JSON.stringify({ error: 'Missing or invalid authorization header' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -33,6 +40,7 @@ serve(async (req) => {
     }
 
     const token = authHeader.replace('Bearer ', '')
+    console.log('Token received, length:', token.length)
     
     // Verify the user token
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser(token)
@@ -45,59 +53,121 @@ serve(async (req) => {
       )
     }
 
+    console.log('User authenticated:', user.id)
+    console.log('User email:', user.email)
+
     // Get user profile
-    const { data: profile, error: profileError } = await supabaseClient
+    console.log('Fetching profile for user:', user.id)
+    let { data: profile, error: profileError } = await supabaseClient
       .from('profiles')
       .select('username, email')
-      .eq('id', user.id)
+      .eq('user_id', user.id)
       .single()
 
-    if (profileError || !profile) {
+    console.log('Profile fetch result:', { profile, error: profileError })
+
+    // If profile doesn't exist, create it
+    if (profileError && profileError.code === 'PGRST116') {
+      console.log('Profile not found, creating new profile for user:', user.id)
+      
+      const newProfileData = {
+        user_id: user.id,
+        username: user.user_metadata?.nickname || user.email?.split('@')[0] || 'Usuário',
+        full_name: user.user_metadata?.full_name || user.user_metadata?.nickname || user.email?.split('@')[0] || 'Usuário',
+        avatar_url: 'avatar_1.png',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+      
+      console.log('Creating profile with data:', newProfileData)
+      
+      const { data: newProfile, error: createError } = await supabaseClient
+        .from('profiles')
+        .insert(newProfileData)
+        .select('username, email')
+        .single()
+
+      console.log('Profile creation result:', { newProfile, error: createError })
+
+      if (createError) {
+        console.error('Error creating profile:', createError)
+        return new Response(
+          JSON.stringify({ error: 'Failed to create profile: ' + createError.message }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+
+      profile = newProfile;
+    } else if (profileError) {
+      console.error('Error fetching profile:', profileError)
       return new Response(
-        JSON.stringify({ error: 'Profile not found' }),
+        JSON.stringify({ error: 'Profile error: ' + profileError.message }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    if (!profile) {
+      console.error('Profile is null after fetch/create')
+      return new Response(
+        JSON.stringify({ error: 'Profile not found and could not be created' }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
+    console.log('Profile ready:', profile)
+
     // Generate welcome email HTML
     const htmlContent = generateWelcomeEmailHTML(profile.username)
+    console.log('HTML content generated, length:', htmlContent.length)
 
     // Send welcome email
+    console.log('Sending welcome email to:', profile.email)
     const emailSent = await sendWelcomeEmail(profile.email, profile.username, htmlContent)
+    console.log('Email send result:', emailSent)
 
     // Log the email attempt
+    const logData = {
+      user_id: user.id,
+      username: profile.username,
+      email: profile.email,
+      status: emailSent ? 'sent' : 'failed',
+      sent_at: new Date().toISOString(),
+    }
+    
+    console.log('Logging email attempt:', logData)
+    
     const { error: logError } = await supabaseClient
       .from('welcome_email_logs')
-      .insert({
-        user_id: user.id,
-        username: profile.username,
-        email: profile.email,
-        status: emailSent ? 'sent' : 'failed',
-        sent_at: new Date().toISOString(),
-      })
+      .insert(logData)
 
     if (logError) {
       console.error('Error logging email:', logError)
+    } else {
+      console.log('Email logged successfully')
     }
 
+    const response = {
+      success: true, 
+      message: emailSent ? 'Email de boas-vindas enviado com sucesso!' : 'Erro ao enviar email de boas-vindas',
+      email_sent: emailSent,
+      user: {
+        id: user.id,
+        username: profile.username,
+        email: profile.email
+      }
+    }
+
+    console.log('Returning response:', response)
+
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: emailSent ? 'Email de boas-vindas enviado com sucesso!' : 'Erro ao enviar email de boas-vindas',
-        email_sent: emailSent,
-        user: {
-          id: user.id,
-          username: profile.username,
-          email: profile.email
-        }
-      }),
+      JSON.stringify(response),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
 
   } catch (error) {
     console.error('Error in welcome email function:', error)
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ error: 'Internal server error: ' + error.message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
