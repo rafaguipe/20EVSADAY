@@ -84,8 +84,7 @@ const WelcomeEmailTester = () => {
         throw new Error('Sessão não encontrada');
       }
 
-      console.log('Session found:', !!session);
-      console.log('User ID:', user.id);
+      setStatus('🔄 Enviando email...');
 
       const response = await fetch(
         `https://mbxefiadqcrzqbrfkvxu.supabase.co/functions/v1/welcome-email`,
@@ -98,16 +97,21 @@ const WelcomeEmailTester = () => {
         }
       );
 
-      console.log('Response status:', response.status);
       const data = await response.json();
-      console.log('Response data:', data);
 
       if (response.ok) {
         setStatus('✅ Email de boas-vindas enviado com sucesso!');
         toast.success('Email de boas-vindas enviado!');
+        
+        // Mostrar detalhes do envio
+        console.log('✅ Email enviado com sucesso!');
+        console.log('👤 Usuário:', data.user?.username);
+        console.log('📧 Email:', data.user?.email);
+        console.log('📊 Status:', data.email_sent);
       } else {
         setStatus(`❌ Erro: ${data.error || 'Erro desconhecido'}`);
         toast.error('Erro ao enviar email de boas-vindas');
+        console.error('❌ Erro na resposta:', data);
       }
 
     } catch (error) {
@@ -162,32 +166,6 @@ const WelcomeEmailTester = () => {
 
       <Button onClick={checkWelcomeEmailLogs} disabled={loading}>
         📋 Verificar Logs
-      </Button>
-
-      <Button 
-        onClick={() => {
-          const script = `
-console.log('=== TESTE DIRETO ===');
-const { data: { session } } = await supabase.auth.getSession();
-if (session) {
-  console.log('✅ Logado:', session.user.email);
-  const response = await fetch('https://mbxefiadqcrzqbrfkvxu.supabase.co/functions/v1/welcome-email', {
-    method: 'POST',
-    headers: { 'Authorization': \`Bearer \${session.access_token}\`, 'Content-Type': 'application/json' }
-  });
-  const data = await response.json();
-  console.log('Status:', response.status, 'Data:', data);
-} else {
-  console.log('❌ Não logado');
-}
-          `;
-          console.log('Script copiado! Cole no console (F12):');
-          console.log(script);
-          navigator.clipboard.writeText(script);
-          toast.success('Script copiado! Cole no console (F12)');
-        }}
-      >
-        📋 Copiar Script de Teste
       </Button>
 
       <InfoText>
