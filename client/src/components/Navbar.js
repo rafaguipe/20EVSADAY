@@ -290,6 +290,9 @@ const Navbar = () => {
             <NavLink to="/profile" active={isActive('/profile')}>
               Perfil
             </NavLink>
+            <NavLink to="/chat-ev" active={isActive('/chat-ev')}>
+              💬 Chat EV
+            </NavLink>
             <NavLink to="/multimidia" active={isActive('/multimidia')}>
               Multimídia
             </NavLink>
@@ -329,6 +332,9 @@ const Navbar = () => {
               </NavLink>
               <NavLink to="/profile" active={isActive('/profile')}>
                 Perfil
+              </NavLink>
+              <NavLink to="/chat-ev" active={isActive('/chat-ev')}>
+                💬 Chat EV
               </NavLink>
               <NavLink to="/multimidia" active={isActive('/multimidia')}>
                 Multimídia

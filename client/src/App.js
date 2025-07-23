@@ -14,6 +14,7 @@ import Profile from './pages/Profile';
 import Dev from './pages/Dev';
 import LoadingSpinner from './components/LoadingSpinner';
 import Multimidia from './pages/Multimidia';
+import ChatEV from './pages/ChatEV';
 import { supabase } from './supabaseClient';
 
 // Componente para rotas protegidas
@@ -135,6 +136,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/chat-ev" 
+              element={
+                <ProtectedRoute>
+                  <ChatEV />
                 </ProtectedRoute>
               } 
             />
