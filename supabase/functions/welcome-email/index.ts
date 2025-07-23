@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    // Create Supabase client with service role key
+    // Create a Supabase client with service role key for database access
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
     
@@ -21,63 +21,84 @@ serve(async (req) => {
       throw new Error('Missing Supabase environment variables')
     }
 
-    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+    const supabaseClient = createClient(supabaseUrl, supabaseServiceKey)
 
-    // Get request body
-    const { user_id, email, username } = await req.json()
+    // Get the user from the Authorization header
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return new Response(
+        JSON.stringify({ error: 'Missing or invalid authorization header' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
 
-    if (!user_id || !email) {
-      throw new Error('Missing user_id or email')
+    const token = authHeader.replace('Bearer ', '')
+    
+    // Verify the user token
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser(token)
+
+    if (userError || !user) {
+      console.error('User authentication error:', userError)
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized - Invalid token' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Get user profile
+    const { data: profile, error: profileError } = await supabaseClient
+      .from('profiles')
+      .select('username, email')
+      .eq('id', user.id)
+      .single()
+
+    if (profileError || !profile) {
+      return new Response(
+        JSON.stringify({ error: 'Profile not found' }),
+        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
     }
 
     // Generate welcome email HTML
-    const welcomeEmailHTML = generateWelcomeEmailHTML(username || 'Conscienciólogo')
+    const htmlContent = generateWelcomeEmailHTML(profile.username)
 
-    // Send email using Resend (you'll need to configure this)
-    const emailSent = await sendWelcomeEmail(email, username || 'Conscienciólogo', welcomeEmailHTML)
+    // Send welcome email
+    const emailSent = await sendWelcomeEmail(profile.email, profile.username, htmlContent)
 
-    if (emailSent) {
-      // Log the welcome email sent
-      await supabase
-        .from('welcome_email_logs')
-        .insert([
-          {
-            user_id: user_id,
-            email: email,
-            username: username,
-            sent_at: new Date().toISOString(),
-            status: 'success'
-          }
-        ])
+    // Log the email attempt
+    const { error: logError } = await supabaseClient
+      .from('welcome_email_logs')
+      .insert({
+        user_id: user.id,
+        username: profile.username,
+        email: profile.email,
+        status: emailSent ? 'sent' : 'failed',
+        sent_at: new Date().toISOString(),
+      })
 
-      return new Response(
-        JSON.stringify({ 
-          success: true, 
-          message: 'Welcome email sent successfully',
-          user_id: user_id,
-          email: email
-        }),
-        { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 200 
-        }
-      )
-    } else {
-      throw new Error('Failed to send welcome email')
+    if (logError) {
+      console.error('Error logging email:', logError)
     }
+
+    return new Response(
+      JSON.stringify({ 
+        success: true, 
+        message: emailSent ? 'Email de boas-vindas enviado com sucesso!' : 'Erro ao enviar email de boas-vindas',
+        email_sent: emailSent,
+        user: {
+          id: user.id,
+          username: profile.username,
+          email: profile.email
+        }
+      }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
 
   } catch (error) {
     console.error('Error in welcome email function:', error)
-    
     return new Response(
-      JSON.stringify({ 
-        error: error.message,
-        success: false 
-      }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 500 
-      }
+      JSON.stringify({ error: 'Internal server error' }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
 })
@@ -101,50 +122,52 @@ function generateWelcomeEmailHTML(username) {
           background-color: #f4f4f4;
         }
         .container {
-          background-color: #ffffff;
-          padding: 30px;
+          background-color: white;
           border-radius: 10px;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          padding: 30px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .header {
           text-align: center;
           margin-bottom: 30px;
-          padding-bottom: 20px;
-          border-bottom: 2px solid #4a8a4a;
         }
         .logo {
-          font-size: 24px;
+          font-size: 2.5em;
           font-weight: bold;
-          color: #4a8a4a;
+          color: #4CAF50;
           margin-bottom: 10px;
         }
-        .welcome-text {
-          font-size: 18px;
-          color: #666;
-        }
-        .content {
-          margin-bottom: 30px;
+        .highlight {
+          background-color: #e8f5e8;
+          border-left: 4px solid #4CAF50;
+          padding: 15px;
+          margin: 20px 0;
+          border-radius: 5px;
         }
         .feature {
-          background-color: #f8f9fa;
+          background-color: #f9f9f9;
           padding: 15px;
           margin: 15px 0;
           border-radius: 8px;
-          border-left: 4px solid #4a8a4a;
+          border-left: 3px solid #2196F3;
         }
         .feature h3 {
-          margin: 0 0 10px 0;
-          color: #4a8a4a;
+          margin-top: 0;
+          color: #2196F3;
         }
         .cta-button {
           display: inline-block;
-          background-color: #4a8a4a;
+          background-color: #4CAF50;
           color: white;
           padding: 15px 30px;
           text-decoration: none;
-          border-radius: 8px;
+          border-radius: 25px;
           font-weight: bold;
           margin: 20px 0;
+          transition: background-color 0.3s;
+        }
+        .cta-button:hover {
+          background-color: #45a049;
         }
         .footer {
           text-align: center;
@@ -152,25 +175,22 @@ function generateWelcomeEmailHTML(username) {
           padding-top: 20px;
           border-top: 1px solid #eee;
           color: #666;
-          font-size: 14px;
+          font-size: 0.9em;
         }
-        .highlight {
-          background-color: #fff3cd;
-          padding: 15px;
-          border-radius: 8px;
-          border: 1px solid #ffeaa7;
-          margin: 20px 0;
+        h2 {
+          color: #4CAF50;
+          margin-bottom: 20px;
+        }
+        h3 {
+          color: #2196F3;
+          margin-bottom: 10px;
         }
       </style>
     </head>
     <body>
       <div class="container">
         <div class="header">
-          <div class="logo">🎮 #20EVSADAY</div>
-          <div class="welcome-text">Sistema de Estados Vibracionais Gamificado</div>
-        </div>
-
-        <div class="content">
+          <div class="logo">🎮 EVSADAY</div>
           <h2>Olá, ${username}! 👋</h2>
           
           <p>Seja muito bem-vindo(a) ao <strong>EVSADAY</strong> - o sistema gamificado para registro e acompanhamento dos seus Estados Vibracionais (EVs)!</p>
@@ -235,37 +255,45 @@ function generateWelcomeEmailHTML(username) {
 
 async function sendWelcomeEmail(email, username, htmlContent) {
   try {
-    // Configure your email service here (Resend, SendGrid, etc.)
-    // This is an example using Resend
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
     
     if (!resendApiKey) {
       console.log('RESEND_API_KEY not configured, skipping email send')
+      console.log('Email would be sent to:', email)
+      console.log('Username:', username)
+      console.log('Subject: 🎮 Bem-vindo ao EVSADAY, ' + username + '!')
+      console.log('HTML Content length:', htmlContent.length)
+      
+      // Para teste, vamos simular o envio
+      console.log('=== SIMULAÇÃO DE ENVIO DE EMAIL ===')
+      console.log('De: EVSADAY <noreply@evsaday.com>')
+      console.log('Para:', email)
+      console.log('Assunto: 🎮 Bem-vindo ao EVSADAY, ' + username + '!')
+      console.log('=== FIM DA SIMULAÇÃO ===')
+      
       return true // Return true for testing purposes
     }
 
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${resendApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: 'EVSADAY <noreply@evsaday.com>',
-        to: [email],
-        subject: `🎮 Bem-vindo ao EVSADAY, ${username}!`,
-        html: htmlContent,
-      }),
+    // Use Resend SDK
+    const { Resend } = await import('https://esm.sh/resend@2.0.0')
+    const resend = new Resend(resendApiKey)
+
+    const { data, error } = await resend.emails.send({
+      from: 'onboarding@resend.dev', // Use o email padrão do Resend para testes
+      to: [email],
+      subject: `🎮 Bem-vindo ao EVSADAY, ${username}!`,
+      html: htmlContent,
     })
 
-    if (response.ok) {
-      console.log('Welcome email sent successfully to:', email)
-      return true
-    } else {
-      const error = await response.text()
+    if (error) {
       console.error('Failed to send welcome email:', error)
       return false
     }
+
+    console.log('Welcome email sent successfully to:', email)
+    console.log('Resend response:', data)
+    return true
+
   } catch (error) {
     console.error('Error sending welcome email:', error)
     return false

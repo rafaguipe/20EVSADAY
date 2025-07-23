@@ -205,7 +205,6 @@ const Navbar = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       if (user) {
-        console.log('Carregando perfil para usuário:', user.id);
         try {
           const { data, error } = await supabase
             .from('profiles')
@@ -213,19 +212,15 @@ const Navbar = () => {
             .eq('user_id', user.id)
             .maybeSingle(); // Use maybeSingle for robust error handling
 
-          console.log('Resultado da busca:', { data, error });
-
           if (error) {
             console.error('Erro detalhado ao carregar perfil:', error);
             return;
           }
 
           if (data) {
-            console.log('Perfil encontrado:', data);
             setProfile(data);
             setIsAdmin(data.is_admin || false);
           } else {
-            console.log('Perfil não encontrado, criando novo...');
             const nickname = user.user_metadata?.nickname || `Jogador ${user.id.slice(0, 8)}`;
             const avatar_id = user.user_metadata?.avatar_id || 1;
 
@@ -241,8 +236,6 @@ const Navbar = () => {
               })
               .select()
               .single();
-
-            console.log('Resultado da criação:', { newProfile, createError });
 
             if (createError) {
               console.error('Erro ao criar perfil:', createError);
@@ -267,14 +260,11 @@ const Navbar = () => {
 
   // Extrair o emoji do avatar_url
   const getAvatarEmoji = () => {
-    console.log('Profile no getAvatarEmoji:', profile);
     if (!profile?.avatar_url) {
-      console.log('Avatar não encontrado, usando padrão');
       return avatars[0];
     }
     const match = profile.avatar_url.match(/avatar_(\d+)\.png/);
     const idx = match ? parseInt(match[1], 10) - 1 : 0;
-    console.log('Avatar encontrado, índice:', idx, 'emoji:', avatars[idx]);
     return avatars[idx] || avatars[0];
   };
 
