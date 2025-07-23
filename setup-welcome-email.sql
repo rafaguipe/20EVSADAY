@@ -86,15 +86,18 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- 7. View para estatísticas de emails de boas-vindas
+-- 7. View para estatísticas de emails de boas-vindas (CORRIGIDA)
 CREATE OR REPLACE VIEW welcome_email_statistics AS
 SELECT 
   COUNT(*) as total_emails_sent,
   COUNT(*) FILTER (WHERE status = 'success') as successful_emails,
   COUNT(*) FILTER (WHERE status = 'failed') as failed_emails,
-  ROUND(
-    (COUNT(*) FILTER (WHERE status = 'success')::DECIMAL / COUNT(*)) * 100, 2
-  ) as success_rate_percent,
+  CASE 
+    WHEN COUNT(*) = 0 THEN 0
+    ELSE ROUND(
+      (COUNT(*) FILTER (WHERE status = 'success')::DECIMAL / COUNT(*)) * 100, 2
+    )
+  END as success_rate_percent,
   MAX(sent_at) as last_email_sent,
   MIN(sent_at) as first_email_sent
 FROM welcome_email_logs;
