@@ -56,11 +56,11 @@ serve(async (req) => {
     console.log('User authenticated:', user.id)
     console.log('User email:', user.email)
 
-    // Get user profile
+    // Get user profile (only username, no email column)
     console.log('Fetching profile for user:', user.id)
     let { data: profile, error: profileError } = await supabaseClient
       .from('profiles')
-      .select('username, email')
+      .select('username')
       .eq('user_id', user.id)
       .single()
 
@@ -84,7 +84,7 @@ serve(async (req) => {
       const { data: newProfile, error: createError } = await supabaseClient
         .from('profiles')
         .insert(newProfileData)
-        .select('username, email')
+        .select('username')
         .single()
 
       console.log('Profile creation result:', { newProfile, error: createError })
@@ -120,16 +120,16 @@ serve(async (req) => {
     const htmlContent = generateWelcomeEmailHTML(profile.username)
     console.log('HTML content generated, length:', htmlContent.length)
 
-    // Send welcome email
-    console.log('Sending welcome email to:', profile.email)
-    const emailSent = await sendWelcomeEmail(profile.email, profile.username, htmlContent)
+    // Send welcome email (use user.email, not profile.email)
+    console.log('Sending welcome email to:', user.email)
+    const emailSent = await sendWelcomeEmail(user.email, profile.username, htmlContent)
     console.log('Email send result:', emailSent)
 
     // Log the email attempt
     const logData = {
       user_id: user.id,
       username: profile.username,
-      email: profile.email,
+      email: user.email,
       status: emailSent ? 'sent' : 'failed',
       sent_at: new Date().toISOString(),
     }
@@ -153,7 +153,7 @@ serve(async (req) => {
       user: {
         id: user.id,
         username: profile.username,
-        email: profile.email
+        email: user.email
       }
     }
 
