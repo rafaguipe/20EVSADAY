@@ -127,7 +127,7 @@ const Loja = () => {
     <Container>
       <Title>🛒 Loja</Title>
       <Description>
-        Produtos e eventos relacionados a Jogos Evolutivos e Conscienciologia
+        Produtos e eventos relacionados aos Jogos Evolutivos
       </Description>
 
       {produtos.length === 0 ? (
