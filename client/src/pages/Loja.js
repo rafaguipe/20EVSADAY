@@ -2,19 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  padding: 20px;
-  max-width: 1200px;
+  padding: 32px 16px;
+  max-width: 900px;
   margin: 0 auto;
   background: ${({ theme }) => theme.background};
 `;
 
 const Title = styled.h1`
   font-family: 'Press Start 2P', monospace;
-  font-size: 24px;
+  font-size: 2rem;
   color: ${({ theme }) => theme.text};
+  margin-bottom: 32px;
   text-align: center;
-  margin-bottom: 30px;
-  text-transform: uppercase;
 `;
 
 const Description = styled.p`
@@ -29,48 +28,46 @@ const Description = styled.p`
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  margin-bottom: 40px;
+  gap: 20px;
+  margin-top: 16px;
 `;
 
 const Card = styled.div`
   background: ${({ theme }) => theme.card};
   border: 2px solid ${({ theme }) => theme.secondary};
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
+  transition: transform 0.2s;
   
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
   }
 `;
 
 const Thumbnail = styled.img`
   width: 100%;
-  height: 200px;
+  height: 180px;
   object-fit: cover;
 `;
 
 const CardContent = styled.div`
-  padding: 20px;
+  padding: 16px;
 `;
 
 const CardTitle = styled.h3`
   font-family: 'Press Start 2P', monospace;
-  font-size: 14px;
-  color: #ffffff;
-  margin-bottom: 10px;
-  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.text};
+  margin-bottom: 8px;
+  line-height: 1.4;
 `;
 
 const CardDescription = styled.p`
   font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #cccccc;
+  font-size: 0.6rem;
+  color: #6a6a6a;
   line-height: 1.5;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
 `;
 
 const CardMeta = styled.div`
@@ -78,7 +75,7 @@ const CardMeta = styled.div`
   justify-content: space-between;
   align-items: center;
   font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-size: 0.6rem;
   color: #4a6a8a;
 `;
 
@@ -92,12 +89,14 @@ const Date = styled.span`
 `;
 
 const ExternalLink = styled.a`
+  color: #4a6a8a;
   text-decoration: none;
-  color: inherit;
-  display: block;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.7rem;
   
   &:hover {
-    text-decoration: none;
+    color: #357a6a;
+    text-decoration: underline;
   }
 `;
 
@@ -155,6 +154,9 @@ const Loja = () => {
                     <Price>{produto.price}</Price>
                     <Date>{produto.date} • {produto.time}</Date>
                   </CardMeta>
+                  <ExternalLink href={produto.link} target="_blank" rel="noopener noreferrer">
+                    Ver Evento →
+                  </ExternalLink>
                 </CardContent>
               </ExternalLink>
             </Card>
