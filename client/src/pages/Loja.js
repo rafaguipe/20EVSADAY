@@ -116,8 +116,8 @@ const Loja = () => {
       id: 1,
       title: 'Workshop Jogos Evolutivos',
       description: 'Aprenda a fazer jogos evolutivos usando jogos eletrônicos. Workshop online sobre ludologia interassistencial.',
-      thumbnail: '/assets/workshop-jogos-evolutivos.jpg',
-      price: 'Gratuito',
+      thumbnail: '/assets/workshop-jogos-evolutivos.svg',
+      price: 'Online',
       date: '26.07.2025',
       time: '9h00 às 12h00',
       link: 'https://www.sympla.com.br/evento-online/workshop-jogos-evolutivos-jogos-eletronicos-online/2991500?_gl=1*1xmmzhj*_gcl_au*MjEzMzExMTg0OS4xNzQ5NDYyOTk2*_ga*OTI4NjI2MzcuMTcyMTQ0MjExMA..*_ga_KXH10SQTZF*czE3NTMyOTY4OTckbzkkZzEkdDE3NTMyOTc1NTQkajUzJGwwJGgxNTc2NzU3MzI2',
@@ -146,7 +146,7 @@ const Loja = () => {
                   src={produto.thumbnail} 
                   alt={produto.title}
                   onError={(e) => {
-                    e.target.src = '/assets/placeholder-workshop.jpg';
+                    e.target.src = '/assets/placeholder-workshop.svg';
                   }}
                 />
                 <CardContent>
