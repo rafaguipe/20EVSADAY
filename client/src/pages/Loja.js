@@ -51,7 +51,6 @@ const Thumbnail = styled.img`
   width: 100%;
   height: 200px;
   object-fit: cover;
-  border-bottom: 2px solid ${({ theme }) => theme.secondary};
 `;
 
 const CardContent = styled.div`
