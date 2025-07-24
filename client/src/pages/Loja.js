@@ -115,7 +115,7 @@ const Loja = () => {
       id: 1,
       title: 'Workshop Jogos Evolutivos',
       description: 'Aprenda a fazer jogos evolutivos usando jogos eletrônicos. Workshop online sobre ludologia interassistencial.',
-      thumbnail: '/assets/workshop-jogos-evolutivos.svg',
+      thumbnail: '/assets/workshop26.7.2025.png',
       price: 'Online',
       date: '26.07.2025',
       time: '9h00 às 12h00',
@@ -145,7 +145,7 @@ const Loja = () => {
                   src={produto.thumbnail} 
                   alt={produto.title}
                   onError={(e) => {
-                    e.target.src = '/assets/placeholder-workshop.svg';
+                    e.target.src = '/assets/placeholder-workshop.png';
                   }}
                 />
                 <CardContent>
