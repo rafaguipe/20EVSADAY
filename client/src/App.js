@@ -15,6 +15,7 @@ import Dev from './pages/Dev';
 import LoadingSpinner from './components/LoadingSpinner';
 import Multimidia from './pages/Multimidia';
 import ChatEV from './pages/ChatEV';
+import Loja from './pages/Loja';
 import { supabase } from './supabaseClient';
 
 // Componente para rotas protegidas
@@ -140,13 +141,14 @@ function App() {
               } 
             />
             <Route 
-              path="/chat-ev" 
+              path="/chat" 
               element={
                 <ProtectedRoute>
                   <ChatEV />
                 </ProtectedRoute>
               } 
             />
+            <Route path="/loja" element={<Loja />} />
             <Route 
               path="/dev" 
               element={

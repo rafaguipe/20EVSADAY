@@ -31,6 +31,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Trigger para atualizar updated_at
+DROP TRIGGER IF EXISTS update_chat_ev_messages_updated_at ON chat_ev_messages;
 CREATE TRIGGER update_chat_ev_messages_updated_at
     BEFORE UPDATE ON chat_ev_messages
     FOR EACH ROW
@@ -115,19 +116,24 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 ALTER TABLE chat_ev_messages ENABLE ROW LEVEL SECURITY;
 
 -- Políticas RLS
+DROP POLICY IF EXISTS "Usuários autenticados podem ver mensagens aprovadas" ON chat_ev_messages;
 CREATE POLICY "Usuários autenticados podem ver mensagens aprovadas" ON chat_ev_messages
     FOR SELECT USING (auth.role() = 'authenticated' AND is_approved = true AND is_deleted = false);
 
+DROP POLICY IF EXISTS "Usuários autenticados podem inserir mensagens" ON chat_ev_messages;
 CREATE POLICY "Usuários autenticados podem inserir mensagens" ON chat_ev_messages
     FOR INSERT WITH CHECK (auth.role() = 'authenticated' AND auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Usuários podem editar suas próprias mensagens" ON chat_ev_messages;
 CREATE POLICY "Usuários podem editar suas próprias mensagens" ON chat_ev_messages
     FOR UPDATE USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Usuários podem deletar suas próprias mensagens" ON chat_ev_messages;
 CREATE POLICY "Usuários podem deletar suas próprias mensagens" ON chat_ev_messages
     FOR DELETE USING (auth.uid() = user_id);
 
 -- Políticas para admins
+DROP POLICY IF EXISTS "Admins podem gerenciar todas as mensagens" ON chat_ev_messages;
 CREATE POLICY "Admins podem gerenciar todas as mensagens" ON chat_ev_messages
     FOR ALL USING (
         EXISTS (
@@ -136,15 +142,6 @@ CREATE POLICY "Admins podem gerenciar todas as mensagens" ON chat_ev_messages
             AND is_admin = true
         )
     );
-
--- Inserir algumas mensagens de exemplo (apenas se houver usuários no sistema)
--- Comentado para evitar erro de foreign key
-/*
-INSERT INTO chat_ev_messages (user_id, username, avatar_url, message, message_type) VALUES
-    ('00000000-0000-0000-0000-000000000000', 'Sistema', 'avatar_1.png', '🎮 Bem-vindos ao Chat EV! Aqui compartilhamos experiências e ortopensatas sobre Estados Vibracionais. Seja positivo e respeitoso!', 'encouragement'),
-    ('00000000-0000-0000-0000-000000000000', 'Sistema', 'avatar_1.png', '💡 Dica: Registre seus EVs durante o dia e passe a limpo aqui à noite. A consistência é a chave!', 'encouragement'),
-    ('00000000-0000-0000-0000-000000000000', 'Sistema', 'avatar_1.png', '🌟 Lembre-se: Este é um espaço para compartilhar experiências conscienciais e ortopensatas. Mantenha o foco no EV!', 'encouragement');
-*/
 
 -- Comentários sobre a tabela
 COMMENT ON TABLE chat_ev_messages IS 'Mensagens do chat sobre Estados Vibracionais';

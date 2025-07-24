@@ -200,6 +200,7 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profile, setProfile] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [lojaVisible, setLojaVisible] = useState(false);
   const { timer: evTimer, formatTime } = useEVTimer();
 
   useEffect(() => {
@@ -251,6 +252,36 @@ const Navbar = () => {
     fetchProfile();
   }, [user]);
 
+  // Verificar visibilidade da loja
+  useEffect(() => {
+    const checkLojaVisibility = async () => {
+      if (!isAuthenticated) {
+        setLojaVisible(false);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .rpc('get_system_setting', {
+            p_key: 'loja_visible'
+          });
+
+        if (error) {
+          console.error('Erro ao verificar visibilidade da loja:', error);
+          setLojaVisible(false);
+          return;
+        }
+
+        setLojaVisible(data === 'true');
+      } catch (error) {
+        console.error('Erro ao verificar visibilidade da loja:', error);
+        setLojaVisible(false);
+      }
+    };
+
+    checkLojaVisibility();
+  }, [isAuthenticated]);
+
   const handleLogout = () => {
     logout();
     navigate('/');
@@ -272,7 +303,7 @@ const Navbar = () => {
     <Nav>
               <LogoContainer to="/">
           <LogoImage src="/assets/logo_jogos_evolutivos.png" alt="Logo" />
-          <LogoText>#20EVSADAY</LogoText>
+          {/* <LogoText>#20EVSADAY</LogoText> */}
         </LogoContainer>
       
       {isAuthenticated ? (
@@ -290,9 +321,14 @@ const Navbar = () => {
             <NavLink to="/profile" active={isActive('/profile')}>
               Perfil
             </NavLink>
-            <NavLink to="/chat-ev" active={isActive('/chat-ev')}>
-              💬 Chat EV
+            <NavLink to="/chat" active={isActive('/chat')}>
+              Chat
             </NavLink>
+            {(isAdmin || lojaVisible) && (
+              <NavLink to="/loja" active={isActive('/loja')}>
+                Loja
+              </NavLink>
+            )}
             <NavLink to="/multimidia" active={isActive('/multimidia')}>
               Multimídia
             </NavLink>
@@ -333,9 +369,14 @@ const Navbar = () => {
               <NavLink to="/profile" active={isActive('/profile')}>
                 Perfil
               </NavLink>
-              <NavLink to="/chat-ev" active={isActive('/chat-ev')}>
-                💬 Chat EV
+              <NavLink to="/chat" active={isActive('/chat')}>
+                Chat
               </NavLink>
+              {(isAdmin || lojaVisible) && (
+                <NavLink to="/loja" active={isActive('/loja')}>
+                  Loja
+                </NavLink>
+              )}
               <NavLink to="/multimidia" active={isActive('/multimidia')}>
                 Multimídia
               </NavLink>

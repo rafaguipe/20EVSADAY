@@ -3,9 +3,10 @@ import { supabase } from '../supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import styled from 'styled-components';
 import toast from 'react-hot-toast';
-import DailyReportTester from '../components/DailyReportTester';
+// import DailyReportTester from '../components/DailyReportTester';
 import WelcomeEmailTester from '../components/WelcomeEmailTester';
 import BulkEmailSender from '../components/BulkEmailSender';
+import LojaVisibilityControl from '../components/LojaVisibilityControl';
 
 const Container = styled.div`
   padding: 20px;
@@ -220,40 +221,39 @@ const Dev = () => {
     }
   };
 
-  const testDailyReports = async () => {
-    setLoading(true);
-    setStatus('');
+  // const testDailyReports = async () => {
+  //   setLoading(true);
+  //   setStatus('');
 
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_SUPABASE_URL}/functions/v1/daily-reports`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_ANON_KEY}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.REACT_APP_SUPABASE_URL}/functions/v1/daily-reports`,
+  //       {
+  //         method: 'POST',
+  //         headers: {
+  //           'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_ANON_KEY}`,
+  //           'Content-Type': 'application/json'
+  //       }
+  //     );
 
-      const data = await response.json();
+  //     const data = await response.json();
 
-      if (response.ok) {
-        setStatus('✅ Relatórios diários processados com sucesso!');
-        toast.success('Relatórios processados!');
-      } else {
-        setStatus(`❌ Erro: ${data.error || 'Erro desconhecido'}`);
-        toast.error('Erro ao processar relatórios');
-      }
+  //     if (response.ok) {
+  //       setStatus('✅ Relatórios diários processados com sucesso!');
+  //       toast.success('Relatórios processados!');
+  //     } else {
+  //       setStatus(`❌ Erro: ${data.error || 'Erro desconhecido'}`);
+  //       toast.error('Erro ao processar relatórios');
+  //     }
 
-    } catch (error) {
-      console.error('Erro ao testar relatórios:', error);
-      setStatus(`❌ Erro de conexão: ${error.message}`);
-      toast.error('Erro de conexão');
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   } catch (error) {
+  //     console.error('Erro ao testar relatórios:', error);
+  //       setStatus(`❌ Erro de conexão: ${error.message}`);
+  //       toast.error('Erro de conexão');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const clearAllData = async () => {
     if (!window.confirm('⚠️ ATENÇÃO: Isso irá apagar TODOS os dados do sistema! Tem certeza?')) {
@@ -362,9 +362,9 @@ const Dev = () => {
         <Card>
           <CardTitle>📧 Relatórios Diários</CardTitle>
           
-          <Button onClick={testDailyReports} disabled={loading}>
+          {/* <Button onClick={testDailyReports} disabled={loading}>
             🚀 Testar Sistema
-          </Button>
+          </Button> */}
 
           <InfoText>
             Testa o sistema completo de relatórios diários
@@ -403,7 +403,8 @@ const Dev = () => {
         </Card>
       </Grid>
 
-      <DailyReportTester />
+      {/* <DailyReportTester /> */}
+      <LojaVisibilityControl />
       <WelcomeEmailTester />
       <BulkEmailSender />
     </Container>
