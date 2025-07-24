@@ -46,7 +46,7 @@ const Card = styled.div`
 
 const Thumbnail = styled.img`
   width: 100%;
-  height: 180px;
+  height: 100%;
   object-fit: cover;
 `;
 
