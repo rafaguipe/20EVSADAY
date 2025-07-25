@@ -309,14 +309,15 @@ const ChatEV = () => {
       console.log('👤 Buscando perfil do usuário...');
       console.log('🆔 User ID:', user.id);
       
+      let profile;
       try {
-        const { data: profile, error: profileError } = await supabase
+        const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('username, avatar_url')
           .eq('user_id', user.id)
           .single();
 
-        console.log('📊 Resultado da busca do perfil:', { profile, profileError });
+        console.log('📊 Resultado da busca do perfil:', { profile: profileData, profileError });
 
         if (profileError) {
           console.error('❌ Erro ao buscar perfil:', profileError);
@@ -324,12 +325,13 @@ const ChatEV = () => {
           return;
         }
 
-        if (!profile) {
+        if (!profileData) {
           console.error('❌ Perfil não encontrado');
           toast.error('Perfil do usuário não encontrado');
           return;
         }
 
+        profile = profileData;
         console.log('✅ Perfil encontrado:', profile);
       } catch (profileException) {
         console.error('❌ Exceção ao buscar perfil:', profileException);
