@@ -229,6 +229,29 @@ const WarningText = styled.p`
   margin: 0;
 `;
 
+const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+`;
+
+const Checkbox = styled.input`
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: #4a6a8a;
+`;
+
+const CheckboxLabel = styled.label`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #ffffff;
+  line-height: 1.4;
+  cursor: pointer;
+  flex: 1;
+`;
+
 const avatars = ['😀', '😎', '🤖', '👾', '🐱', '🦊', '🐼', '🦁', '🐯', '🐸', '🐙', '🦄'];
 
 const downloadFile = (content, filename, type) => {
@@ -255,6 +278,7 @@ const Register = () => {
   const [error, setError] = useState('');
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState('');
+  const [acceptedLGPD, setAcceptedLGPD] = useState(false);
   
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -297,6 +321,12 @@ const Register = () => {
       return;
     }
 
+    if (!acceptedLGPD) {
+      setError('Você precisa aceitar os termos do LGPD para continuar');
+      setLoading(false);
+      return;
+    }
+
     const result = await register(
       formData.email,
       formData.password,
@@ -305,9 +335,8 @@ const Register = () => {
     );
     
     if (result.success) {
-      setRegisteredEmail(formData.email);
-      setShowEmailModal(true);
-      toast.success('Conta criada com sucesso! Verifique seu e-mail.');
+      toast.success('Conta criada com sucesso!');
+      navigate('/dashboard');
     } else {
       setError(result.error);
     }
@@ -326,12 +355,12 @@ const Register = () => {
         <FormCard>
           <Title>Cadastro</Title>
           
-          <EmailWarning>
+          {/* <EmailWarning>
             <WarningText>
               ⚠️ IMPORTANTE: Após o cadastro, você receberá um e-mail de confirmação. 
               Clique no link para ativar sua conta!
             </WarningText>
-          </EmailWarning>
+          </EmailWarning> */}
           
           <Form onSubmit={handleSubmit}>
             <FormGroup>
@@ -389,18 +418,17 @@ const Register = () => {
             </FormGroup>
             
             <AvatarSection>
-              <Label>Escolha seu Avatar</Label>
-              <AvatarGrid>
-                {avatars.map((avatar, index) => (
-                  <AvatarOption
-                    key={index}
-                    selected={formData.avatar_id === index + 1}
-                    onClick={() => handleAvatarSelect(index + 1)}
-                  >
-                    {avatar}
-                  </AvatarOption>
-                ))}
-              </AvatarGrid>
+              <CheckboxContainer>
+                <Checkbox
+                  type="checkbox"
+                  id="lgpd"
+                  checked={acceptedLGPD}
+                  onChange={(e) => setAcceptedLGPD(e.target.checked)}
+                />
+                <CheckboxLabel htmlFor="lgpd">
+                  Ao acessar esse produto você autoriza de forma livre e inequívoca o tratamento dos seus dados pessoais e dados pessoais sensíveis, para a finalidade específica e legítima informada pela instituição/empresa, especialmente para o fim de realizar meu cadastro no produto Jogos Evolutivos, nos termos do que dispõe a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018).
+                </CheckboxLabel>
+              </CheckboxContainer>
             </AvatarSection>
             
             <SubmitButton type="submit" disabled={loading}>
@@ -417,7 +445,7 @@ const Register = () => {
         </FormCard>
       </Container>
 
-      {showEmailModal && (
+      {/* {showEmailModal && (
         <ModalOverlay>
           <ModalBox>
             <ModalIcon>📧</ModalIcon>
@@ -437,7 +465,7 @@ const Register = () => {
             </ModalButton>
           </ModalBox>
         </ModalOverlay>
-      )}
+      )} */}
     </>
   );
 };
