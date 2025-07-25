@@ -549,12 +549,7 @@ const Profile = () => {
   };
 
   const handleSoundToggle = async () => {
-    console.log('=== DEBUG TOGGLE ===');
-    console.log('Estado atual:', soundEnabledLocal);
-    console.log('User ID:', user?.id);
-    
     const newValue = !soundEnabledLocal;
-    console.log('Novo valor:', newValue);
     
     // Atualizar estado local imediatamente
     setSoundEnabledLocal(newValue);
@@ -563,8 +558,6 @@ const Profile = () => {
     setLoading(true);
     
     try {
-      console.log('Tentando atualizar no banco...');
-      
       const { data, error } = await supabase
         .from('profiles')
         .update({ 
@@ -574,10 +567,7 @@ const Profile = () => {
         .eq('user_id', user.id)
         .select();
       
-      console.log('Resposta do Supabase:', { data, error });
-      
       if (error) {
-        console.error('❌ ERRO:', error);
         // Reverter em caso de erro
         setSoundEnabledLocal(!newValue);
         updateSoundEnabled(!newValue);
@@ -588,18 +578,15 @@ const Profile = () => {
           toast.error(`❌ Erro: ${error.message}`);
         }
       } else {
-        console.log('✅ Sucesso! Som atualizado para:', newValue);
         toast.success(newValue ? '🔊 Som ativado!' : '🔇 Som desativado!');
       }
     } catch (err) {
-      console.error('❌ Erro inesperado:', err);
       // Reverter em caso de erro
       setSoundEnabledLocal(!newValue);
       updateSoundEnabled(!newValue);
       toast.error('❌ Erro inesperado!');
     } finally {
       setLoading(false);
-      console.log('=== FIM DEBUG TOGGLE ===');
     }
   };
 

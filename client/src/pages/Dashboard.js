@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useSync } from '../contexts/SyncContext';
+import { useEVTimer } from '../contexts/EVTimerContext';
 import toast from 'react-hot-toast';
 import styled from 'styled-components';
 import SoundEffect from '../components/SoundEffect';
@@ -220,6 +221,7 @@ const EVNotes = styled.div`
 const Dashboard = () => {
   const { user } = useAuth();
   const { isOnline, saveEVOffline } = useSync();
+  const { soundEnabled } = useEVTimer();
   const [formData, setFormData] = useState({
     score: null,
     notes: ''
@@ -249,9 +251,7 @@ const Dashboard = () => {
   // Reset do som de vitória após tocar
   useEffect(() => {
     if (playVictorySound) {
-      console.log('🎵 Som de vitória ativado, resetando em 3 segundos...');
       const timer = setTimeout(() => {
-        console.log('🎵 Resetando som de vitória');
         setPlayVictorySound(false);
       }, 3000);
       return () => clearTimeout(timer);
@@ -762,32 +762,18 @@ const Dashboard = () => {
       {/* Som de moeda quando registrar EV */}
       <SoundEffect 
         soundFile="/sounds/coin.mp3" 
-        play={playCoinSound} 
+        play={playCoinSound && soundEnabled} 
         volume={0.3}
       />
       
       {/* Som de vitória quando conquistar badge ou atingir marcos */}
       <SoundEffect 
         soundFile="/sounds/victory.mp3" 
-        play={playVictorySound} 
+        play={playVictorySound && soundEnabled} 
         volume={0.4}
       />
       
-      {/* Debug: Mostrar status do som de vitória */}
-      {playVictorySound && (
-        <div style={{ 
-          position: 'fixed', 
-          top: '10px', 
-          right: '10px', 
-          background: 'red', 
-          color: 'white', 
-          padding: '10px', 
-          zIndex: 9999,
-          fontSize: '12px'
-        }}>
-          🎵 TOCANDO VITÓRIA
-        </div>
-      )}
+
       
 
       
