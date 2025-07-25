@@ -23,13 +23,18 @@ export const ChatNotificationProvider = ({ children }) => {
       const stored = localStorage.getItem(`chat_last_read_${user.id}`);
       if (stored) {
         setLastReadAt(new Date(stored));
+      } else {
+        // Se não tem timestamp salvo, usar 1 hora atrás
+        setLastReadAt(new Date(Date.now() - 60 * 60 * 1000));
       }
     }
   }, [user]);
 
-  // Subscribe to new messages
+  // Subscribe to new messages (menos agressivo)
   useEffect(() => {
-    if (!user) return;
+    if (!user || !lastReadAt) return;
+
+    console.log('🔔 Iniciando subscription do chat...');
 
     const channel = supabase
       .channel('chat_messages')
@@ -41,18 +46,22 @@ export const ChatNotificationProvider = ({ children }) => {
           table: 'chat_ev_messages'
         },
         (payload) => {
+          console.log('📨 Nova mensagem detectada:', payload);
           // Only count messages from other users
           if (payload.new.user_id !== user.id) {
             updateUnreadCount();
           }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('📡 Status da subscription:', status);
+      });
 
     // Initial count
     updateUnreadCount();
 
     return () => {
+      console.log('🔕 Removendo subscription do chat...');
       supabase.removeChannel(channel);
     };
   }, [user, lastReadAt]);
@@ -61,6 +70,8 @@ export const ChatNotificationProvider = ({ children }) => {
     if (!user || !lastReadAt) return;
 
     try {
+      console.log('🔍 Atualizando contagem de mensagens não lidas...');
+      
       const { data, error } = await supabase
         .from('chat_ev_messages')
         .select('id')
@@ -68,25 +79,31 @@ export const ChatNotificationProvider = ({ children }) => {
         .neq('user_id', user.id);
 
       if (error) {
-        console.error('Error fetching unread messages:', error);
+        console.error('❌ Erro ao buscar mensagens não lidas:', error);
         return;
       }
 
-      setUnreadCount(data?.length || 0);
+      const count = data?.length || 0;
+      console.log(`📊 Mensagens não lidas: ${count}`);
+      setUnreadCount(count);
     } catch (error) {
-      console.error('Error updating unread count:', error);
+      console.error('❌ Erro ao atualizar contagem:', error);
     }
   };
 
   const markAsRead = async () => {
     if (!user) return;
 
+    console.log('✅ Marcando mensagens como lidas...');
+    
     const now = new Date();
     setLastReadAt(now);
     setUnreadCount(0);
     
     // Save to localStorage
     localStorage.setItem(`chat_last_read_${user.id}`, now.toISOString());
+    
+    console.log('✅ Mensagens marcadas como lidas');
   };
 
   const value = {
