@@ -56,12 +56,12 @@ export const SyncProvider = ({ children }) => {
   };
 
   // Save EV to localStorage (offline mode)
-  const saveEVOffline = (intensity, comment) => {
+  const saveEVOffline = (score, notes) => {
     try {
       const newEV = {
         id: `local_${Date.now()}_${Math.random()}`,
-        intensity,
-        comment,
+        score,
+        notes,
         timestamp: new Date().toISOString(),
         synced: false
       };
@@ -101,8 +101,8 @@ export const SyncProvider = ({ children }) => {
             .from('evs')
             .insert({
               user_id: user.id,
-              intensity: ev.intensity,
-              notes: ev.comment, // Corrigido de 'comment' para 'notes'
+              score: ev.score,
+              notes: ev.notes,
               created_at: ev.timestamp
             });
 
