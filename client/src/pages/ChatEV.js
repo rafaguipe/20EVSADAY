@@ -307,19 +307,35 @@ const ChatEV = () => {
       
       // Buscar dados do perfil do usuário
       console.log('👤 Buscando perfil do usuário...');
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('username, avatar_url')
-        .eq('user_id', user.id)
-        .single();
+      console.log('🆔 User ID:', user.id);
+      
+      try {
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('username, avatar_url')
+          .eq('user_id', user.id)
+          .single();
 
-      if (profileError) {
-        console.error('❌ Erro ao buscar perfil:', profileError);
-        toast.error('Erro ao buscar dados do perfil');
+        console.log('📊 Resultado da busca do perfil:', { profile, profileError });
+
+        if (profileError) {
+          console.error('❌ Erro ao buscar perfil:', profileError);
+          toast.error(`Erro ao buscar dados do perfil: ${profileError.message}`);
+          return;
+        }
+
+        if (!profile) {
+          console.error('❌ Perfil não encontrado');
+          toast.error('Perfil do usuário não encontrado');
+          return;
+        }
+
+        console.log('✅ Perfil encontrado:', profile);
+      } catch (profileException) {
+        console.error('❌ Exceção ao buscar perfil:', profileException);
+        toast.error(`Exceção ao buscar perfil: ${profileException.message}`);
         return;
       }
-
-      console.log('✅ Perfil encontrado:', profile);
 
       // Inserir mensagem diretamente na tabela
       console.log('💬 Inserindo mensagem na tabela...');
