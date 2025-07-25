@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
+import { useSync } from '../contexts/SyncContext';
 import toast from 'react-hot-toast';
 import styled from 'styled-components';
 import SoundEffect from '../components/SoundEffect';
@@ -218,6 +219,7 @@ const EVNotes = styled.div`
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const { isOnline, saveEVOffline } = useSync();
   const [formData, setFormData] = useState({
     score: null,
     notes: ''
@@ -337,117 +339,138 @@ const Dashboard = () => {
     setLoading(true);
     
     try {
-      const { error } = await supabase
-        .from('evs')
-        .insert([
-          {
-            user_id: user.id,
-            score: formData.score,
-            notes: formData.notes,
-            created_at: new Date().toISOString()
-          }
-        ]);
-
-      if (error) throw error;
+      // Tocar som de moeda sempre que registrar EV
+      setPlayCoinSound(true);
       
-      // Verificar se é o primeiro EV e atribuir badge de Iniciante Consciencial
-      const { data: evCount } = await supabase
-        .from('evs')
-        .select('id', { count: 'exact' })
-        .eq('user_id', user.id);
-      
-      // Verificar se é o primeiro EV e atribuir badge de Iniciante Consciencial
-      if (evCount && evCount.length === 1) {
-        const { data: badge } = await supabase
-          .from('badges')
-          .select('id')
-          .eq('name', 'Iniciante Consciencial')
-          .single();
+      if (!isOnline) {
+        // Modo offline - salvar no localStorage
+        const result = await saveEVOffline(formData.score, formData.notes);
         
-        if (badge) {
-          await supabase
-            .from('user_badges')
-            .insert([
-              {
-                user_id: user.id,
-                badge_id: badge.id,
-                awarded_at: new Date().toISOString()
-              }
-            ]);
-          
-          // Mostrar pop-up de badge conquistado
-          setEarnedBadge({
-            name: 'Iniciante Consciencial',
-            description: 'Primeiro EV registrado',
-            icon: '🌱'
+        if (result.success) {
+          // Reset form
+          setFormData({
+            score: null,
+            notes: ''
           });
-          setShowBadgeNotification(true);
           
-          // Tocar som de vitória
-          setPlayVictorySound(true);
+          // Recarregar dados locais
+          await loadStats();
+          await loadRecentEVs();
+        }
+      } else {
+        // Modo online - salvar no Supabase
+        const { error } = await supabase
+          .from('evs')
+          .insert([
+            {
+              user_id: user.id,
+              score: formData.score,
+              notes: formData.notes,
+              created_at: new Date().toISOString()
+            }
+          ]);
+
+        if (error) throw error;
+        
+        // Verificar se é o primeiro EV e atribuir badge de Iniciante Consciencial
+        const { data: evCount } = await supabase
+          .from('evs')
+          .select('id', { count: 'exact' })
+          .eq('user_id', user.id);
+        
+        // Verificar se é o primeiro EV e atribuir badge de Iniciante Consciencial
+        if (evCount && evCount.length === 1) {
+          const { data: badge } = await supabase
+            .from('badges')
+            .select('id')
+            .eq('name', 'Iniciante Consciencial')
+            .single();
           
-          toast.success('EV registrado com sucesso! 🎉 Badge "Iniciante Consciencial" conquistado!');
+          if (badge) {
+            await supabase
+              .from('user_badges')
+              .insert([
+                {
+                  user_id: user.id,
+                  badge_id: badge.id,
+                  awarded_at: new Date().toISOString()
+                }
+              ]);
+            
+            // Mostrar pop-up de badge conquistado
+            setEarnedBadge({
+              name: 'Iniciante Consciencial',
+              description: 'Primeiro EV registrado',
+              icon: '🌱'
+            });
+            setShowBadgeNotification(true);
+            
+            // Tocar som de vitória
+            setPlayVictorySound(true);
+            
+            toast.success('EV registrado com sucesso! 🎉 Badge "Iniciante Consciencial" conquistado!');
+          } else {
+            toast.success('EV registrado com sucesso!');
+          }
         } else {
           toast.success('EV registrado com sucesso!');
         }
-      } else {
-        toast.success('EV registrado com sucesso!');
-      }
-      
-      // Verificar se atingiu marcos especiais de EVs no dia para tocar som de vitória
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const { data: todayEVs } = await supabase
-        .from('evs')
-        .select('id')
-        .eq('user_id', user.id)
-        .gte('created_at', today.toISOString());
-      
-      if (todayEVs && todayEVs.length > 0) {
-        // Tocar som de vitória apenas quando ACABAR de atingir marcos especiais (20, 30, 40, 50 EVs)
-        const specialMilestones = [20, 30, 40, 50];
-        const currentEVs = todayEVs.length;
         
-        // Verificar se acabou de atingir um marco (antes tinha menos, agora tem exatamente o marco)
-        if (specialMilestones.includes(currentEVs)) {
-          console.log(`🎉 Marco atingido: ${currentEVs} EVs hoje!`);
-          setPlayVictorySound(true);
-          toast.success(`🎉 Parabéns! Você atingiu ${currentEVs} EVs hoje!`);
+        // Verificar se atingiu marcos especiais de EVs no dia para tocar som de vitória
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const { data: todayEVs } = await supabase
+          .from('evs')
+          .select('id')
+          .eq('user_id', user.id)
+          .gte('created_at', today.toISOString());
+        
+        if (todayEVs && todayEVs.length > 0) {
+          // Tocar som de vitória apenas quando ACABAR de atingir marcos especiais (20, 30, 40, 50 EVs)
+          const specialMilestones = [20, 30, 40, 50];
+          const currentEVs = todayEVs.length;
+          
+          // Verificar se acabou de atingir um marco (antes tinha menos, agora tem exatamente o marco)
+          if (specialMilestones.includes(currentEVs)) {
+            console.log(`🎉 Marco atingido: ${currentEVs} EVs hoje!`);
+            setPlayVictorySound(true);
+            toast.success(`🎉 Parabéns! Você atingiu ${currentEVs} EVs hoje!`);
+          }
         }
+
+        // Verificação de badges movida para função separada para evitar erros
+        try {
+          console.log('🔍 Verificando badges...');
+          await checkAndAwardBadges();
+        } catch (error) {
+          console.log('Erro ao verificar badges (não crítico):', error);
+        }
+        
+        // Verificação de badges de fundação movida para função separada
+        try {
+          console.log('🔍 Verificando badges de fundação...');
+          await checkFoundationBadges();
+        } catch (error) {
+          console.log('Erro ao verificar badges de fundação (não crítico):', error);
+        }
+        
+        // Reset form
+        setFormData({
+          score: null,
+          notes: ''
+        });
+        
+        // Recarregar dados
+        await loadStats();
+        await loadRecentEVs();
       }
-
-      // Verificação de badges movida para função separada para evitar erros
-      try {
-        console.log('🔍 Verificando badges...');
-        await checkAndAwardBadges();
-      } catch (error) {
-        console.log('Erro ao verificar badges (não crítico):', error);
-      }
       
-      // Verificação de badges de fundação movida para função separada
-      
-      // Tocar som de moeda como recompensa
-      setPlayCoinSound(true);
-      
-      setFormData({
-        score: null,
-        notes: ''
-      });
-      
-      loadStats();
-      loadRecentEVs();
-      
-      // Resetar o som após tocar
-      setTimeout(() => setPlayCoinSound(false), 100);
-
-      // Verificação de badges já feita acima
-
     } catch (error) {
       console.error('Erro ao registrar EV:', error);
-      toast.error('Erro ao registrar EV');
+      toast.error('Erro ao registrar EV. Tente novamente.');
+    } finally {
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
 
   const formatDate = (dateString) => {

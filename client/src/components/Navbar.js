@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../supabaseClient';
 import styled from 'styled-components';
 import { useEVTimer } from '../contexts/EVTimerContext';
+import OfflineIndicator from './OfflineIndicator';
 
 const Nav = styled.nav`
   position: fixed;
@@ -340,6 +341,7 @@ const Navbar = () => {
           </NavLinks>
           
           <UserSection>
+            <OfflineIndicator />
             <UserInfo>
               <Avatar>{getAvatarEmoji()}</Avatar>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
