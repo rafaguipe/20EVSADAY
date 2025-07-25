@@ -266,10 +266,10 @@ const ChatEV = () => {
       setLoading(true);
       
       const { data, error } = await supabase
-        .rpc('get_chat_ev_messages', {
-          p_limit: 50,
-          p_offset: 0
-        });
+        .from('chat_ev_messages')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50);
 
       if (error) {
         console.error('Erro ao carregar mensagens:', error);
@@ -309,14 +309,19 @@ const ChatEV = () => {
         .eq('user_id', user.id)
         .single();
 
+      // Inserir mensagem diretamente na tabela
       const { data, error } = await supabase
-        .rpc('insert_chat_ev_message', {
-          p_user_id: user.id,
-          p_username: profile?.username || 'Usuário',
-          p_avatar_url: profile?.avatar_url || 'avatar_1.png',
-          p_message: newMessage.trim(),
-          p_message_type: messageType
-        });
+        .from('chat_ev_messages')
+        .insert({
+          user_id: user.id,
+          username: profile?.username || 'Usuário',
+          avatar_url: profile?.avatar_url || 'avatar_1.png',
+          message: newMessage.trim(),
+          message_type: messageType,
+          created_at: new Date().toISOString()
+        })
+        .select()
+        .single();
 
       if (error) {
         console.error('Erro ao enviar mensagem:', error);
