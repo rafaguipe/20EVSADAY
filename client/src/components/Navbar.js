@@ -233,7 +233,7 @@ const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [lojaVisible, setLojaVisible] = useState(false);
   const { timer: evTimer, formatTime } = useEVTimer();
-  const { unreadCount } = useChatNotification();
+  // const { unreadCount } = useChatNotification();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -357,11 +357,11 @@ const Navbar = () => {
               <NavLink to="/chat" active={isActive('/chat')}>
                 Chat
               </NavLink>
-              {unreadCount > 0 && (
+              {/* {unreadCount > 0 && (
                 <NotificationBadge count={unreadCount}>
                   {unreadCount}
                 </NotificationBadge>
-              )}
+              )} */}
             </NavLinkContainer>
             {(isAdmin || lojaVisible) && (
               <NavLink to="/loja" active={isActive('/loja')}>
@@ -413,11 +413,11 @@ const Navbar = () => {
                 <NavLink to="/chat" active={isActive('/chat')}>
                   Chat
                 </NavLink>
-                {unreadCount > 0 && (
+                {/* {unreadCount > 0 && (
                   <NotificationBadge count={unreadCount}>
                     {unreadCount}
                   </NotificationBadge>
-                )}
+                )} */}
               </NavLinkContainer>
               {(isAdmin || lojaVisible) && (
                 <NavLink to="/loja" active={isActive('/loja')}>
