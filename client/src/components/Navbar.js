@@ -302,7 +302,7 @@ const Navbar = () => {
   return (
     <Nav>
               <LogoContainer to="/">
-          <LogoImage src="/assets/logo_jogos_evolutivos.png" alt="Logo" />
+          <LogoImage src="/assets/boneco1.png" alt="Logo" />
           {/* <LogoText>#20EVSADAY</LogoText> */}
         </LogoContainer>
       
