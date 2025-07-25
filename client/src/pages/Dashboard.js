@@ -539,30 +539,26 @@ const Dashboard = () => {
         await awardBadge('Sábio Consciencial', 'Primeiros 1000 EVs registrados', '🧙‍♀️');
       }
 
-      // 2. Verificar badges de EVs em um único dia
-      const dailyEVCounts = {};
-      userEVs.forEach(ev => {
-        const date = new Date(ev.created_at).toDateString();
-        dailyEVCounts[date] = (dailyEVCounts[date] || 0) + 1;
-      });
-
-      const maxDailyEVs = Math.max(...Object.values(dailyEVCounts));
+      // 2. Verificar badges de EVs diários
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todayEVs = userEVs.filter(ev => new Date(ev.created_at) >= today);
       
-      if (maxDailyEVs >= 30) {
-        await awardBadge('Maratonista EV', '30 EVs registrados em um único dia', '🏃');
+      if (todayEVs.length >= 30) {
+        await awardBadge('Maratonista EV', '30 EVs em um dia', '🏃‍♂️');
       }
-      if (maxDailyEVs >= 40) {
-        await awardBadge('Ultra Maratonista EV', '40 EVs registrados em um único dia', '🏃‍♂️');
+      if (todayEVs.length >= 40) {
+        await awardBadge('Ultra Maratonista EV', '40 EVs em um dia', '🏃‍♀️');
       }
-      if (maxDailyEVs >= 50) {
-        await awardBadge('Mega Maratonista EV', '50 EVs registrados em um único dia', '🏃‍♀️');
+      if (todayEVs.length >= 50) {
+        await awardBadge('Mega Maratonista EV', '50 EVs em um dia', '🚀');
       }
 
       // 3. Verificar badges de dias consecutivos
       const consecutiveDays = calculateConsecutiveDays(userEVs);
       
       if (consecutiveDays >= 90) {
-        await awardBadge('Mestre da Persistência', '90 dias consecutivos de EVs', '🎯');
+        await awardBadge('Mestre da Persistência', '90 dias consecutivos de EVs', '💪');
       }
       if (consecutiveDays >= 180) {
         await awardBadge('Semi-Anual Consciencial', '180 dias consecutivos de EVs', '📅');
@@ -573,6 +569,78 @@ const Dashboard = () => {
 
     } catch (error) {
       console.error('Erro ao verificar badges:', error);
+    }
+  };
+
+  const checkFoundationBadges = async () => {
+    try {
+      // Buscar dados do perfil do usuário
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('created_at')
+        .eq('user_id', user.id)
+        .single();
+
+      if (!profile) return;
+
+      const userCreatedAt = new Date(profile.created_at);
+      const foundationEndDate = new Date('2025-07-31T23:59:59Z');
+
+      // Buscar badges já conquistados
+      const { data: userBadges } = await supabase
+        .from('user_badges')
+        .select('badge_id')
+        .eq('user_id', user.id);
+
+      const earnedBadgeIds = userBadges?.map(ub => ub.badge_id) || [];
+
+      // Função para atribuir badge
+      const awardBadge = async (badgeName, description, icon) => {
+        const { data: badge } = await supabase
+          .from('badges')
+          .select('id')
+          .eq('name', badgeName)
+          .single();
+
+        if (badge && !earnedBadgeIds.includes(badge.id)) {
+          await supabase
+            .from('user_badges')
+            .insert([{
+              user_id: user.id,
+              badge_id: badge.id,
+              awarded_at: new Date().toISOString()
+            }]);
+
+          setEarnedBadge({ name: badgeName, description, icon });
+          setShowBadgeNotification(true);
+          setPlayVictorySound(true);
+          toast.success(`🎉 Badge "${badgeName}" conquistado!`);
+          return true;
+        }
+        return false;
+      };
+
+      // Verificar badge de Fundador (cadastro até 31/7/2025)
+      if (userCreatedAt <= foundationEndDate) {
+        await awardBadge('Fundador', 'Usuário fundador do #20EVSADAY', '🏗️');
+      }
+
+      // Verificar badge de Líder 4 Anos de Fundação (EVs de 1/7/2025 a 31/7/2025)
+      const foundationStartDate = new Date('2025-07-01T00:00:00Z');
+      
+      const { data: foundationEVs } = await supabase
+        .from('evs')
+        .select('id')
+        .eq('user_id', user.id)
+        .gte('created_at', foundationStartDate.toISOString())
+        .lte('created_at', foundationEndDate.toISOString());
+
+      if (foundationEVs && foundationEVs.length > 0) {
+        await awardBadge('Líder 4 Anos de Fundação', 'EVs registrados durante período de fundação', '👑');
+      }
+
+    } catch (error) {
+      console.error('Erro ao verificar badges de fundação:', error);
     }
   };
 
