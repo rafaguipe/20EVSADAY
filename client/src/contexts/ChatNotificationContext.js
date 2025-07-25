@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from './AuthContext';
 
@@ -16,10 +16,12 @@ export const ChatNotificationProvider = ({ children }) => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [lastReadAt, setLastReadAt] = useState(null);
   const { user } = useAuth();
+  const subscriptionRef = useRef(null);
+  const isInitializedRef = useRef(false);
 
-  // Load last read timestamp from localStorage
+  // Load last read timestamp from localStorage (only once)
   useEffect(() => {
-    if (user) {
+    if (user && !isInitializedRef.current) {
       const stored = localStorage.getItem(`chat_last_read_${user.id}`);
       if (stored) {
         setLastReadAt(new Date(stored));
@@ -27,46 +29,11 @@ export const ChatNotificationProvider = ({ children }) => {
         // Se não tem timestamp salvo, usar 1 hora atrás
         setLastReadAt(new Date(Date.now() - 60 * 60 * 1000));
       }
+      isInitializedRef.current = true;
     }
   }, [user]);
 
-  // Subscribe to new messages (menos agressivo)
-  useEffect(() => {
-    if (!user || !lastReadAt) return;
-
-    console.log('🔔 Iniciando subscription do chat...');
-
-    const channel = supabase
-      .channel('chat_messages')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'chat_ev_messages'
-        },
-        (payload) => {
-          console.log('📨 Nova mensagem detectada:', payload);
-          // Only count messages from other users
-          if (payload.new.user_id !== user.id) {
-            updateUnreadCount();
-          }
-        }
-      )
-      .subscribe((status) => {
-        console.log('📡 Status da subscription:', status);
-      });
-
-    // Initial count
-    updateUnreadCount();
-
-    return () => {
-      console.log('🔕 Removendo subscription do chat...');
-      supabase.removeChannel(channel);
-    };
-  }, [user, lastReadAt]);
-
-  const updateUnreadCount = async () => {
+  const updateUnreadCount = useCallback(async () => {
     if (!user || !lastReadAt) return;
 
     try {
@@ -89,9 +56,55 @@ export const ChatNotificationProvider = ({ children }) => {
     } catch (error) {
       console.error('❌ Erro ao atualizar contagem:', error);
     }
-  };
+  }, [user, lastReadAt]);
 
-  const markAsRead = async () => {
+  // Subscribe to new messages (only when user and lastReadAt are stable)
+  useEffect(() => {
+    if (!user || !lastReadAt || !isInitializedRef.current) return;
+
+    console.log('🔔 Iniciando subscription do chat...');
+
+    // Clean up existing subscription
+    if (subscriptionRef.current) {
+      supabase.removeChannel(subscriptionRef.current);
+    }
+
+    const channel = supabase
+      .channel('chat_messages')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'chat_ev_messages'
+        },
+        (payload) => {
+          console.log('📨 Nova mensagem detectada:', payload);
+          // Only count messages from other users
+          if (payload.new.user_id !== user.id) {
+            updateUnreadCount();
+          }
+        }
+      )
+      .subscribe((status) => {
+        console.log('📡 Status da subscription:', status);
+      });
+
+    subscriptionRef.current = channel;
+
+    // Initial count
+    updateUnreadCount();
+
+    return () => {
+      console.log('🔕 Removendo subscription do chat...');
+      if (subscriptionRef.current) {
+        supabase.removeChannel(subscriptionRef.current);
+        subscriptionRef.current = null;
+      }
+    };
+  }, [user?.id, lastReadAt?.getTime(), updateUnreadCount]);
+
+  const markAsRead = useCallback(async () => {
     if (!user) return;
 
     console.log('✅ Marcando mensagens como lidas...');
@@ -104,7 +117,7 @@ export const ChatNotificationProvider = ({ children }) => {
     localStorage.setItem(`chat_last_read_${user.id}`, now.toISOString());
     
     console.log('✅ Mensagens marcadas como lidas');
-  };
+  }, [user]);
 
   const value = {
     unreadCount,
