@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../supabaseClient';
 import styled from 'styled-components';
 import { useEVTimer } from '../contexts/EVTimerContext';
+import { useChatNotification } from '../contexts/ChatNotificationContext';
 import OfflineIndicator from './OfflineIndicator';
 
 const Nav = styled.nav`
@@ -194,6 +195,35 @@ const avatars = [
   '👨‍🦲', '👩‍🦲', '👨‍🦳', '👩‍🦳', '👴', '👵', '🧓', '👶'
 ];
 
+const NavLinkContainer = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+
+const NotificationBadge = styled.div`
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff6b6b;
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: bold;
+  font-family: 'Press Start 2P', monospace;
+  animation: ${props => props.count > 0 ? 'pulse 2s infinite' : 'none'};
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+`;
+
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
@@ -203,6 +233,7 @@ const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [lojaVisible, setLojaVisible] = useState(false);
   const { timer: evTimer, formatTime } = useEVTimer();
+  const { unreadCount } = useChatNotification();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -322,9 +353,16 @@ const Navbar = () => {
             <NavLink to="/profile" active={isActive('/profile')}>
               Perfil
             </NavLink>
-            <NavLink to="/chat" active={isActive('/chat')}>
-              Chat
-            </NavLink>
+            <NavLinkContainer>
+              <NavLink to="/chat" active={isActive('/chat')}>
+                Chat
+              </NavLink>
+              {unreadCount > 0 && (
+                <NotificationBadge count={unreadCount}>
+                  {unreadCount}
+                </NotificationBadge>
+              )}
+            </NavLinkContainer>
             {(isAdmin || lojaVisible) && (
               <NavLink to="/loja" active={isActive('/loja')}>
                 Loja
@@ -371,9 +409,16 @@ const Navbar = () => {
               <NavLink to="/profile" active={isActive('/profile')}>
                 Perfil
               </NavLink>
-              <NavLink to="/chat" active={isActive('/chat')}>
-                Chat
-              </NavLink>
+              <NavLinkContainer>
+                <NavLink to="/chat" active={isActive('/chat')}>
+                  Chat
+                </NavLink>
+                {unreadCount > 0 && (
+                  <NotificationBadge count={unreadCount}>
+                    {unreadCount}
+                  </NotificationBadge>
+                )}
+              </NavLinkContainer>
               {(isAdmin || lojaVisible) && (
                 <NavLink to="/loja" active={isActive('/loja')}>
                   Loja

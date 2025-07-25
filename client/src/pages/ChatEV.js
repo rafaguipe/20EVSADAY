@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useAuth } from '../contexts/AuthContext';
+import { useChatNotification } from '../contexts/ChatNotificationContext';
 import { supabase } from '../supabaseClient';
 import toast from 'react-hot-toast';
 
@@ -227,6 +228,7 @@ const EmptyState = styled.div`
 
 const ChatEV = () => {
   const { user } = useAuth();
+  const { markAsRead } = useChatNotification();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
@@ -253,6 +255,11 @@ const ChatEV = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Mark messages as read when entering chat
+  useEffect(() => {
+    markAsRead();
+  }, [markAsRead]);
 
   const loadMessages = async () => {
     try {
