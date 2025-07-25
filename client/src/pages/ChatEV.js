@@ -298,17 +298,11 @@ const ChatEV = () => {
       toast.error('Mensagem muito longa (máximo 1000 caracteres)');
       return;
     }
-
-    console.log('🚀 Iniciando envio de mensagem...');
     
     try {
       setSending(true);
-      console.log('✅ setSending(true) executado');
       
       // Buscar dados do perfil do usuário
-      console.log('👤 Buscando perfil do usuário...');
-      console.log('🆔 User ID:', user.id);
-      
       let profile;
       try {
         const { data: profileData, error: profileError } = await supabase
@@ -317,30 +311,26 @@ const ChatEV = () => {
           .eq('user_id', user.id)
           .single();
 
-        console.log('📊 Resultado da busca do perfil:', { profile: profileData, profileError });
-
         if (profileError) {
-          console.error('❌ Erro ao buscar perfil:', profileError);
+          console.error('Erro ao buscar perfil:', profileError);
           toast.error(`Erro ao buscar dados do perfil: ${profileError.message}`);
           return;
         }
 
         if (!profileData) {
-          console.error('❌ Perfil não encontrado');
+          console.error('Perfil não encontrado');
           toast.error('Perfil do usuário não encontrado');
           return;
         }
 
         profile = profileData;
-        console.log('✅ Perfil encontrado:', profile);
       } catch (profileException) {
-        console.error('❌ Exceção ao buscar perfil:', profileException);
+        console.error('Exceção ao buscar perfil:', profileException);
         toast.error(`Exceção ao buscar perfil: ${profileException.message}`);
         return;
       }
 
       // Inserir mensagem diretamente na tabela
-      console.log('💬 Inserindo mensagem na tabela...');
       const messageData = {
         user_id: user.id,
         username: profile?.username || 'Usuário',
@@ -349,8 +339,6 @@ const ChatEV = () => {
         message_type: messageType,
         created_at: new Date().toISOString()
       };
-      
-      console.log('📝 Dados da mensagem:', messageData);
 
       const { data, error } = await supabase
         .from('chat_ev_messages')
@@ -359,28 +347,23 @@ const ChatEV = () => {
         .single();
 
       if (error) {
-        console.error('❌ Erro ao inserir mensagem:', error);
+        console.error('Erro ao inserir mensagem:', error);
         toast.error(`Erro ao enviar mensagem: ${error.message}`);
         return;
       }
 
-      console.log('✅ Mensagem inserida com sucesso:', data);
-
       // Recarregar mensagens
-      console.log('🔄 Recarregando mensagens...');
       await loadMessages();
       
       // Limpar formulário
       setNewMessage('');
       setMessageType('encouragement');
       
-      console.log('✅ Mensagem enviada com sucesso!');
       toast.success('Mensagem enviada com sucesso!');
     } catch (error) {
-      console.error('❌ Erro geral ao enviar mensagem:', error);
+      console.error('Erro geral ao enviar mensagem:', error);
       toast.error(`Erro ao enviar mensagem: ${error.message}`);
     } finally {
-      console.log('🏁 Finalizando - setSending(false)');
       setSending(false);
     }
   };

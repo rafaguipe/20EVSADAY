@@ -37,8 +37,6 @@ export const ChatNotificationProvider = ({ children }) => {
     if (!user || !lastReadAt) return;
 
     try {
-      console.log('🔍 Atualizando contagem de mensagens não lidas...');
-      
       const { data, error } = await supabase
         .from('chat_ev_messages')
         .select('id')
@@ -46,23 +44,20 @@ export const ChatNotificationProvider = ({ children }) => {
         .neq('user_id', user.id);
 
       if (error) {
-        console.error('❌ Erro ao buscar mensagens não lidas:', error);
+        console.error('Erro ao buscar mensagens não lidas:', error);
         return;
       }
 
       const count = data?.length || 0;
-      console.log(`📊 Mensagens não lidas: ${count}`);
       setUnreadCount(count);
     } catch (error) {
-      console.error('❌ Erro ao atualizar contagem:', error);
+      console.error('Erro ao atualizar contagem:', error);
     }
   }, [user, lastReadAt]);
 
   // Subscribe to new messages (only when user and lastReadAt are stable)
   useEffect(() => {
     if (!user || !lastReadAt || !isInitializedRef.current) return;
-
-    console.log('🔔 Iniciando subscription do chat...');
 
     // Clean up existing subscription
     if (subscriptionRef.current) {
@@ -79,16 +74,13 @@ export const ChatNotificationProvider = ({ children }) => {
           table: 'chat_ev_messages'
         },
         (payload) => {
-          console.log('📨 Nova mensagem detectada:', payload);
           // Only count messages from other users
           if (payload.new.user_id !== user.id) {
             updateUnreadCount();
           }
         }
       )
-      .subscribe((status) => {
-        console.log('📡 Status da subscription:', status);
-      });
+      .subscribe();
 
     subscriptionRef.current = channel;
 
@@ -96,7 +88,6 @@ export const ChatNotificationProvider = ({ children }) => {
     updateUnreadCount();
 
     return () => {
-      console.log('🔕 Removendo subscription do chat...');
       if (subscriptionRef.current) {
         supabase.removeChannel(subscriptionRef.current);
         subscriptionRef.current = null;
@@ -106,8 +97,6 @@ export const ChatNotificationProvider = ({ children }) => {
 
   const markAsRead = useCallback(async () => {
     if (!user) return;
-
-    console.log('✅ Marcando mensagens como lidas...');
     
     const now = new Date();
     setLastReadAt(now);
@@ -115,8 +104,6 @@ export const ChatNotificationProvider = ({ children }) => {
     
     // Save to localStorage
     localStorage.setItem(`chat_last_read_${user.id}`, now.toISOString());
-    
-    console.log('✅ Mensagens marcadas como lidas');
   }, [user]);
 
   const value = {
