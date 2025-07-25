@@ -361,8 +361,9 @@ const Profile = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [evInterval, setEvInterval] = useState(25);
-  const { intervalMinutes, setIntervalMinutes, updateInterval, soundEnabled, updateSoundEnabled } = useEVTimer();
+  const { intervalMinutes, setIntervalMinutes, updateInterval, soundEnabled, updateSoundEnabled, tabBlinkEnabled, updateTabBlinkEnabled } = useEVTimer();
   const [soundEnabledLocal, setSoundEnabledLocal] = useState(true);
+  const [tabBlinkEnabledLocal, setTabBlinkEnabledLocal] = useState(true);
   const [evData, setEvData] = useState([]);
   const [exportLoading, setExportLoading] = useState(false);
   const [editingUsername, setEditingUsername] = useState(false);
@@ -385,6 +386,12 @@ const Profile = () => {
   useEffect(() => {
     if (profile?.sound_enabled !== undefined) {
       setSoundEnabledLocal(profile.sound_enabled);
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    if (profile?.tab_blink_enabled !== undefined) {
+      setTabBlinkEnabledLocal(profile.tab_blink_enabled);
     }
   }, [profile]);
 
@@ -584,6 +591,48 @@ const Profile = () => {
       // Reverter em caso de erro
       setSoundEnabledLocal(!newValue);
       updateSoundEnabled(!newValue);
+      toast.error('❌ Erro inesperado!');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTabBlinkToggle = async () => {
+    const newValue = !tabBlinkEnabledLocal;
+    
+    // Atualizar estado local imediatamente
+    setTabBlinkEnabledLocal(newValue);
+    updateTabBlinkEnabled(newValue);
+    
+    setLoading(true);
+    
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({ 
+          tab_blink_enabled: newValue, 
+          updated_at: new Date().toISOString() 
+        })
+        .eq('user_id', user.id)
+        .select();
+      
+      if (error) {
+        // Reverter em caso de erro
+        setTabBlinkEnabledLocal(!newValue);
+        updateTabBlinkEnabled(!newValue);
+        
+        if (error.code === '42703') {
+          toast.error('❌ Campo tab_blink_enabled não existe. Execute o script SQL primeiro!');
+        } else {
+          toast.error(`❌ Erro: ${error.message}`);
+        }
+      } else {
+        toast.success(newValue ? '🔴 Piscar aba ativado!' : '⚪ Piscar aba desativado!');
+      }
+    } catch (err) {
+      // Reverter em caso de erro
+      setTabBlinkEnabledLocal(!newValue);
+      updateTabBlinkEnabled(!newValue);
       toast.error('❌ Erro inesperado!');
     } finally {
       setLoading(false);
@@ -997,6 +1046,21 @@ const Profile = () => {
             </ToggleSwitch>
             <ToggleStatus enabled={soundEnabledLocal}>
               {soundEnabledLocal ? 'LIGADO' : 'DESLIGADO'}
+            </ToggleStatus>
+          </ToggleContainer>
+          <ToggleContainer>
+            <ToggleLabel>Piscar Aba do Navegador:</ToggleLabel>
+            <ToggleSwitch>
+              <ToggleInput
+                type="checkbox"
+                checked={tabBlinkEnabledLocal}
+                onChange={handleTabBlinkToggle}
+                disabled={loading}
+              />
+              <ToggleSlider checked={tabBlinkEnabledLocal} />
+            </ToggleSwitch>
+            <ToggleStatus enabled={tabBlinkEnabledLocal}>
+              {tabBlinkEnabledLocal ? 'LIGADO' : 'DESLIGADO'}
             </ToggleStatus>
           </ToggleContainer>
           <ExportSection>

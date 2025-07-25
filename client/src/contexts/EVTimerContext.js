@@ -12,6 +12,7 @@ export const EVTimerProvider = ({ children }) => {
   const timerRef = useRef();
   const audioRef = useRef();
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [tabBlinkEnabled, setTabBlinkEnabled] = useState(true);
 
   // Carregar intervalo e preferência de som do perfil
   useEffect(() => {
@@ -19,7 +20,7 @@ export const EVTimerProvider = ({ children }) => {
       if (user) {
         const { data } = await supabase
           .from('profiles')
-          .select('ev_interval_minutes, sound_enabled')
+          .select('ev_interval_minutes, sound_enabled, tab_blink_enabled')
           .eq('user_id', user.id)
           .single();
         
@@ -58,6 +59,10 @@ export const EVTimerProvider = ({ children }) => {
         if (data?.sound_enabled !== undefined) {
           setSoundEnabled(data.sound_enabled);
         }
+        
+        if (data?.tab_blink_enabled !== undefined) {
+          setTabBlinkEnabled(data.tab_blink_enabled);
+        }
       }
     };
     fetchUserPreferences();
@@ -84,6 +89,12 @@ export const EVTimerProvider = ({ children }) => {
         audioRef.current.currentTime = 0;
         audioRef.current.play().catch(e => console.log('Erro ao tocar som:', e));
       }
+      
+      // Piscar aba se estiver habilitado
+      if (tabBlinkEnabled) {
+        startTabBlink();
+      }
+      
       setShouldTriggerReminder(true);
       setTimer(intervalMinutes * 60); // reinicia
       // Limpar timer salvo quando reiniciar
@@ -159,6 +170,28 @@ export const EVTimerProvider = ({ children }) => {
     setSoundEnabled(enabled);
   };
 
+  const updateTabBlinkEnabled = (enabled) => {
+    setTabBlinkEnabled(enabled);
+  };
+
+  // Função para piscar a aba do navegador
+  const startTabBlink = () => {
+    let blinkCount = 0;
+    const maxBlinks = 10; // Piscar 10 vezes
+    const originalTitle = document.title;
+    
+    const blinkInterval = setInterval(() => {
+      if (blinkCount >= maxBlinks) {
+        clearInterval(blinkInterval);
+        document.title = originalTitle;
+        return;
+      }
+      
+      document.title = blinkCount % 2 === 0 ? '🔴 EV TEMPO!' : originalTitle;
+      blinkCount++;
+    }, 500); // Piscar a cada 500ms
+  };
+
   return (
     <EVTimerContext.Provider value={{ 
       timer, 
@@ -168,7 +201,9 @@ export const EVTimerProvider = ({ children }) => {
       consumeReminder,
       updateInterval,
       soundEnabled,
-      updateSoundEnabled
+      updateSoundEnabled,
+      tabBlinkEnabled,
+      updateTabBlinkEnabled
     }}>
       <audio ref={audioRef} src="/sounds/reminder.mp3" preload="auto" />
       {children}

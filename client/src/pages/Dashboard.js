@@ -440,7 +440,6 @@ const Dashboard = () => {
 
         // Verificação de badges movida para função separada para evitar erros
         try {
-          console.log('🔍 Verificando badges...');
           await checkAndAwardBadges();
         } catch (error) {
           console.log('Erro ao verificar badges (não crítico):', error);
@@ -448,7 +447,6 @@ const Dashboard = () => {
         
         // Verificação de badges de fundação movida para função separada
         try {
-          console.log('🔍 Verificando badges de fundação...');
           await checkFoundationBadges();
         } catch (error) {
           console.log('Erro ao verificar badges de fundação (não crítico):', error);
