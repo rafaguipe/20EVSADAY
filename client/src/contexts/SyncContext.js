@@ -102,7 +102,7 @@ export const SyncProvider = ({ children }) => {
             .insert({
               user_id: user.id,
               intensity: ev.intensity,
-              comment: ev.comment,
+              notes: ev.comment, // Corrigido de 'comment' para 'notes'
               created_at: ev.timestamp
             });
 
