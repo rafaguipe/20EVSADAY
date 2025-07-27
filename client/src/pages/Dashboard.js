@@ -139,6 +139,93 @@ const SubmitButton = styled.button`
   }
 `;
 
+const EscalaSection = styled.div`
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(26, 26, 26, 0.9);
+  border: 2px solid #4a4a4a;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+`;
+
+const EscalaTitle = styled.h3`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: #ffffff;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  text-align: center;
+`;
+
+const EscalaGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+`;
+
+const EscalaCard = styled.div`
+  background: rgba(74, 106, 138, 0.1);
+  border: 1px solid #4a6a8a;
+  border-radius: 6px;
+  padding: 12px;
+  transition: transform 0.2s;
+  
+  &:hover {
+    transform: translateY(-1px);
+    background: rgba(74, 106, 138, 0.2);
+  }
+`;
+
+const EscalaNota = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+`;
+
+const NotaBadge = styled.span`
+  background: #4a6a8a;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.6rem;
+  font-weight: bold;
+  margin-right: 10px;
+  min-width: 30px;
+  text-align: center;
+`;
+
+const EscalaDescricao = styled.p`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.5rem;
+  color: #ffffff;
+  line-height: 1.3;
+  margin: 0;
+`;
+
+const escalaAutoqualificacao = [
+  {
+    nota: 0,
+    descricao: "Tentei instalar o EV mas não senti nada."
+  },
+  {
+    nota: 1,
+    descricao: "Percebi a energia circular com dificuldade."
+  },
+  {
+    nota: 2,
+    descricao: "Percebi a energia circular com facilidade."
+  },
+  {
+    nota: 3,
+    descricao: "Percebi o EV."
+  },
+  {
+    nota: 4,
+    descricao: "Percebi o EV intensamente."
+  }
+];
+
 const StatsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -735,6 +822,20 @@ const Dashboard = () => {
               {loading ? 'Registrando...' : 'Registrar EV'}
             </SubmitButton>
           </Form>
+          
+          <EscalaSection>
+            <EscalaTitle>Escala de Autoqualificação do EV</EscalaTitle>
+            <EscalaGrid>
+              {escalaAutoqualificacao.map((item, index) => (
+                <EscalaCard key={index}>
+                  <EscalaNota>
+                    <NotaBadge>Nota {item.nota}</NotaBadge>
+                    <EscalaDescricao>{item.descricao}</EscalaDescricao>
+                  </EscalaNota>
+                </EscalaCard>
+              ))}
+            </EscalaGrid>
+          </EscalaSection>
         </Card>
 
         <RecentEVs>
