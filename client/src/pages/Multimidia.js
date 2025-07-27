@@ -293,6 +293,75 @@ const verbetes = [
   }
 ];
 
+const EscalaGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+`;
+
+const EscalaCard = styled.div`
+  background: ${({ theme }) => theme.card};
+  border: 2px solid ${({ theme }) => theme.secondary};
+  border-radius: 8px;
+  padding: 16px;
+  transition: transform 0.2s;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+`;
+
+const EscalaNota = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+`;
+
+const NotaBadge = styled.span`
+  background: #4a6a8a;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.7rem;
+  font-weight: bold;
+  margin-right: 12px;
+  min-width: 40px;
+  text-align: center;
+`;
+
+const EscalaDescricao = styled.p`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.6rem;
+  color: ${({ theme }) => theme.text};
+  line-height: 1.4;
+  margin: 0;
+`;
+
+const escalaAutoqualificacao = [
+  {
+    nota: 0,
+    descricao: "Tentei instalar o EV mas não senti nada."
+  },
+  {
+    nota: 1,
+    descricao: "Percebi a energia circular com dificuldade."
+  },
+  {
+    nota: 2,
+    descricao: "Percebi a energia circular com facilidade."
+  },
+  {
+    nota: 3,
+    descricao: "Percebi o EV."
+  },
+  {
+    nota: 4,
+    descricao: "Percebi o EV intensamente."
+  }
+];
+
 const Multimidia = () => (
   <Container>
     <Title>Referências Multimídia sobre EV</Title>
@@ -365,6 +434,20 @@ const Multimidia = () => (
           </VerbeteCard>
         ))}
       </VerbetesGrid>
+    </Section>
+
+    <Section>
+      <SectionTitle>Escala de Autoqualificação do EV</SectionTitle>
+      <EscalaGrid>
+        {escalaAutoqualificacao.map((item, index) => (
+          <EscalaCard key={index}>
+            <EscalaNota>
+              <NotaBadge>Nota {item.nota}</NotaBadge>
+              <EscalaDescricao>{item.descricao}</EscalaDescricao>
+            </EscalaNota>
+          </EscalaCard>
+        ))}
+      </EscalaGrid>
     </Section>
   </Container>
 );
