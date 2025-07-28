@@ -99,6 +99,10 @@ const videos = [
   {
     title: "MBE + EV: Técnica da Mobilização Básica das Energias",
     url: "https://youtu.be/FPjtUkKkVUs?si=wpsKx-Dz0h6BuAjc"
+  },
+  {
+    title: "Aplicativo do EV",
+    url: "https://www.youtube.com/live/KgxhsOHddTg?si=zoZBIxSPEUaexcIm"
   }
 ];
 
