@@ -78,12 +78,26 @@ const VideoLink = styled.a`
 
 // Função para extrair o ID do vídeo do YouTube
 const getYouTubeVideoId = (url) => {
-  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
-  return match ? match[1] : null;
+  // Padrão para vídeos normais: youtube.com/watch?v= ou youtu.be/
+  let match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+  if (match) return match[1];
+  
+  // Padrão para vídeos ao vivo: youtube.com/live/
+  match = url.match(/youtube\.com\/live\/([^&\n?#]+)/);
+  if (match) return match[1];
+  
+  return null;
 };
 
 // Função para gerar URL da thumbnail
-const getYouTubeThumbnail = (videoId) => {
+const getYouTubeThumbnail = (videoId, isLive = false) => {
+  if (!videoId) return null;
+  
+  // Para vídeos ao vivo, tentar primeiro o formato live
+  if (isLive) {
+    return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  }
+  
   return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 };
 
@@ -308,20 +322,44 @@ const Multimidia = () => (
       <VideoGrid>
         {videos.map((video, index) => {
           const videoId = getYouTubeVideoId(video.url);
+          const isLive = video.url.includes('/live/');
+          
           return (
             <VideoCard key={index}>
               <VideoLink href={video.url} target="_blank" rel="noopener noreferrer">
                 <VideoThumbnail 
-                  src={getYouTubeThumbnail(videoId)} 
+                  src={videoId && !isLive ? getYouTubeThumbnail(videoId, isLive) : '/assets/placeholder-live.svg'} 
                   alt={video.title}
                   onError={(e) => {
-                    e.target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                    if (videoId && !isLive) {
+                      // Tentar diferentes qualidades de thumbnail para vídeos normais
+                      const fallbacks = [
+                        `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+                        `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
+                        `https://img.youtube.com/vi/${videoId}/sddefault.jpg`,
+                        '/assets/placeholder-workshop.png'
+                      ];
+                      
+                      const currentSrc = e.target.src;
+                      const currentIndex = fallbacks.indexOf(currentSrc);
+                      const nextIndex = currentIndex + 1;
+                      
+                      if (nextIndex < fallbacks.length) {
+                        e.target.src = fallbacks[nextIndex];
+                      } else {
+                        // Se todos os fallbacks falharem, usar placeholder
+                        e.target.src = '/assets/placeholder-workshop.png';
+                      }
+                    } else {
+                      // Para vídeos ao vivo ou sem ID, usar placeholder específico
+                      e.target.src = isLive ? '/assets/placeholder-live.svg' : '/assets/placeholder-workshop.png';
+                    }
                   }}
                 />
                 <VideoInfo>
                   <VideoTitle>{video.title}</VideoTitle>
                   <VideoLink href={video.url} target="_blank" rel="noopener noreferrer">
-                    Assistir no YouTube →
+                    {isLive ? 'Assistir Live →' : 'Assistir no YouTube →'}
                   </VideoLink>
                 </VideoInfo>
               </VideoLink>
