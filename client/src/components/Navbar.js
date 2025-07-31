@@ -232,6 +232,11 @@ const Navbar = () => {
   const [profile, setProfile] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [lojaVisible, setLojaVisible] = useState(false);
+  const [sobreVisible, setSobreVisible] = useState(false);
+  const [multimidiaVisible, setMultimidiaVisible] = useState(true);
+  const [chatVisible, setChatVisible] = useState(true);
+  const [badgesVisible, setBadgesVisible] = useState(true);
+  const [leaderboardVisible, setLeaderboardVisible] = useState(true);
   const { timer: evTimer, formatTime } = useEVTimer();
   const { unreadCount } = useChatNotification();
 
@@ -284,34 +289,81 @@ const Navbar = () => {
     fetchProfile();
   }, [user]);
 
-  // Verificar visibilidade da loja
+  // Verificar visibilidade das abas
   useEffect(() => {
-    const checkLojaVisibility = async () => {
+    const checkTabVisibility = async () => {
       if (!isAuthenticated) {
         setLojaVisible(false);
+        setSobreVisible(false);
+        setMultimidiaVisible(true);
+        setChatVisible(true);
+        setBadgesVisible(true);
+        setLeaderboardVisible(true);
         return;
       }
 
       try {
-        const { data, error } = await supabase
-          .rpc('get_system_setting', {
-            p_key: 'loja_visible'
-          });
+        const tabs = [
+          'loja_visible',
+          'sobre_visible',
+          'multimidia_visible',
+          'chat_visible',
+          'badges_visible',
+          'leaderboard_visible'
+        ];
 
-        if (error) {
-          console.error('Erro ao verificar visibilidade da loja:', error);
-          setLojaVisible(false);
-          return;
+        for (const tab of tabs) {
+          const { data, error } = await supabase
+            .rpc('get_system_setting', {
+              p_key: tab
+            });
+
+          if (error) {
+            console.error(`Erro ao verificar visibilidade da aba ${tab}:`, error);
+            // Valores padrão
+            if (tab === 'loja_visible') {
+              setLojaVisible(false);
+            } else if (tab === 'sobre_visible') {
+              setSobreVisible(false);
+            } else if (tab === 'multimidia_visible') {
+              setMultimidiaVisible(true);
+            } else if (tab === 'chat_visible') {
+              setChatVisible(true);
+            } else if (tab === 'badges_visible') {
+              setBadgesVisible(true);
+            } else if (tab === 'leaderboard_visible') {
+              setLeaderboardVisible(true);
+            }
+          } else {
+            const isVisible = data === 'true';
+            if (tab === 'loja_visible') {
+              setLojaVisible(isVisible);
+            } else if (tab === 'sobre_visible') {
+              setSobreVisible(isVisible);
+            } else if (tab === 'multimidia_visible') {
+              setMultimidiaVisible(isVisible);
+            } else if (tab === 'chat_visible') {
+              setChatVisible(isVisible);
+            } else if (tab === 'badges_visible') {
+              setBadgesVisible(isVisible);
+            } else if (tab === 'leaderboard_visible') {
+              setLeaderboardVisible(isVisible);
+            }
+          }
         }
-
-        setLojaVisible(data === 'true');
       } catch (error) {
-        console.error('Erro ao verificar visibilidade da loja:', error);
+        console.error('Erro ao verificar visibilidade das abas:', error);
+        // Valores padrão em caso de erro
         setLojaVisible(false);
+        setSobreVisible(false);
+        setMultimidiaVisible(true);
+        setChatVisible(true);
+        setBadgesVisible(true);
+        setLeaderboardVisible(true);
       }
     };
 
-    checkLojaVisibility();
+    checkTabVisibility();
   }, [isAuthenticated]);
 
   const handleLogout = () => {
@@ -344,33 +396,46 @@ const Navbar = () => {
             <NavLink to="/dashboard" active={isActive('/dashboard')}>
               Dashboard
             </NavLink>
-            <NavLink to="/leaderboard" active={isActive('/leaderboard')}>
-              Ranking
-            </NavLink>
-            <NavLink to="/badges" active={isActive('/badges')}>
-              Badges
-            </NavLink>
+            {(isAdmin || leaderboardVisible) && (
+              <NavLink to="/leaderboard" active={isActive('/leaderboard')}>
+                Ranking
+              </NavLink>
+            )}
+            {(isAdmin || badgesVisible) && (
+              <NavLink to="/badges" active={isActive('/badges')}>
+                Badges
+              </NavLink>
+            )}
             <NavLink to="/profile" active={isActive('/profile')}>
               Perfil
             </NavLink>
-            <NavLinkContainer>
-              <NavLink to="/chat" active={isActive('/chat')}>
-                Chat
-              </NavLink>
-              {unreadCount > 0 && (
-                <NotificationBadge count={unreadCount}>
-                  {unreadCount}
-                </NotificationBadge>
-              )}
-            </NavLinkContainer>
+            {(isAdmin || chatVisible) && (
+              <NavLinkContainer>
+                <NavLink to="/chat" active={isActive('/chat')}>
+                  Chat
+                </NavLink>
+                {unreadCount > 0 && (
+                  <NotificationBadge count={unreadCount}>
+                    {unreadCount}
+                  </NotificationBadge>
+                )}
+              </NavLinkContainer>
+            )}
             {(isAdmin || lojaVisible) && (
               <NavLink to="/loja" active={isActive('/loja')}>
                 Loja
               </NavLink>
             )}
-            <NavLink to="/multimidia" active={isActive('/multimidia')}>
-              Multimídia
-            </NavLink>
+            {(isAdmin || sobreVisible) && (
+              <NavLink to="/sobre" active={isActive('/sobre')}>
+                Sobre
+              </NavLink>
+            )}
+            {(isAdmin || multimidiaVisible) && (
+              <NavLink to="/multimidia" active={isActive('/multimidia')}>
+                Multimídia
+              </NavLink>
+            )}
             {isAdmin && (
               <NavLink to="/dev" active={isActive('/dev')}>
                 🔧 Dev
@@ -400,33 +465,46 @@ const Navbar = () => {
               <NavLink to="/dashboard" active={isActive('/dashboard')}>
                 Dashboard
               </NavLink>
-              <NavLink to="/leaderboard" active={isActive('/leaderboard')}>
-                Ranking
-              </NavLink>
-              <NavLink to="/badges" active={isActive('/badges')}>
-                Badges
-              </NavLink>
+              {(isAdmin || leaderboardVisible) && (
+                <NavLink to="/leaderboard" active={isActive('/leaderboard')}>
+                  Ranking
+                </NavLink>
+              )}
+              {(isAdmin || badgesVisible) && (
+                <NavLink to="/badges" active={isActive('/badges')}>
+                  Badges
+                </NavLink>
+              )}
               <NavLink to="/profile" active={isActive('/profile')}>
                 Perfil
               </NavLink>
-              <NavLinkContainer>
-                <NavLink to="/chat" active={isActive('/chat')}>
-                  Chat
-                </NavLink>
-                {unreadCount > 0 && (
-                  <NotificationBadge count={unreadCount}>
-                    {unreadCount}
-                  </NotificationBadge>
-                )}
-              </NavLinkContainer>
+              {(isAdmin || chatVisible) && (
+                <NavLinkContainer>
+                  <NavLink to="/chat" active={isActive('/chat')}>
+                    Chat
+                  </NavLink>
+                  {unreadCount > 0 && (
+                    <NotificationBadge count={unreadCount}>
+                      {unreadCount}
+                    </NotificationBadge>
+                  )}
+                </NavLinkContainer>
+              )}
               {(isAdmin || lojaVisible) && (
                 <NavLink to="/loja" active={isActive('/loja')}>
                   Loja
                 </NavLink>
               )}
-              <NavLink to="/multimidia" active={isActive('/multimidia')}>
-                Multimídia
-              </NavLink>
+              {(isAdmin || sobreVisible) && (
+                <NavLink to="/sobre" active={isActive('/sobre')}>
+                  Sobre
+                </NavLink>
+              )}
+              {(isAdmin || multimidiaVisible) && (
+                <NavLink to="/multimidia" active={isActive('/multimidia')}>
+                  Multimídia
+                </NavLink>
+              )}
               {isAdmin && (
                 <NavLink to="/dev" active={isActive('/dev')}>
                   🔧 Dev

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { supabase } from '../supabaseClient';
 
 const Container = styled.div`
   padding: 32px 16px;
@@ -109,19 +110,53 @@ const EmptyState = styled.div`
 `;
 
 const Loja = () => {
-  const produtos = [
-    {
-      id: 1,
-      title: 'Workshop Jogos Evolutivos',
-      description: 'Aprenda a fazer jogos evolutivos usando jogos eletrônicos. Workshop online sobre ludologia interassistencial.',
-      thumbnail: '/assets/workshop26.7.2025.png',
-      price: 'Online',
-      date: '26.07.2025',
-      time: '9h00 às 12h00',
-      link: 'https://www.sympla.com.br/evento-online/workshop-jogos-evolutivos-jogos-eletronicos-online/2991500?_gl=1*1xmmzhj*_gcl_au*MjEzMzExMTg0OS4xNzQ5NDYyOTk2*_ga*OTI4NjI2MzcuMTcyMTQ0MjExMA..*_ga_KXH10SQTZF*czE3NTMyOTY4OTckbzkkZzEkdDE3NTMyOTc1NTQkajUzJGwwJGgxNTc2NzU3MzI2',
-      external: true
+  const [produtos, setProdutos] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  const loadProducts = async () => {
+    try {
+      setLoading(true);
+      
+      const { data, error } = await supabase
+        .rpc('get_system_setting', {
+          p_key: 'loja_products'
+        });
+
+      if (error) {
+        console.error('Erro ao carregar produtos:', error);
+        setProdutos([]);
+        return;
+      }
+
+      const productsList = data ? JSON.parse(data) : [];
+      // Filtrar apenas produtos ativos
+      const activeProducts = productsList.filter(product => product.active);
+      setProdutos(activeProducts);
+    } catch (error) {
+      console.error('Erro ao carregar produtos:', error);
+      setProdutos([]);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  if (loading) {
+    return (
+      <Container>
+        <Title>🛒 Loja</Title>
+        <Description>
+          Produtos e eventos relacionados aos Jogos Evolutivos
+        </Description>
+        <EmptyState>
+          <div>Carregando produtos...</div>
+        </EmptyState>
+      </Container>
+    );
+  }
 
   return (
     <Container>
@@ -141,7 +176,7 @@ const Loja = () => {
             <Card key={produto.id}>
               <ExternalLink href={produto.link} target="_blank" rel="noopener noreferrer">
                 <Thumbnail 
-                  src={produto.thumbnail} 
+                  src={produto.thumbnail || '/assets/placeholder-workshop.png'} 
                   alt={produto.title}
                   onError={(e) => {
                     e.target.src = '/assets/placeholder-workshop.png';

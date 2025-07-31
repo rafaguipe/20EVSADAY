@@ -16,6 +16,7 @@ import LoadingSpinner from './components/LoadingSpinner';
 import Multimidia from './pages/Multimidia';
 import ChatEV from './pages/ChatEV';
 import Loja from './pages/Loja';
+import Sobre from './pages/Sobre';
 import { supabase } from './supabaseClient';
 
 // Componente para rotas protegidas
@@ -149,6 +150,7 @@ function App() {
               } 
             />
             <Route path="/loja" element={<Loja />} />
+            <Route path="/sobre" element={<Sobre />} />
             <Route 
               path="/dev" 
               element={

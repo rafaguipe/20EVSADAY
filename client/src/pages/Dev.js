@@ -7,6 +7,9 @@ import toast from 'react-hot-toast';
 import WelcomeEmailTester from '../components/WelcomeEmailTester';
 import BulkEmailSender from '../components/BulkEmailSender';
 import LojaVisibilityControl from '../components/LojaVisibilityControl';
+import LojaProductManager from '../components/LojaProductManager';
+import TabVisibilityControl from '../components/TabVisibilityControl';
+import SobreTextEditor from '../components/SobreTextEditor';
 
 const Container = styled.div`
   padding: 20px;
@@ -404,7 +407,10 @@ const Dev = () => {
       </Grid>
 
       {/* <DailyReportTester /> */}
+      <TabVisibilityControl />
+      <SobreTextEditor />
       <LojaVisibilityControl />
+      <LojaProductManager />
       <WelcomeEmailTester />
       <BulkEmailSender />
     </Container>
