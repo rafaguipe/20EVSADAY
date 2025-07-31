@@ -215,7 +215,7 @@ const Loja = () => {
       <Container>
         <Title>🛒 Loja</Title>
         <Description>
-          Produtos e eventos relacionados aos Jogos Evolutivos
+          Produtos e eventos relacionados ao Estado Vibracional
         </Description>
         <EmptyState>
           <div>Carregando produtos...</div>
@@ -227,9 +227,9 @@ const Loja = () => {
   return (
     <Container>
       <Title>🛒 Loja</Title>
-      <Description>
-        Produtos e eventos relacionados aos Jogos Evolutivos
-      </Description>
+              <Description>
+          Produtos e eventos relacionados ao Estado Vibracional
+        </Description>
 
       {produtos.length === 0 ? (
         <EmptyState>
