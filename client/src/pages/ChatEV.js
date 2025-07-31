@@ -268,7 +268,7 @@ const ChatEV = () => {
       const { data, error } = await supabase
         .from('chat_ev_messages')
         .select('*')
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: true })
         .limit(50);
 
       if (error) {
