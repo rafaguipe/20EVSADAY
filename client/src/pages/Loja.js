@@ -7,6 +7,14 @@ const Container = styled.div`
   max-width: 900px;
   margin: 0 auto;
   background: ${({ theme }) => theme.background};
+  
+  @media (max-width: 768px) {
+    padding: 24px 12px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 20px 8px;
+  }
 `;
 
 const Title = styled.h1`
@@ -15,6 +23,16 @@ const Title = styled.h1`
   color: ${({ theme }) => theme.text};
   margin-bottom: 32px;
   text-align: center;
+  
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
 `;
 
 const Description = styled.p`
@@ -28,31 +46,57 @@ const Description = styled.p`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 20px;
   margin-top: 16px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 `;
 
 const Card = styled.div`
   background: ${({ theme }) => theme.card};
   border: 2px solid ${({ theme }) => theme.secondary};
   border-radius: 8px;
-  overflow: hidden;
-  transition: transform 0.2s;
+  transition: border-color 0.2s ease;
   
   &:hover {
-    transform: translateY(-2px);
+    border-color: #4a6a8a;
+  }
+`;
+
+const CardLayout = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
   }
 `;
 
 const Thumbnail = styled.img`
-  width: 100%;
-  height: 180px%;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  
+  @media (max-width: 480px) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 const CardContent = styled.div`
-  padding: 16px;
+  flex: 1;
+  min-width: 0;
 `;
 
 const CardTitle = styled.h3`
@@ -78,6 +122,12 @@ const CardMeta = styled.div`
   font-family: 'Press Start 2P', monospace;
   font-size: 0.6rem;
   color: #4a6a8a;
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
 `;
 
 const Price = styled.span`
@@ -94,10 +144,26 @@ const ExternalLink = styled.a`
   text-decoration: none;
   font-family: 'Press Start 2P', monospace;
   font-size: 0.7rem;
+  display: inline-block;
+  margin-top: 8px;
   
   &:hover {
     color: #357a6a;
     text-decoration: underline;
+  }
+`;
+
+const CardLink = styled.div`
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:active {
+    transform: translateY(0);
   }
 `;
 
@@ -174,26 +240,28 @@ const Loja = () => {
         <Grid>
           {produtos.map((produto) => (
             <Card key={produto.id}>
-              <ExternalLink href={produto.link} target="_blank" rel="noopener noreferrer">
-                <Thumbnail 
-                  src={produto.thumbnail || '/assets/placeholder-workshop.png'} 
-                  alt={produto.title}
-                  onError={(e) => {
-                    e.target.src = '/assets/placeholder-workshop.png';
-                  }}
-                />
-                <CardContent>
-                  <CardTitle>{produto.title}</CardTitle>
-                  <CardDescription>{produto.description}</CardDescription>
-                  <CardMeta>
-                    <Price>{produto.price}</Price>
-                    <Date>{produto.date} • {produto.time}</Date>
-                  </CardMeta>
-                  <ExternalLink href={produto.link} target="_blank" rel="noopener noreferrer">
-                    Ver Evento →
-                  </ExternalLink>
-                </CardContent>
-              </ExternalLink>
+              <CardLink onClick={() => window.open(produto.link, '_blank', 'noopener,noreferrer')}>
+                <CardLayout>
+                  <Thumbnail 
+                    src={produto.thumbnail || '/assets/placeholder-workshop.png'} 
+                    alt={produto.title}
+                    onError={(e) => {
+                      e.target.src = '/assets/placeholder-workshop.png';
+                    }}
+                  />
+                  <CardContent>
+                    <CardTitle>{produto.title}</CardTitle>
+                    <CardDescription>{produto.description}</CardDescription>
+                    <CardMeta>
+                      <Price>{produto.price}</Price>
+                      <Date>{produto.date} • {produto.time}</Date>
+                    </CardMeta>
+                    <ExternalLink href={produto.link} target="_blank" rel="noopener noreferrer">
+                      Ver Evento →
+                    </ExternalLink>
+                  </CardContent>
+                </CardLayout>
+              </CardLink>
             </Card>
           ))}
         </Grid>
