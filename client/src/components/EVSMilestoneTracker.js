@@ -187,18 +187,22 @@ const EVSMilestoneTracker = () => {
       // Calcular o próximo marco
       const nextMilestone = Math.floor(total / 1000) * 1000;
       
-      // Se chegamos a um novo marco e não é 0
-      if (nextMilestone > 0 && nextMilestone > lastCheckedMilestone) {
-        setCurrentMilestone(nextMilestone);
-        setLastCheckedMilestone(nextMilestone);
-        setShowPopup(true);
-        
-        // Tocar som de vitória
-        playVictorySound();
-        
-        // Salvar o marco verificado
-        localStorage.setItem('lastEVSMilestone', nextMilestone.toString());
-      }
+             // Se chegamos a um novo marco e não é 0
+       if (nextMilestone > 0 && nextMilestone > lastCheckedMilestone) {
+         // Verificar se já mostrou este marco
+         const shownMilestone = localStorage.getItem(`milestone_shown_${nextMilestone}`);
+         if (shownMilestone !== 'true') {
+           setCurrentMilestone(nextMilestone);
+           setLastCheckedMilestone(nextMilestone);
+           setShowPopup(true);
+           
+           // Tocar som de vitória
+           playVictorySound();
+           
+           // Salvar o marco verificado
+           localStorage.setItem('lastEVSMilestone', nextMilestone.toString());
+         }
+       }
     } catch (error) {
       console.error('Erro ao verificar marcos de EVS:', error);
     }
@@ -218,6 +222,10 @@ const EVSMilestoneTracker = () => {
 
   const closePopup = () => {
     setShowPopup(false);
+    // Marcar que este marco já foi mostrado
+    if (currentMilestone > 0) {
+      localStorage.setItem(`milestone_shown_${currentMilestone}`, 'true');
+    }
   };
 
   // Carregar último marco verificado do localStorage
@@ -227,6 +235,16 @@ const EVSMilestoneTracker = () => {
       setLastCheckedMilestone(parseInt(lastMilestone));
     }
   }, []);
+
+  // Verificar se já mostrou o pop-up para o marco atual
+  useEffect(() => {
+    if (currentMilestone > 0) {
+      const shownMilestone = localStorage.getItem(`milestone_shown_${currentMilestone}`);
+      if (shownMilestone === 'true') {
+        setShowPopup(false);
+      }
+    }
+  }, [currentMilestone]);
 
   if (!showPopup) {
     return null;
