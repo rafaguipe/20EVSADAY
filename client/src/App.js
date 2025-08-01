@@ -18,6 +18,9 @@ import ChatEV from './pages/ChatEV';
 import Loja from './pages/Loja';
 import Sobre from './pages/Sobre';
 import { supabase } from './supabaseClient';
+import AnnouncementPopup from './components/AnnouncementPopup';
+import EVSMilestoneTracker from './components/EVSMilestoneTracker';
+import EVSMilestoneProgress from './components/EVSMilestoneProgress';
 
 // Componente para rotas protegidas
 const ProtectedRoute = ({ children }) => {
@@ -104,6 +107,9 @@ function App() {
       <GlobalStyle />
       <div className="App">
         <Navbar />
+        <AnnouncementPopup />
+        <EVSMilestoneTracker />
+        <EVSMilestoneProgress />
         <main style={{ paddingTop: '80px', minHeight: 'calc(100vh - 80px)' }}>
           <Routes>
             <Route path="/" element={<Home />} />

@@ -10,6 +10,7 @@ import LojaVisibilityControl from '../components/LojaVisibilityControl';
 import LojaProductManager from '../components/LojaProductManager';
 import TabVisibilityControl from '../components/TabVisibilityControl';
 import SobreTextEditor from '../components/SobreTextEditor';
+import AnnouncementManager from '../components/AnnouncementManager';
 
 const Container = styled.div`
   padding: 20px;
@@ -406,13 +407,14 @@ const Dev = () => {
         </Card>
       </Grid>
 
-      {/* <DailyReportTester /> */}
-      <TabVisibilityControl />
-      <SobreTextEditor />
-      <LojaVisibilityControl />
-      <LojaProductManager />
-      <WelcomeEmailTester />
-      <BulkEmailSender />
+                    {/* <DailyReportTester /> */}
+              <TabVisibilityControl />
+              <SobreTextEditor />
+              <AnnouncementManager />
+              <LojaVisibilityControl />
+              <LojaProductManager />
+              <WelcomeEmailTester />
+              <BulkEmailSender />
     </Container>
   );
 };
