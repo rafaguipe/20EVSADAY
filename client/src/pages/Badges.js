@@ -460,16 +460,21 @@ const Badges = () => {
 
       setBadges(badgesWithProgress);
       setUserBadges(userBadgesData || []);
-      // Calcular dias consecutivos para o indicador
-      const consecutiveDays = calculateConsecutiveDays(userEVs);
-      
-      setUserStats({
-        total_badges: earnedBadges.length,
-        total_evs,
-        average_score,
-        max_score,
-        consecutive_days: consecutiveDays
-      });
+             // Calcular dias consecutivos para o indicador
+       const consecutiveDays = calculateConsecutiveDays(userEVs);
+       
+       // Debug: verificar cálculo
+       console.log('Debug - Dias consecutivos calculados:', consecutiveDays);
+       console.log('Debug - Total de EVs:', userEVs?.length);
+       console.log('Debug - Datas únicas:', [...new Set(userEVs?.map(ev => new Date(ev.created_at).toDateString()))].sort());
+       
+       setUserStats({
+         total_badges: earnedBadges.length,
+         total_evs,
+         average_score,
+         max_score,
+         consecutive_days: consecutiveDays
+       });
 
     } catch (error) {
       console.error('Erro ao carregar badges:', error);
@@ -500,16 +505,24 @@ const Badges = () => {
       const currUTC = Date.UTC(currDate.getFullYear(), currDate.getMonth(), currDate.getDate());
       const diffDays = (currUTC - prevUTC) / (1000 * 60 * 60 * 24);
       
+      console.log(`Debug - Comparando ${prevDate.toDateString()} com ${currDate.toDateString()}: diffDays = ${diffDays}`);
+      
       if (diffDays === 1) {
         // Dias consecutivos
         currentConsecutive++;
         maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
+        console.log(`Debug - Consecutivo! currentConsecutive = ${currentConsecutive}, maxConsecutive = ${maxConsecutive}`);
       } else {
         // Quebra na sequência
         maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
         currentConsecutive = 1;
+        console.log(`Debug - Quebra! maxConsecutive = ${maxConsecutive}, currentConsecutive resetado para 1`);
       }
     }
+    
+    // Garantir que o último grupo seja considerado
+    maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
+    console.log(`Debug - Resultado final: maxConsecutive = ${maxConsecutive}`);
     
     return maxConsecutive;
   };
