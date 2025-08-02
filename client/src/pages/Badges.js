@@ -501,8 +501,8 @@ const Badges = () => {
   const calculateConsecutiveDays = (evs) => {
     if (!evs || evs.length === 0) return 0;
     
-    // Obter datas únicas e ordenar (igual ao SQL)
-    const dates = [...new Set(evs.map(ev => new Date(ev.created_at).toDateString()))].sort();
+              // Obter datas únicas e ordenar cronologicamente (igual ao SQL)
+          const dates = [...new Set(evs.map(ev => new Date(ev.created_at).toDateString()))].sort((a, b) => new Date(a) - new Date(b));
     
     console.log('Debug - Datas únicas ordenadas:', dates);
     
