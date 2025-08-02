@@ -460,11 +460,15 @@ const Badges = () => {
 
       setBadges(badgesWithProgress);
       setUserBadges(userBadgesData || []);
+      // Calcular dias consecutivos para o indicador
+      const consecutiveDays = calculateConsecutiveDays(userEVs);
+      
       setUserStats({
         total_badges: earnedBadges.length,
         total_evs,
         average_score,
-        max_score
+        max_score,
+        consecutive_days: consecutiveDays
       });
 
     } catch (error) {
@@ -478,24 +482,35 @@ const Badges = () => {
   const calculateConsecutiveDays = (evs) => {
     if (!evs || evs.length === 0) return 0;
     
+    // Obter datas únicas e ordenar
     const dates = [...new Set(evs.map(ev => new Date(ev.created_at).toDateString()))].sort();
-    let maxConsecutive = 0;
+    
+    if (dates.length === 0) return 0;
+    if (dates.length === 1) return 1;
+    
+    let maxConsecutive = 1;
     let currentConsecutive = 1;
     
     for (let i = 1; i < dates.length; i++) {
       const prevDate = new Date(dates[i - 1]);
       const currDate = new Date(dates[i]);
-      const diffDays = (currDate - prevDate) / (1000 * 60 * 60 * 24);
+      
+      // Calcular diferença em dias
+      const timeDiff = currDate.getTime() - prevDate.getTime();
+      const diffDays = Math.round(timeDiff / (1000 * 60 * 60 * 24));
       
       if (diffDays === 1) {
+        // Dias consecutivos
         currentConsecutive++;
+        maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
       } else {
+        // Quebra na sequência
         maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
         currentConsecutive = 1;
       }
     }
     
-    return Math.max(maxConsecutive, currentConsecutive);
+    return maxConsecutive;
   };
 
   useEffect(() => {
@@ -524,6 +539,10 @@ const Badges = () => {
         <StatCard>
           <StatValue>{userStats.total_evs}</StatValue>
           <StatLabel>Total de EVs</StatLabel>
+        </StatCard>
+        <StatCard>
+          <StatValue>{userStats.consecutive_days || 0}</StatValue>
+          <StatLabel>Dias Consecutivos</StatLabel>
         </StatCard>
         <StatCard>
           <StatValue>{userStats.average_score}</StatValue>
