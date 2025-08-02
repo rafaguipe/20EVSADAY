@@ -469,13 +469,11 @@ const Badges = () => {
        
        
        
-               // Debug temporário para verificar contagem de badges
-        console.log('Debug - Total de badges do banco:', userBadgesData?.length);
-        console.log('Debug - IDs das badges:', earnedBadges);
-        console.log('Debug - Badges com earned=true:', badgesWithProgress.filter(b => b.earned).length);
+               // Contar badges realmente conquistadas (incluindo as calculadas no frontend)
+        const totalEarnedBadges = badgesWithProgress.filter(b => b.earned).length;
         
         setUserStats({
-          total_badges: earnedBadges.length,
+          total_badges: totalEarnedBadges,
           total_evs,
           average_score,
           max_score,
