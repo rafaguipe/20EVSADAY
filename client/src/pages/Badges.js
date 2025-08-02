@@ -258,9 +258,7 @@ const Badges = () => {
              // Verificar quais badges o usuário conquistou
        const earnedBadges = userBadgesData?.map(ub => ub.badges.id) || [];
        
-       // Debug: verificar badges do banco
-       console.log('Debug - Badges do banco:', userBadgesData?.map(ub => ub.badges.name));
-       console.log('Debug - IDs das badges conquistadas:', earnedBadges);
+       
       
       // Verificar se o usuário é fundador (inscrito até 31/7/2025)
       const userProfile = await supabase
@@ -294,15 +292,7 @@ const Badges = () => {
              target = 7;
              earned = consecutiveDays >= 7;
              
-             // Debug específico para badge Persistente
-             console.log('Debug - Badge Persistente:', {
-               consecutiveDays,
-               progress,
-               current,
-               target,
-               earned,
-               earnedFromDB: earnedBadges.includes(badge.id)
-             });
+             
              break;
           case 'Dedicado':
             // Verificar 30 dias consecutivos
@@ -477,18 +467,20 @@ const Badges = () => {
              // Calcular dias consecutivos para o indicador
        const consecutiveDays = calculateConsecutiveDays(userEVs);
        
-       // Debug: verificar cálculo
-       console.log('Debug - Dias consecutivos calculados:', consecutiveDays);
-       console.log('Debug - Total de EVs:', userEVs?.length);
-       console.log('Debug - Datas únicas:', [...new Set(userEVs?.map(ev => new Date(ev.created_at).toDateString()))].sort());
        
-       setUserStats({
-         total_badges: earnedBadges.length,
-         total_evs,
-         average_score,
-         max_score,
-         consecutive_days: consecutiveDays
-       });
+       
+               // Debug temporário para verificar contagem de badges
+        console.log('Debug - Total de badges do banco:', userBadgesData?.length);
+        console.log('Debug - IDs das badges:', earnedBadges);
+        console.log('Debug - Badges com earned=true:', badgesWithProgress.filter(b => b.earned).length);
+        
+        setUserStats({
+          total_badges: earnedBadges.length,
+          total_evs,
+          average_score,
+          max_score,
+          consecutive_days: consecutiveDays
+        });
 
     } catch (error) {
       console.error('Erro ao carregar badges:', error);
@@ -504,7 +496,7 @@ const Badges = () => {
               // Obter datas únicas e ordenar cronologicamente (igual ao SQL)
           const dates = [...new Set(evs.map(ev => new Date(ev.created_at).toDateString()))].sort((a, b) => new Date(a) - new Date(b));
     
-    console.log('Debug - Datas únicas ordenadas:', dates);
+    
     
     if (dates.length === 0) return 0;
     if (dates.length === 1) return 1;
@@ -525,18 +517,18 @@ const Badges = () => {
         const currUTC = Date.UTC(currDate.getFullYear(), currDate.getMonth(), currDate.getDate());
         const diffDays = (currUTC - prevUTC) / (1000 * 60 * 60 * 24);
         
-        console.log(`Debug - Comparando ${prevDate.toDateString()} com ${currDate.toDateString()}: diffDays = ${diffDays}`);
+        
         
         if (diffDays === 1) {
           // Dias consecutivos
           currentConsecutive++;
           maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
-          console.log(`Debug - Consecutivo! currentConsecutive = ${currentConsecutive}, maxConsecutive = ${maxConsecutive}`);
+          
         } else {
           // Quebra na sequência
           maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
           currentConsecutive = 1;
-          console.log(`Debug - Quebra! maxConsecutive = ${maxConsecutive}, currentConsecutive resetado para 1`);
+          
         }
       }
       
@@ -545,7 +537,7 @@ const Badges = () => {
     
     // Garantir que o último grupo seja considerado (igual ao SQL)
     maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
-    console.log(`Debug - Resultado final: maxConsecutive = ${maxConsecutive}`);
+    
     
     return maxConsecutive;
   };
