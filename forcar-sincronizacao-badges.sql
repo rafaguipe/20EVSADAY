@@ -31,13 +31,13 @@ WHERE name = 'Persistente';
 -- 3. Verificar se há duplicatas na user_badges
 SELECT 
     'Verificar duplicatas:' as info,
-    user_id,
-    badge_id,
+    ub.user_id,
+    ub.badge_id,
     COUNT(*) as quantidade
 FROM user_badges ub
 JOIN profiles p ON ub.user_id = p.user_id
 WHERE p.username = 'rafaguipe'
-GROUP BY user_id, badge_id
+GROUP BY ub.user_id, ub.badge_id
 HAVING COUNT(*) > 1;
 
 -- 4. Verificar estrutura da tabela user_badges
