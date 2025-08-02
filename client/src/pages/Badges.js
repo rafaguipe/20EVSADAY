@@ -495,9 +495,10 @@ const Badges = () => {
       const prevDate = new Date(dates[i - 1]);
       const currDate = new Date(dates[i]);
       
-      // Calcular diferença em dias
-      const timeDiff = currDate.getTime() - prevDate.getTime();
-      const diffDays = Math.round(timeDiff / (1000 * 60 * 60 * 24));
+      // Calcular diferença em dias usando UTC para evitar problemas de timezone
+      const prevUTC = Date.UTC(prevDate.getFullYear(), prevDate.getMonth(), prevDate.getDate());
+      const currUTC = Date.UTC(currDate.getFullYear(), currDate.getMonth(), currDate.getDate());
+      const diffDays = (currUTC - prevUTC) / (1000 * 60 * 60 * 24);
       
       if (diffDays === 1) {
         // Dias consecutivos
