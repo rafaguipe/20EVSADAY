@@ -255,8 +255,12 @@ const Badges = () => {
       const average_score = total_evs > 0 ? (userEVs.reduce((sum, ev) => sum + ev.score, 0) / total_evs).toFixed(1) : 0;
       const max_score = total_evs > 0 ? Math.max(...userEVs.map(ev => ev.score)) : 0;
 
-      // Verificar quais badges o usuário conquistou
-      const earnedBadges = userBadgesData?.map(ub => ub.badges.id) || [];
+             // Verificar quais badges o usuário conquistou
+       const earnedBadges = userBadgesData?.map(ub => ub.badges.id) || [];
+       
+       // Debug: verificar badges do banco
+       console.log('Debug - Badges do banco:', userBadgesData?.map(ub => ub.badges.name));
+       console.log('Debug - IDs das badges conquistadas:', earnedBadges);
       
       // Verificar se o usuário é fundador (inscrito até 31/7/2025)
       const userProfile = await supabase
@@ -282,14 +286,24 @@ const Badges = () => {
             target = 1;
             earned = total_evs > 0;
             break;
-          case 'Persistente':
-            // Verificar 7 dias consecutivos
-            const consecutiveDays = calculateConsecutiveDays(userEVs);
-            progress = Math.min((consecutiveDays / 7) * 100, 100);
-            current = consecutiveDays;
-            target = 7;
-            earned = consecutiveDays >= 7;
-            break;
+                     case 'Persistente':
+             // Verificar 7 dias consecutivos
+             const consecutiveDays = calculateConsecutiveDays(userEVs);
+             progress = Math.min((consecutiveDays / 7) * 100, 100);
+             current = consecutiveDays;
+             target = 7;
+             earned = consecutiveDays >= 7;
+             
+             // Debug específico para badge Persistente
+             console.log('Debug - Badge Persistente:', {
+               consecutiveDays,
+               progress,
+               current,
+               target,
+               earned,
+               earnedFromDB: earnedBadges.includes(badge.id)
+             });
+             break;
           case 'Dedicado':
             // Verificar 30 dias consecutivos
             const consecutiveDays30 = calculateConsecutiveDays(userEVs);
@@ -487,40 +501,49 @@ const Badges = () => {
   const calculateConsecutiveDays = (evs) => {
     if (!evs || evs.length === 0) return 0;
     
-    // Obter datas únicas e ordenar
+    // Obter datas únicas e ordenar (igual ao SQL)
     const dates = [...new Set(evs.map(ev => new Date(ev.created_at).toDateString()))].sort();
+    
+    console.log('Debug - Datas únicas ordenadas:', dates);
     
     if (dates.length === 0) return 0;
     if (dates.length === 1) return 1;
     
     let maxConsecutive = 1;
     let currentConsecutive = 1;
+    let prevDate = null;
     
-    for (let i = 1; i < dates.length; i++) {
-      const prevDate = new Date(dates[i - 1]);
-      const currDate = new Date(dates[i]);
+    // Usar a mesma lógica do SQL
+    for (const dateStr of dates) {
+      const currDate = new Date(dateStr);
       
-      // Calcular diferença em dias usando UTC para evitar problemas de timezone
-      const prevUTC = Date.UTC(prevDate.getFullYear(), prevDate.getMonth(), prevDate.getDate());
-      const currUTC = Date.UTC(currDate.getFullYear(), currDate.getMonth(), currDate.getDate());
-      const diffDays = (currUTC - prevUTC) / (1000 * 60 * 60 * 24);
-      
-      console.log(`Debug - Comparando ${prevDate.toDateString()} com ${currDate.toDateString()}: diffDays = ${diffDays}`);
-      
-      if (diffDays === 1) {
-        // Dias consecutivos
-        currentConsecutive++;
-        maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
-        console.log(`Debug - Consecutivo! currentConsecutive = ${currentConsecutive}, maxConsecutive = ${maxConsecutive}`);
-      } else {
-        // Quebra na sequência
-        maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
+      if (prevDate === null) {
         currentConsecutive = 1;
-        console.log(`Debug - Quebra! maxConsecutive = ${maxConsecutive}, currentConsecutive resetado para 1`);
+      } else {
+        // Calcular diferença em dias usando UTC (igual ao SQL)
+        const prevUTC = Date.UTC(prevDate.getFullYear(), prevDate.getMonth(), prevDate.getDate());
+        const currUTC = Date.UTC(currDate.getFullYear(), currDate.getMonth(), currDate.getDate());
+        const diffDays = (currUTC - prevUTC) / (1000 * 60 * 60 * 24);
+        
+        console.log(`Debug - Comparando ${prevDate.toDateString()} com ${currDate.toDateString()}: diffDays = ${diffDays}`);
+        
+        if (diffDays === 1) {
+          // Dias consecutivos
+          currentConsecutive++;
+          maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
+          console.log(`Debug - Consecutivo! currentConsecutive = ${currentConsecutive}, maxConsecutive = ${maxConsecutive}`);
+        } else {
+          // Quebra na sequência
+          maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
+          currentConsecutive = 1;
+          console.log(`Debug - Quebra! maxConsecutive = ${maxConsecutive}, currentConsecutive resetado para 1`);
+        }
       }
+      
+      prevDate = currDate;
     }
     
-    // Garantir que o último grupo seja considerado
+    // Garantir que o último grupo seja considerado (igual ao SQL)
     maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
     console.log(`Debug - Resultado final: maxConsecutive = ${maxConsecutive}`);
     
