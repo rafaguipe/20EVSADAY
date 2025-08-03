@@ -154,15 +154,59 @@ const Estatisticas = () => {
 
       if (badgesError) throw badgesError;
 
+      // Carregar todas as badges disponíveis para calcular dinamicamente
+      const { data: allBadges, error: allBadgesError } = await supabase
+        .from('badges')
+        .select('*');
+
+      if (allBadgesError) throw allBadgesError;
+
       // Calcular estatísticas
       const total_evs = userEVs?.length || 0;
       const total_points = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
       const average_score = total_evs > 0 ? (total_points / total_evs).toFixed(1) : 0;
       const max_score = total_evs > 0 ? Math.max(...userEVs.map(ev => ev.score)) : 0;
-      const total_badges = userBadges?.length || 0;
+      
+
 
       // Calcular dias consecutivos
       const consecutiveDays = calculateConsecutiveDays(userEVs);
+      
+      // Recalcular badges com os dias consecutivos
+      const earnedBadges = allBadges?.filter(badge => {
+        const userBadgeIds = userBadges?.map(ub => ub.badge_id) || [];
+        
+        // Se já tem a badge no banco, considera como conquistada
+        if (userBadgeIds.includes(badge.id)) {
+          return true;
+        }
+        
+        // Verificar badges calculadas dinamicamente
+        switch (badge.name) {
+          case 'first_ev':
+            return total_evs >= 1;
+          case 'persistente':
+            return consecutiveDays >= 7;
+          case 'determinado':
+            return consecutiveDays >= 14;
+          case 'focado':
+            return consecutiveDays >= 30;
+          case 'milestone_1000_points':
+            return total_points >= 1000;
+          case 'milestone_2000_points':
+            return total_points >= 2000;
+          case 'milestone_3000_points':
+            return total_points >= 3000;
+          case 'milestone_4000_points':
+            return total_points >= 4000;
+          case 'milestone_5000_points':
+            return total_points >= 5000;
+          default:
+            return false;
+        }
+      }) || [];
+      
+      const total_badges = earnedBadges.length;
 
       setUserStats({
         total_evs,

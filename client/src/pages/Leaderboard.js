@@ -21,9 +21,39 @@ const Title = styled.h1`
 const TabContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
   gap: 10px;
+`;
+
+const FilterContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 10px;
+  flex-wrap: wrap;
+`;
+
+const FilterButton = styled.button`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  padding: 8px 15px;
+  border: 2px solid #4a4a4a;
+  background: ${props => props.active ? '#4a6a8a' : '#1a1a1a'};
+  color: #ffffff;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: ${props => props.active ? '#6a8aaa' : '#4a4a4a'};
+    border-color: #6a6a6a;
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 8px;
+    padding: 6px 12px;
+  }
 `;
 
 const Tab = styled.button`
@@ -183,9 +213,15 @@ const tabs = [
   { key: 'daily', label: 'Diário' },
   { key: 'weekly', label: 'Semanal' },
   { key: 'monthly', label: 'Mensal' },
+  { key: 'yearly', label: 'Anual' },
   { key: 'all-time', label: 'Todos os Tempos' },
-  { key: 'consistency', label: 'Consistência' },
-  { key: 'dedication', label: 'Dedicação' }
+  { key: '2025', label: '2025' }
+];
+
+const sortOptions = [
+  { key: 'total_points', label: 'Pontos' },
+  { key: 'evs_count', label: 'Número' },
+  { key: 'average_score', label: 'Média' }
 ];
 
 const avatars = [
@@ -196,6 +232,7 @@ const avatars = [
 const Leaderboard = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('daily');
+  const [sortBy, setSortBy] = useState('total_points');
   const [leaderboardData, setLeaderboardData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -361,6 +398,74 @@ const Leaderboard = () => {
           info = `Todos os tempos • ${leaderboard.length} jogadores`;
           break;
 
+        case 'yearly':
+          const yearStart = new Date();
+          yearStart.setMonth(0, 1);
+          yearStart.setHours(0, 0, 0, 0);
+          const { data: yearlyData } = await supabase
+            .from('evs')
+            .select('score, created_at, user_id')
+            .gte('created_at', yearStart.toISOString());
+          
+          if (yearlyData && yearlyData.length > 0) {
+            const yearlyStats = yearlyData.reduce((acc, ev) => {
+              const userId = ev.user_id;
+              if (!acc[userId]) {
+                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
+              }
+              acc[userId].total_points += ev.score;
+              acc[userId].evs_count += 1;
+              acc[userId].scores.push(ev.score);
+              return acc;
+            }, {});
+
+            leaderboard = Object.entries(yearlyStats)
+              .map(([userId, stats]) => ({
+                user_id: userId,
+                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
+                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
+                total_points: stats.total_points,
+                evs_count: stats.evs_count,
+                average_score: (stats.total_points / stats.evs_count).toFixed(1),
+                max_score: Math.max(...stats.scores)
+              }));
+          }
+          info = `${yearStart.getFullYear()} • ${leaderboard.length} jogadores`;
+          break;
+
+        case '2025':
+          const year2025Start = new Date('2025-01-01T00:00:00.000Z');
+          const { data: year2025Data } = await supabase
+            .from('evs')
+            .select('score, created_at, user_id')
+            .gte('created_at', year2025Start.toISOString());
+          
+          if (year2025Data && year2025Data.length > 0) {
+            const year2025Stats = year2025Data.reduce((acc, ev) => {
+              const userId = ev.user_id;
+              if (!acc[userId]) {
+                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
+              }
+              acc[userId].total_points += ev.score;
+              acc[userId].evs_count += 1;
+              acc[userId].scores.push(ev.score);
+              return acc;
+            }, {});
+
+            leaderboard = Object.entries(year2025Stats)
+              .map(([userId, stats]) => ({
+                user_id: userId,
+                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
+                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
+                total_points: stats.total_points,
+                evs_count: stats.evs_count,
+                average_score: (stats.total_points / stats.evs_count).toFixed(1),
+                max_score: Math.max(...stats.scores)
+              }));
+          }
+          info = `2025 • ${leaderboard.length} jogadores`;
+          break;
+
         case 'consistency':
           const { data: consistencyData } = await supabase
             .from('evs')
@@ -425,6 +530,31 @@ const Leaderboard = () => {
           break;
       }
 
+      // Aplicar ordenação
+      if (leaderboard.length > 0) {
+        leaderboard.sort((a, b) => {
+          let aValue, bValue;
+          
+          switch (sortBy) {
+            case 'evs_count':
+              aValue = a.evs_count;
+              bValue = b.evs_count;
+              break;
+            case 'average_score':
+              aValue = parseFloat(a.average_score);
+              bValue = parseFloat(b.average_score);
+              break;
+            case 'total_points':
+            default:
+              aValue = a.total_points;
+              bValue = b.total_points;
+              break;
+          }
+          
+          return bValue - aValue;
+        });
+      }
+
       setLeaderboardData({ leaderboard, info });
     } catch (error) {
       console.error('Erro ao carregar leaderboard:', error);
@@ -436,25 +566,27 @@ const Leaderboard = () => {
 
   useEffect(() => {
     loadLeaderboard();
-  }, [loadLeaderboard]);
+  }, [loadLeaderboard, sortBy]);
 
   const getScoreDisplay = (user) => {
-    switch (activeTab) {
-      case 'consistency':
-        return `${user.average_score} (${user.evs_count} EVs)`;
-      case 'dedication':
+    switch (sortBy) {
+      case 'evs_count':
         return `${user.evs_count} EVs`;
+      case 'average_score':
+        return `${user.average_score}`;
+      case 'total_points':
       default:
         return `${user.total_points} pts`;
     }
   };
 
   const getScoreLabel = () => {
-    switch (activeTab) {
-      case 'consistency':
+    switch (sortBy) {
+      case 'evs_count':
+        return 'Número';
+      case 'average_score':
         return 'Média';
-      case 'dedication':
-        return 'EVs';
+      case 'total_points':
       default:
         return 'Pontos';
     }
@@ -475,6 +607,18 @@ const Leaderboard = () => {
           </Tab>
         ))}
       </TabContainer>
+
+      <FilterContainer>
+        {sortOptions.map(option => (
+          <FilterButton
+            key={option.key}
+            active={sortBy === option.key}
+            onClick={() => setSortBy(option.key)}
+          >
+            {option.label}
+          </FilterButton>
+        ))}
+      </FilterContainer>
 
       <LeaderboardCard>
         <LeaderboardHeader>

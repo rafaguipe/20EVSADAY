@@ -329,9 +329,9 @@ const Home = () => {
 
         <FeatureCard>
           <FeatureIcon>🎖️</FeatureIcon>
-          <FeatureTitle>Badges Conscienciológicas</FeatureTitle>
+          <FeatureTitle>Conquistas Conscienciológicas</FeatureTitle>
           <FeatureText>
-            Conquiste badges com nomes da Conscienciologia 
+            Conquiste selos com nomes da Conscienciologia 
             conforme você progride na prática dos EVs.
           </FeatureText>
         </FeatureCard>
