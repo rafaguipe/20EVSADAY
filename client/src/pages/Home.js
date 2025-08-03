@@ -285,7 +285,7 @@ const Home = () => {
         <Title>#20EVSADAY</Title>
         <Subtitle>
           Registre seus Estados Vibracionais de forma gamificada. 
-          Acompanhe seu progresso, conquiste badges e participe do ranking 
+          Acompanhe seu progresso, conquiste selos e participe do ranking 
           da comunidade conscienciológica.
         </Subtitle>
         
