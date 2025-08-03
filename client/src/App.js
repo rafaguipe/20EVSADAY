@@ -12,11 +12,12 @@ import Leaderboard from './pages/Leaderboard';
 import Badges from './pages/Badges';
 import Profile from './pages/Profile';
 import Dev from './pages/Dev';
+import Estatisticas from './pages/Estatisticas';
 import LoadingSpinner from './components/LoadingSpinner';
 import Multimidia from './pages/Multimidia';
 import ChatEV from './pages/ChatEV';
 import Loja from './pages/Loja';
-import Sobre from './pages/Sobre';
+
 import { supabase } from './supabaseClient';
 import AnnouncementPopup from './components/AnnouncementPopup';
 import EVSMilestoneTracker from './components/EVSMilestoneTracker';
@@ -140,6 +141,14 @@ function App() {
               } 
             />
             <Route 
+              path="/estatisticas" 
+              element={
+                <ProtectedRoute>
+                  <Estatisticas />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
               path="/profile" 
               element={
                 <ProtectedRoute>
@@ -156,7 +165,7 @@ function App() {
               } 
             />
             <Route path="/loja" element={<Loja />} />
-            <Route path="/sobre" element={<Sobre />} />
+
             <Route 
               path="/dev" 
               element={

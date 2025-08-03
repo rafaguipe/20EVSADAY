@@ -440,13 +440,49 @@ const Badges = () => {
             target = 180;
             earned = consecutiveDays180 >= 180;
             break;
-          case 'Anual Consciencial':
-            const consecutiveDays360 = calculateConsecutiveDays(userEVs);
-            progress = Math.min((consecutiveDays360 / 360) * 100, 100);
-            current = consecutiveDays360;
-            target = 360;
-            earned = consecutiveDays360 >= 360;
-            break;
+                     case 'Anual Consciencial':
+             const consecutiveDays360 = calculateConsecutiveDays(userEVs);
+             progress = Math.min((consecutiveDays360 / 360) * 100, 100);
+             current = consecutiveDays360;
+             target = 360;
+             earned = consecutiveDays360 >= 360;
+             break;
+           // Novos badges - Milestones de pontos
+           case 'milestone_1000_points':
+             const totalPoints = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
+             progress = Math.min((totalPoints / 1000) * 100, 100);
+             current = totalPoints;
+             target = 1000;
+             earned = totalPoints >= 1000;
+             break;
+           case 'milestone_2000_points':
+             const totalPoints2k = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
+             progress = Math.min((totalPoints2k / 2000) * 100, 100);
+             current = totalPoints2k;
+             target = 2000;
+             earned = totalPoints2k >= 2000;
+             break;
+           case 'milestone_3000_points':
+             const totalPoints3k = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
+             progress = Math.min((totalPoints3k / 3000) * 100, 100);
+             current = totalPoints3k;
+             target = 3000;
+             earned = totalPoints3k >= 3000;
+             break;
+           case 'milestone_4000_points':
+             const totalPoints4k = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
+             progress = Math.min((totalPoints4k / 4000) * 100, 100);
+             current = totalPoints4k;
+             target = 4000;
+             earned = totalPoints4k >= 4000;
+             break;
+           case 'milestone_5000_points':
+             const totalPoints5k = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
+             progress = Math.min((totalPoints5k / 5000) * 100, 100);
+             current = totalPoints5k;
+             target = 5000;
+             earned = totalPoints5k >= 5000;
+             break;
           default:
             progress = 0;
             current = 0;
@@ -556,45 +592,22 @@ const Badges = () => {
 
   return (
     <Container>
-      <Title>Badges</Title>
-      
-      <StatsGrid>
-        <StatCard>
-          <StatValue>{userStats.total_badges}</StatValue>
-          <StatLabel>Badges Conquistadas</StatLabel>
-        </StatCard>
-        <StatCard>
-          <StatValue>{userStats.total_evs}</StatValue>
-          <StatLabel>Total de EVs</StatLabel>
-        </StatCard>
-        <StatCard>
-          <StatValue>{userStats.consecutive_days || 0}</StatValue>
-          <StatLabel>Dias Consecutivos</StatLabel>
-        </StatCard>
-        <StatCard>
-          <StatValue>{userStats.average_score}</StatValue>
-          <StatLabel>Média Geral</StatLabel>
-        </StatCard>
-        <StatCard>
-          <StatValue>{userStats.max_score}</StatValue>
-          <StatLabel>Pontuação Máxima</StatLabel>
-        </StatCard>
-      </StatsGrid>
+             <Title>Conquistas</Title>
 
-      {loading && (
-        <LoadingText>CARREGANDO BADGES...</LoadingText>
-      )}
+             {loading && (
+         <LoadingText>CARREGANDO CONQUISTAS...</LoadingText>
+       )}
 
-      {error && (
-        <ErrorText>{error}</ErrorText>
-      )}
+             {error && (
+         <ErrorText>Erro ao carregar conquistas</ErrorText>
+       )}
 
       {!loading && !error && (
         <>
           <BadgesGrid>
             {badges.map(badge => (
               <BadgeCard key={badge.id} earned={badge.earned}>
-                {badge.earned && <EarnedBadge>Conquistada</EarnedBadge>}
+                                 {badge.earned && <EarnedBadge>Conquistado</EarnedBadge>}
                 <BadgeHeader>
                   <BadgeIcon earned={badge.earned}>{badge.icon}</BadgeIcon>
                   <BadgeInfo>
@@ -617,12 +630,12 @@ const Badges = () => {
             ))}
           </BadgesGrid>
 
-          <RecentBadges>
-            <BadgeName style={{ marginBottom: '20px' }}>Badges Recentes</BadgeName>
+                     <RecentBadges>
+             <BadgeName style={{ marginBottom: '20px' }}>Selos Recentes</BadgeName>
             {userBadges.length === 0 ? (
-              <div style={{ textAlign: 'center', color: '#6a6a6a', padding: '20px' }}>
-                Nenhuma badge conquistada ainda
-              </div>
+                             <div style={{ textAlign: 'center', color: '#6a6a6a', padding: '20px' }}>
+                 Nenhum selo conquistado ainda
+               </div>
             ) : (
               userBadges.slice(0, 5).map(userBadge => (
                 <RecentBadgeItem key={userBadge.id}>

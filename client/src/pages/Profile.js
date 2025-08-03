@@ -821,7 +821,7 @@ const Profile = () => {
 
   return (
     <Container>
-      <Title>Perfil</Title>
+      <Title>Configurações</Title>
       
       <Grid>
         <Card>
@@ -933,61 +933,7 @@ const Profile = () => {
           </AvatarSection>
         </Card>
 
-        <Card>
-          <CardTitle>Estatísticas</CardTitle>
-          
-          <StatsGrid>
-            <StatCard>
-              <StatValue>{stats.total_evs}</StatValue>
-              <StatLabel>Total de EVs</StatLabel>
-            </StatCard>
-            <StatCard>
-              <StatValue>{stats.average_score}</StatValue>
-              <StatLabel>Média Geral</StatLabel>
-            </StatCard>
-            <StatCard>
-              <StatValue>{stats.max_score}</StatValue>
-              <StatLabel>Pontuação Máxima</StatLabel>
-            </StatCard>
-            <StatCard>
-              <StatValue>{stats.min_score}</StatValue>
-              <StatLabel>Pontuação Mínima</StatLabel>
-            </StatCard>
-            <StatCard>
-              <StatValue>{stats.consecutive_days}</StatValue>
-              <StatLabel>Dias Consecutivos</StatLabel>
-            </StatCard>
-            <StatCard>
-              <StatValue>{stats.total_points}</StatValue>
-              <StatLabel>Total de Pontos</StatLabel>
-            </StatCard>
-          </StatsGrid>
 
-          <HistoryChart>
-            <ChartTitle>Histórico dos Últimos 7 Dias</ChartTitle>
-            {history.length === 0 ? (
-              <div style={{ textAlign: 'center', color: '#6a6a6a', padding: '20px' }}>
-                Nenhum EV registrado ainda
-              </div>
-            ) : (
-              history.map((day, index) => (
-                <ChartBar key={index}>
-                  <ChartLabel>
-                    {day.date.toLocaleDateString('pt-BR', { weekday: 'short' })}
-                  </ChartLabel>
-                  <ChartBarFill 
-                    style={{ 
-                      width: `${(day.count / getMaxValue()) * 200}px` 
-                    }} 
-                  />
-                  <ChartValue>
-                    {day.count} EVs (média: {day.average})
-                  </ChartValue>
-                </ChartBar>
-              ))
-            )}
-          </HistoryChart>
-        </Card>
         <Card>
           <CardTitle>Ajustes</CardTitle>
           <div style={{ marginBottom: 16 }}>

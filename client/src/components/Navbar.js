@@ -394,7 +394,7 @@ const Navbar = () => {
         <>
           <NavLinks>
             <NavLink to="/dashboard" active={isActive('/dashboard')}>
-              Dashboard
+              Registro
             </NavLink>
             {(isAdmin || leaderboardVisible) && (
               <NavLink to="/leaderboard" active={isActive('/leaderboard')}>
@@ -403,12 +403,9 @@ const Navbar = () => {
             )}
             {(isAdmin || badgesVisible) && (
               <NavLink to="/badges" active={isActive('/badges')}>
-                Badges
+                Conquistas
               </NavLink>
             )}
-            <NavLink to="/profile" active={isActive('/profile')}>
-              Perfil
-            </NavLink>
             {(isAdmin || chatVisible) && (
               <NavLinkContainer>
                 <NavLink to="/chat" active={isActive('/chat')}>
@@ -426,16 +423,12 @@ const Navbar = () => {
                 Loja
               </NavLink>
             )}
-            {(isAdmin || sobreVisible) && (
-              <NavLink to="/sobre" active={isActive('/sobre')}>
-                Sobre
-              </NavLink>
-            )}
-            {(isAdmin || multimidiaVisible) && (
-              <NavLink to="/multimidia" active={isActive('/multimidia')}>
-                Multimídia
-              </NavLink>
-            )}
+            <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
+              Estatísticas
+            </NavLink>
+            <NavLink to="/profile" active={isActive('/profile')}>
+              Configurações
+            </NavLink>
             {isAdmin && (
               <NavLink to="/dev" active={isActive('/dev')}>
                 🔧 Dev
@@ -462,49 +455,42 @@ const Navbar = () => {
               ☰
             </MobileMenuBtn>
             <MobileMenuContent open={mobileMenuOpen}>
-              <NavLink to="/dashboard" active={isActive('/dashboard')}>
-                Dashboard
+                          <NavLink to="/dashboard" active={isActive('/dashboard')}>
+              Registro
+            </NavLink>
+            {(isAdmin || leaderboardVisible) && (
+              <NavLink to="/leaderboard" active={isActive('/leaderboard')}>
+                Ranking
               </NavLink>
-              {(isAdmin || leaderboardVisible) && (
-                <NavLink to="/leaderboard" active={isActive('/leaderboard')}>
-                  Ranking
-                </NavLink>
-              )}
-              {(isAdmin || badgesVisible) && (
-                <NavLink to="/badges" active={isActive('/badges')}>
-                  Badges
-                </NavLink>
-              )}
-              <NavLink to="/profile" active={isActive('/profile')}>
-                Perfil
+            )}
+            {(isAdmin || badgesVisible) && (
+              <NavLink to="/badges" active={isActive('/badges')}>
+                Conquistas
               </NavLink>
-              {(isAdmin || chatVisible) && (
-                <NavLinkContainer>
-                  <NavLink to="/chat" active={isActive('/chat')}>
-                    Chat
-                  </NavLink>
-                  {unreadCount > 0 && (
-                    <NotificationBadge count={unreadCount}>
-                      {unreadCount}
-                    </NotificationBadge>
-                  )}
-                </NavLinkContainer>
-              )}
-              {(isAdmin || lojaVisible) && (
-                <NavLink to="/loja" active={isActive('/loja')}>
-                  Loja
+            )}
+            {(isAdmin || chatVisible) && (
+              <NavLinkContainer>
+                <NavLink to="/chat" active={isActive('/chat')}>
+                  Chat
                 </NavLink>
-              )}
-              {(isAdmin || sobreVisible) && (
-                <NavLink to="/sobre" active={isActive('/sobre')}>
-                  Sobre
-                </NavLink>
-              )}
-              {(isAdmin || multimidiaVisible) && (
-                <NavLink to="/multimidia" active={isActive('/multimidia')}>
-                  Multimídia
-                </NavLink>
-              )}
+                {unreadCount > 0 && (
+                  <NotificationBadge count={unreadCount}>
+                    {unreadCount}
+                  </NotificationBadge>
+                )}
+              </NavLinkContainer>
+            )}
+            {(isAdmin || lojaVisible) && (
+              <NavLink to="/loja" active={isActive('/loja')}>
+                Loja
+              </NavLink>
+            )}
+            <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
+              Estatísticas
+            </NavLink>
+            <NavLink to="/profile" active={isActive('/profile')}>
+              Configurações
+            </NavLink>
               {isAdmin && (
                 <NavLink to="/dev" active={isActive('/dev')}>
                   🔧 Dev

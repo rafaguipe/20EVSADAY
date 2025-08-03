@@ -755,34 +755,7 @@ const Dashboard = () => {
   return (
     <Container>
       <EVReminder />
-      <Title>Dashboard</Title>
-      
-      <StatsGrid>
-        <StatCard>
-          <StatValue>{stats.total_evs}</StatValue>
-          <StatLabel>Total de EVs</StatLabel>
-        </StatCard>
-        <StatCard>
-          <StatValue>{stats.average_score}</StatValue>
-          <StatLabel>Média Geral</StatLabel>
-        </StatCard>
-        <StatCard>
-          <StatValue>{stats.max_score}</StatValue>
-          <StatLabel>Pontuação Máxima</StatLabel>
-        </StatCard>
-        <StatCard>
-          <StatValue>{stats.today_evs}</StatValue>
-          <StatLabel>EVs Hoje</StatLabel>
-        </StatCard>
-        <StatCard>
-          <StatValue>{stats.today_points}</StatValue>
-          <StatLabel>Pontos Hoje</StatLabel>
-        </StatCard>
-        <StatCard>
-          <StatValue>{stats.week_evs}</StatValue>
-          <StatLabel>EVs na Semana</StatLabel>
-        </StatCard>
-      </StatsGrid>
+      <Title>Registro</Title>
       
       {/* Barra de Progresso Diária */}
       <DailyProgressBar currentEVs={stats.today_evs} targetEVs={20} />

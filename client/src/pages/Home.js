@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import styled from 'styled-components';
+import { supabase } from '../supabaseClient';
 
 const Hero = styled.div`
   min-height: 100vh;
@@ -173,14 +174,112 @@ const StatLabel = styled.div`
   text-transform: uppercase;
 `;
 
+const AboutSection = styled.div`
+  padding: 60px 20px;
+  background: rgba(26, 26, 26, 0.9);
+  border-top: 2px solid #4a4a4a;
+`;
+
+const AboutContainer = styled.div`
+  max-width: 900px;
+  margin: 0 auto;
+`;
+
+const AboutTitle = styled.h2`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 24px;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+`;
+
+const AboutCard = styled.div`
+  background: rgba(26, 26, 26, 0.9);
+  border: 2px solid #4a4a4a;
+  border-radius: 8px;
+  padding: 30px;
+  margin-bottom: 30px;
+  backdrop-filter: blur(10px);
+`;
+
+const AboutCardHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+`;
+
+const AboutCardLogo = styled.img`
+  height: 60px;
+  width: auto;
+`;
+
+const AboutCardTitle = styled.h3`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 16px;
+  color: #ffffff;
+  text-transform: uppercase;
+`;
+
+const AboutCardText = styled.div`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: #6a6a6a;
+  line-height: 1.6;
+  white-space: pre-wrap;
+`;
+
 const Home = () => {
   const { isAuthenticated } = useAuth();
+  const [gpcText, setGpcText] = useState('');
+  const [liderareText, setLiderareText] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadAboutContent();
+  }, []);
+
+  const loadAboutContent = async () => {
+    try {
+      setLoading(true);
+      
+      // Carregar texto sobre GPC
+      const { data: gpcData, error: gpcError } = await supabase
+        .rpc('get_system_setting', {
+          p_key: 'sobre_gpc_text'
+        });
+
+      if (gpcError) {
+        console.error('Erro ao carregar texto GPC:', gpcError);
+      } else {
+        setGpcText(gpcData || 'Texto sobre GPC Jogos Evolutivos não configurado.');
+      }
+
+      // Carregar texto sobre Liderare
+      const { data: liderareData, error: liderareError } = await supabase
+        .rpc('get_system_setting', {
+          p_key: 'sobre_liderare_text'
+        });
+
+      if (liderareError) {
+        console.error('Erro ao carregar texto Liderare:', liderareError);
+      } else {
+        setLiderareText(liderareData || 'Texto sobre IC Liderare não configurado.');
+      }
+
+    } catch (error) {
+      console.error('Erro ao carregar conteúdo:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
       <Hero>
         <Logo>
-          <LogoImage src="/assets/logo_jogos_evolutivos.png" alt="Logo" />
+          <LogoImage src="/assets/boneco1.png" alt="Logo" />
         </Logo>
         
         <Title>#20EVSADAY</Title>
@@ -193,7 +292,7 @@ const Home = () => {
         <CTAButtons>
           {isAuthenticated ? (
             <CTAButton to="/dashboard" className="primary">
-              Ir para Dashboard
+              Ir para Registro
             </CTAButton>
           ) : (
             <>
@@ -279,6 +378,28 @@ const Home = () => {
           <StatLabel>Possibilidades de crescimento</StatLabel>
         </StatCard>
       </Stats>
+
+      <AboutSection>
+        <AboutContainer>
+          <AboutTitle>Sobre</AboutTitle>
+          
+          <AboutCard>
+            <AboutCardHeader>
+              <AboutCardLogo src="/assets/logo_jogos_evolutivos.png" alt="GPC Jogos Evolutivos" />
+              <AboutCardTitle>🎮 GPC Jogos Evolutivos</AboutCardTitle>
+            </AboutCardHeader>
+            <AboutCardText>{gpcText}</AboutCardText>
+          </AboutCard>
+
+          <AboutCard>
+            <AboutCardHeader>
+              <AboutCardLogo src="/assets/Liderare.png" alt="IC Liderare" />
+              <AboutCardTitle>🏛️ IC Liderare</AboutCardTitle>
+            </AboutCardHeader>
+            <AboutCardText>{liderareText}</AboutCardText>
+          </AboutCard>
+        </AboutContainer>
+      </AboutSection>
     </div>
   );
 };
