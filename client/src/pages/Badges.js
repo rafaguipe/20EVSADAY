@@ -476,13 +476,26 @@ const Badges = () => {
              target = 4000;
              earned = totalPoints4k >= 4000;
              break;
-           case 'milestone_5000_points':
-             const totalPoints5k = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
-             progress = Math.min((totalPoints5k / 5000) * 100, 100);
-             current = totalPoints5k;
-             target = 5000;
-             earned = totalPoints5k >= 5000;
-             break;
+                     case 'milestone_5000_points':
+            const totalPoints5k = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
+            progress = Math.min((totalPoints5k / 5000) * 100, 100);
+            current = totalPoints5k;
+            target = 5000;
+            earned = totalPoints5k >= 5000;
+            break;
+          case 'experimento_grupal_1':
+            // Verificar se fez EV entre 11h e 12h do dia 6/8/2025 (horário de Brasília)
+            const experimentDate = new Date('2025-08-06T11:00:00-03:00');
+            const experimentEndDate = new Date('2025-08-06T12:00:00-03:00');
+            const hasExperimentEV = userEVs?.some(ev => {
+              const evDate = new Date(ev.created_at);
+              return evDate >= experimentDate && evDate < experimentEndDate;
+            }) || false;
+            progress = hasExperimentEV ? 100 : 0;
+            current = hasExperimentEV ? 1 : 0;
+            target = 1;
+            earned = hasExperimentEV;
+            break;
           default:
             progress = 0;
             current = 0;

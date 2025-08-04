@@ -1009,29 +1009,7 @@ const Profile = () => {
               {tabBlinkEnabledLocal ? 'LIGADO' : 'DESLIGADO'}
             </ToggleStatus>
           </ToggleContainer>
-          <ExportSection>
-            <ExportTitle>Exportar Dados</ExportTitle>
-            <ExportButtons>
-              <ExportButton 
-                variant="txt" 
-                onClick={exportToTXT} 
-                disabled={exportLoading || evData.length === 0}
-              >
-                📄 Exportar Relatório
-              </ExportButton>
-              <ExportButton 
-                variant="csv" 
-                onClick={exportToCSV} 
-                disabled={exportLoading || evData.length === 0}
-              >
-                📊 Exportar CSV
-              </ExportButton>
-            </ExportButtons>
-            <ExportInfo>
-              Exporte todos os seus registros de EV com data, hora, intensidade e comentários.
-              {evData.length > 0 && ` Total de ${evData.length} registros disponíveis.`}
-            </ExportInfo>
-          </ExportSection>
+
         </Card>
       </Grid>
     </Container>
