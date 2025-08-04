@@ -235,7 +235,7 @@ const Estatisticas = () => {
       // Carregar estatísticas da comunidade
       const { data: allEVs, error: communityError } = await supabase
         .from('evs')
-        .select('score');
+        .select('*');
 
       if (communityError) throw communityError;
 
