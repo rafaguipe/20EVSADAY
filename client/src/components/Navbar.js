@@ -426,6 +426,11 @@ const Navbar = () => {
             <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
               Estatísticas
             </NavLink>
+            {(isAdmin || multimidiaVisible) && (
+              <NavLink to="/multimidia" active={isActive('/multimidia')}>
+                Multimídia
+              </NavLink>
+            )}
             <NavLink to="/profile" active={isActive('/profile')}>
               Configurações
             </NavLink>
@@ -488,6 +493,11 @@ const Navbar = () => {
             <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
               Estatísticas
             </NavLink>
+            {(isAdmin || multimidiaVisible) && (
+              <NavLink to="/multimidia" active={isActive('/multimidia')}>
+                Multimídia
+              </NavLink>
+            )}
             <NavLink to="/profile" active={isActive('/profile')}>
               Configurações
             </NavLink>
