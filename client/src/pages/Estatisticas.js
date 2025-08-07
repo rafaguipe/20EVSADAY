@@ -180,6 +180,89 @@ const ExportInfo = styled.div`
   line-height: 1.4;
 `;
 
+// Estilos para o gráfico de barras
+const ChartSection = styled.div`
+  background: rgba(26, 26, 26, 0.9);
+  border: 2px solid #4a4a4a;
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 30px;
+  backdrop-filter: blur(10px);
+`;
+
+const ChartTitle = styled.h3`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: #ffffff;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  text-align: center;
+`;
+
+const ChartContainer = styled.div`
+  height: 300px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 20px 0;
+  border-bottom: 2px solid #4a4a4a;
+  border-left: 2px solid #4a4a4a;
+  position: relative;
+`;
+
+const Bar = styled.div`
+  background: linear-gradient(180deg, #4CAF50 0%, #45a049 100%);
+  border: 1px solid #2a2a2a;
+  border-radius: 4px 4px 0 0;
+  min-width: 20px;
+  position: relative;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: linear-gradient(180deg, #6aaa6a 0%, #4CAF50 100%);
+    transform: scaleY(1.05);
+  }
+`;
+
+const BarLabel = styled.div`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #6a6a6a;
+  text-align: center;
+  margin-top: 8px;
+  transform: rotate(-45deg);
+  white-space: nowrap;
+`;
+
+const BarValue = styled.div`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #ffffff;
+  text-align: center;
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  padding: 2px 4px;
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  
+  ${Bar}:hover & {
+    opacity: 1;
+  }
+`;
+
+const NoDataText = styled.div`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: #6a6a6a;
+  text-align: center;
+  padding: 40px;
+`;
+
 const Estatisticas = () => {
   const { user } = useAuth();
   const [userStats, setUserStats] = useState({
@@ -187,8 +270,7 @@ const Estatisticas = () => {
     total_points: 0,
     average_score: 0,
     max_score: 0,
-    consecutive_days: 0,
-    total_badges: 0
+    consecutive_days: 0
   });
   const [communityStats, setCommunityStats] = useState({
     total_evs: 0,
@@ -198,6 +280,7 @@ const Estatisticas = () => {
   const [error, setError] = useState(null);
   const [exportLoading, setExportLoading] = useState(false);
   const [evData, setEvData] = useState([]);
+  const [dailyChartData, setDailyChartData] = useState([]);
 
   const loadStats = async () => {
     if (!user) return;
@@ -217,100 +300,47 @@ const Estatisticas = () => {
       
       setEvData(userEVs || []);
 
-      // Carregar badges do usuário
-      const { data: userBadges, error: badgesError } = await supabase
-        .from('user_badges')
-        .select('badge_id')
-        .eq('user_id', user.id);
-
-      if (badgesError) throw badgesError;
-
-      // Carregar todas as badges disponíveis para calcular dinamicamente
-      const { data: allBadges, error: allBadgesError } = await supabase
-        .from('badges')
-        .select('*');
-
-      if (allBadgesError) throw allBadgesError;
-
-      // Carregar estatísticas da comunidade
-      const { data: allEVs, error: communityError } = await supabase
-        .from('evs')
-        .select('*');
-
-      if (communityError) throw communityError;
-
       // Calcular estatísticas
       const total_evs = userEVs?.length || 0;
       const total_points = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
       const average_score = total_evs > 0 ? (total_points / total_evs).toFixed(1) : 0;
       const max_score = total_evs > 0 ? Math.max(...userEVs.map(ev => ev.score)) : 0;
       
-
-
       // Calcular dias consecutivos
       const consecutiveDays = calculateConsecutiveDays(userEVs);
-      
-      // Recalcular badges com os dias consecutivos
-      const earnedBadges = allBadges?.filter(badge => {
-        const userBadgeIds = userBadges?.map(ub => ub.badge_id) || [];
-        
-        // Se já tem a badge no banco, considera como conquistada
-        if (userBadgeIds.includes(badge.id)) {
-          return true;
-        }
-        
-        // Verificar badges calculadas dinamicamente
-        switch (badge.name) {
-          case 'first_ev':
-            return total_evs >= 1;
-          case 'persistente':
-            return consecutiveDays >= 7;
-          case 'determinado':
-            return consecutiveDays >= 14;
-          case 'focado':
-            return consecutiveDays >= 30;
-          case 'milestone_1000_points':
-            return total_points >= 1000;
-          case 'milestone_2000_points':
-            return total_points >= 2000;
-          case 'milestone_3000_points':
-            return total_points >= 3000;
-          case 'milestone_4000_points':
-            return total_points >= 4000;
-          case 'milestone_5000_points':
-            return total_points >= 5000;
-          case 'experimento_grupal_1':
-            // Verificar se fez EV entre 11h e 12h do dia 6/8/2025 (horário de Brasília)
-            const experimentDate = new Date('2025-08-06T11:00:00-03:00');
-            const experimentEndDate = new Date('2025-08-06T12:00:00-03:00');
-            return userEVs.some(ev => {
-              const evDate = new Date(ev.created_at);
-              return evDate >= experimentDate && evDate < experimentEndDate;
-            });
-          default:
-            return false;
-        }
-      }) || [];
-      
-      const total_badges = earnedBadges.length;
 
-      // Calcular estatísticas da comunidade
-      const community_total_evs = allEVs?.length || 0;
-      const community_average_score = community_total_evs > 0 
-        ? (allEVs.reduce((sum, ev) => sum + ev.score, 0) / community_total_evs).toFixed(1) 
-        : 0;
+      // Preparar dados do gráfico de barras (EVs por dia)
+      const dailyData = prepareDailyChartData(userEVs);
+      setDailyChartData(dailyData);
 
       setUserStats({
         total_evs,
         total_points,
         average_score,
         max_score,
-        consecutive_days: consecutiveDays,
-        total_badges
+        consecutive_days: consecutiveDays
       });
 
+      // Carregar total de EVs da comunidade (mesmo método da janelinha)
+      const { count: communityTotalEVs, error: communityError } = await supabase
+        .from('evs')
+        .select('*', { count: 'exact' });
+
+      if (communityError) throw communityError;
+
+      // Carregar todas as EVs para calcular média da comunidade
+      const { data: allEVs, error: allEVsError } = await supabase
+        .from('evs')
+        .select('score');
+
+      if (allEVsError) throw allEVsError;
+
+      const community_average_score = allEVs?.length > 0 
+        ? (allEVs.reduce((sum, ev) => sum + ev.score, 0) / allEVs.length).toFixed(1) 
+        : 0;
+
       setCommunityStats({
-        total_evs: community_total_evs,
+        total_evs: communityTotalEVs || 0,
         average_score: community_average_score
       });
 
@@ -320,6 +350,30 @@ const Estatisticas = () => {
     }
     
     setLoading(false);
+  };
+
+  const prepareDailyChartData = (evs) => {
+    if (!evs || evs.length === 0) return [];
+
+    // Agrupar EVs por dia
+    const dailyCounts = evs.reduce((acc, ev) => {
+      const date = new Date(ev.created_at).toLocaleDateString('pt-BR');
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Converter para array e ordenar por data
+    const sortedDates = Object.keys(dailyCounts).sort((a, b) => {
+      return new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-'));
+    });
+
+    // Pegar os últimos 14 dias ou todos se menos que 14
+    const recentDates = sortedDates.slice(-14);
+
+    return recentDates.map(date => ({
+      date,
+      count: dailyCounts[date]
+    }));
   };
 
   const calculateConsecutiveDays = (evs) => {
@@ -474,6 +528,9 @@ const Estatisticas = () => {
     loadStats();
   }, [user]);
 
+  // Calcular altura máxima para o gráfico
+  const maxCount = dailyChartData.length > 0 ? Math.max(...dailyChartData.map(d => d.count)) : 0;
+
   return (
     <Container>
       <Title>Estatísticas</Title>
@@ -500,16 +557,34 @@ const Estatisticas = () => {
           <StatValue>{userStats.consecutive_days}</StatValue>
           <StatLabel>Dias Consecutivos</StatLabel>
         </StatCard>
-        <StatCard>
-          <StatValue>{userStats.total_badges}</StatValue>
-          <StatLabel>Selos Conquistados</StatLabel>
-        </StatCard>
       </StatsGrid>
+
+      {/* Gráfico de barras de EVs por dia */}
+      {dailyChartData.length > 0 && (
+        <ChartSection>
+          <ChartTitle>EVs por Dia (Últimos 14 dias)</ChartTitle>
+          <ChartContainer>
+            {dailyChartData.map((day, index) => (
+              <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+                <Bar 
+                  style={{ 
+                    height: `${maxCount > 0 ? (day.count / maxCount) * 200 : 0}px`,
+                    maxHeight: '200px'
+                  }}
+                >
+                  <BarValue>{day.count}</BarValue>
+                </Bar>
+                <BarLabel>{day.date}</BarLabel>
+              </div>
+            ))}
+          </ChartContainer>
+        </ChartSection>
+      )}
 
       <SectionTitle>Estatísticas da Comunidade</SectionTitle>
       <StatsGrid>
         <StatCard>
-          <StatValue>{communityStats.total_evs}</StatValue>
+          <StatValue>{communityStats.total_evs.toLocaleString()}</StatValue>
           <StatLabel>Total de EVs</StatLabel>
         </StatCard>
         <StatCard>
@@ -528,16 +603,6 @@ const Estatisticas = () => {
 
       {!loading && !error && (
         <>
-          <ProgressSection>
-            <ProgressTitle>Progresso de Pontos</ProgressTitle>
-            <ProgressBar>
-              <ProgressFill percentage={Math.min((userStats.total_points / 5000) * 100, 100)} />
-            </ProgressBar>
-            <ProgressText>
-              {userStats.total_points}/5000 pontos ({Math.min((userStats.total_points / 5000) * 100, 100).toFixed(0)}%)
-            </ProgressText>
-          </ProgressSection>
-
           <ExportSection>
             <ExportTitle>Exportar Dados</ExportTitle>
             <ExportButtons>
