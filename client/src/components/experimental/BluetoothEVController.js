@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../supabaseClient';
 import './BluetoothEVController.css';
@@ -8,8 +8,12 @@ const BluetoothEVController = () => {
   const [clickCount, setClickCount] = useState(0);
   const [lastClickTime, setLastClickTime] = useState(0);
   const [isListening, setIsListening] = useState(false);
-  const [currentVolume, setCurrentVolume] = useState(0);
   const [isEnabled, setIsEnabled] = useState(false);
+  
+  // Usar refs para valores que não devem causar re-renderização
+  const clickCountRef = useRef(0);
+  const lastClickTimeRef = useRef(0);
+  const currentVolumeRef = useRef(0);
   
   // Configurações de tolerância
   const CLICK_TIMEOUT = 1000; // 1 segundo entre cliques
@@ -44,33 +48,39 @@ const BluetoothEVController = () => {
     return null;
   }
 
+  // Função para lidar com mudanças de volume (usando refs)
+  const handleVolumeChange = useCallback(() => {
+    console.log('🔊 Mudança de volume detectada');
+    
+    const now = Date.now();
+    const timeSinceLastClick = now - lastClickTimeRef.current;
+    
+    // Se passou muito tempo, reinicia a contagem
+    if (timeSinceLastClick > CLICK_TIMEOUT) {
+      clickCountRef.current = 1;
+      lastClickTimeRef.current = now;
+      setClickCount(1);
+      setLastClickTime(now);
+    } else {
+      // Incrementa o contador
+      const newCount = Math.min(clickCountRef.current + 1, MAX_CLICKS);
+      clickCountRef.current = newCount;
+      lastClickTimeRef.current = now;
+      
+      setClickCount(newCount);
+      setLastClickTime(now);
+      
+      // Se atingiu o máximo ou passou tempo, registra o EV
+      if (newCount === MAX_CLICKS || timeSinceLastClick > CLICK_TIMEOUT) {
+        registerEV(newCount - 1); // -1 porque queremos notas 0-4, não 1-5
+        resetClickCounter();
+      }
+    }
+  }, []);
+
   // Detectar mudanças de volume
   useEffect(() => {
     if (!isListening) return;
-
-    const handleVolumeChange = () => {
-      console.log('🔊 Mudança de volume detectada');
-      
-      const now = Date.now();
-      const timeSinceLastClick = now - lastClickTime;
-      
-      // Se passou muito tempo, reinicia a contagem
-      if (timeSinceLastClick > CLICK_TIMEOUT) {
-        setClickCount(1);
-        setLastClickTime(now);
-      } else {
-        // Incrementa o contador
-        const newCount = Math.min(clickCount + 1, MAX_CLICKS);
-        setClickCount(newCount);
-        setLastClickTime(now);
-        
-        // Se atingiu o máximo ou passou tempo, registra o EV
-        if (newCount === MAX_CLICKS || timeSinceLastClick > CLICK_TIMEOUT) {
-          registerEV(newCount - 1); // -1 porque queremos notas 0-4, não 1-5
-          resetClickCounter();
-        }
-      }
-    };
 
     // Adicionar listener para mudanças de volume
     window.addEventListener('volumechange', handleVolumeChange);
@@ -91,8 +101,8 @@ const BluetoothEVController = () => {
             
             const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
             
-            if (Math.abs(average - currentVolume) > 10) { // Mudança significativa
-              setCurrentVolume(average);
+            if (Math.abs(average - currentVolumeRef.current) > 10) { // Mudança significativa
+              currentVolumeRef.current = average;
               handleVolumeChange();
             }
           })
@@ -104,12 +114,11 @@ const BluetoothEVController = () => {
       window.removeEventListener('volumechange', handleVolumeChange);
       clearInterval(volumeCheckInterval);
     };
-  }, [isListening, clickCount, lastClickTime, currentVolume]);
+  }, [isListening, handleVolumeChange]);
 
   const startListening = () => {
     setIsListening(true);
-    setClickCount(0);
-    setLastClickTime(0);
+    resetClickCounter();
   };
 
   const stopListening = () => {
@@ -118,6 +127,8 @@ const BluetoothEVController = () => {
   };
 
   const resetClickCounter = () => {
+    clickCountRef.current = 0;
+    lastClickTimeRef.current = 0;
     setClickCount(0);
     setLastClickTime(0);
   };
@@ -126,6 +137,8 @@ const BluetoothEVController = () => {
     const now = Date.now();
     const newCount = Math.min(clickCount + 1, MAX_CLICKS);
     
+    clickCountRef.current = newCount;
+    lastClickTimeRef.current = now;
     setClickCount(newCount);
     setLastClickTime(now);
     
