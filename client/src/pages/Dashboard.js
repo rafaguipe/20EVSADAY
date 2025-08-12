@@ -9,6 +9,7 @@ import SoundEffect from '../components/SoundEffect';
 import BadgeNotification from '../components/BadgeNotification';
 import DailyProgressBar from '../components/DailyProgressBar';
 import EVReminder from '../components/EVReminder';
+import BluetoothEVController from '../components/experimental/BluetoothEVController';
 
 const Container = styled.div`
   padding: 20px;
@@ -859,6 +860,9 @@ const Dashboard = () => {
           setPlayVictorySound(false);
         }}
       />
+
+      {/* Funcionalidade Experimental - Bluetooth EV Controller */}
+      <BluetoothEVController />
     </Container>
   );
 };
