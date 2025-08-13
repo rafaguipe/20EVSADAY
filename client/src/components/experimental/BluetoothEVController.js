@@ -19,35 +19,6 @@ const BluetoothEVController = () => {
   const CLICK_TIMEOUT = 1000; // 1 segundo entre cliques
   const MAX_CLICKS = 5; // Máximo 5 cliques (notas 0-4)
 
-  // Verificar se o recurso está habilitado nas configurações
-  useEffect(() => {
-    const checkBluetoothEVEnabled = async () => {
-      if (!user) return;
-      
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('bluetooth_ev_enabled')
-          .eq('user_id', user.id)
-          .single();
-        
-        if (!error && data) {
-          setIsEnabled(data.bluetooth_ev_enabled || false);
-        }
-      } catch (err) {
-        console.log('Erro ao verificar configuração Bluetooth EV:', err);
-        setIsEnabled(false);
-      }
-    };
-
-    checkBluetoothEVEnabled();
-  }, [user]);
-
-  // Só renderiza se estiver habilitado nas configurações
-  if (!isEnabled) {
-    return null;
-  }
-
   // Função para lidar com mudanças de volume (usando refs)
   const handleVolumeChange = useCallback(() => {
     console.log('🔊 Mudança de volume detectada');
@@ -77,6 +48,30 @@ const BluetoothEVController = () => {
       }
     }
   }, []);
+
+  // Verificar se o recurso está habilitado nas configurações
+  useEffect(() => {
+    const checkBluetoothEVEnabled = async () => {
+      if (!user) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('bluetooth_ev_enabled')
+          .eq('user_id', user.id)
+          .single();
+        
+        if (!error && data) {
+          setIsEnabled(data.bluetooth_ev_enabled || false);
+        }
+      } catch (err) {
+        console.log('Erro ao verificar configuração Bluetooth EV:', err);
+        setIsEnabled(false);
+      }
+    };
+
+    checkBluetoothEVEnabled();
+  }, [user]);
 
   // Detectar mudanças de volume
   useEffect(() => {
@@ -116,24 +111,25 @@ const BluetoothEVController = () => {
     };
   }, [isListening, handleVolumeChange]);
 
-  const startListening = () => {
-    setIsListening(true);
-    resetClickCounter();
-  };
-
-  const stopListening = () => {
-    setIsListening(false);
-    resetClickCounter();
-  };
-
-  const resetClickCounter = () => {
+  // Funções auxiliares
+  const resetClickCounter = useCallback(() => {
     clickCountRef.current = 0;
     lastClickTimeRef.current = 0;
     setClickCount(0);
     setLastClickTime(0);
-  };
+  }, []);
 
-  const simulateClick = () => {
+  const startListening = useCallback(() => {
+    setIsListening(true);
+    resetClickCounter();
+  }, [resetClickCounter]);
+
+  const stopListening = useCallback(() => {
+    setIsListening(false);
+    resetClickCounter();
+  }, [resetClickCounter]);
+
+  const simulateClick = useCallback(() => {
     const now = Date.now();
     const newCount = Math.min(clickCount + 1, MAX_CLICKS);
     
@@ -147,9 +143,9 @@ const BluetoothEVController = () => {
       registerEV(newCount - 1);
       resetClickCounter();
     }
-  };
+  }, [clickCount, resetClickCounter]);
 
-  const registerEV = async (level) => {
+  const registerEV = useCallback(async (level) => {
     try {
       const response = await fetch('/api/evs', {
         method: 'POST',
@@ -173,9 +169,9 @@ const BluetoothEVController = () => {
     } catch (error) {
       console.error('❌ Erro na API:', error);
     }
-  };
+  }, []);
 
-  const giveFeedback = (level) => {
+  const giveFeedback = useCallback((level) => {
     // Vibração (se suportado)
     if (navigator.vibrate) {
       const pattern = [100, 50, 100, 50, 100];
@@ -185,7 +181,12 @@ const BluetoothEVController = () => {
     // Som de confirmação
     const audio = new Audio('/sounds/coin.mp3');
     audio.play().catch(e => console.log('🔊 Erro ao tocar som:', e));
-  };
+  }, []);
+
+  // Só renderiza se estiver habilitado nas configurações
+  if (!isEnabled) {
+    return null;
+  }
 
   return (
     <div className="bluetooth-ev-controller">
