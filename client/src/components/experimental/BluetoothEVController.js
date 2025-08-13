@@ -27,9 +27,9 @@ const BluetoothEVController = () => {
   // Configurações de tolerância
   const CLICK_TIMEOUT = 1000; // 1 segundo entre cliques
   const MAX_CLICKS = 5; // Máximo 5 cliques (notas 0-4)
-  const AUDIO_THRESHOLD = 50; // Threshold muito mais alto para reduzir falsos positivos
-  const DEBOUNCE_TIME = 500; // 500ms entre detecções
-  const CONSECUTIVE_THRESHOLD = 3; // Precisa de 3 detecções consecutivas para confirmar
+  const AUDIO_THRESHOLD = 30; // Threshold mais baixo para detectar controles BT
+  const DEBOUNCE_TIME = 300; // 300ms entre detecções
+  const CONSECUTIVE_THRESHOLD = 2; // Precisa de apenas 2 detecções consecutivas
 
   // Função para lidar com mudanças de volume (usando refs)
   const handleVolumeChange = useCallback(() => {
@@ -146,46 +146,48 @@ const BluetoothEVController = () => {
            
            const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
            
-           // Estabelecer baseline na primeira execução
-           if (audioBaselineRef.current === 0) {
-             audioBaselineRef.current = average;
-             currentVolumeRef.current = average;
-             return;
-           }
+                       // Estabelecer baseline na primeira execução
+            if (audioBaselineRef.current === 0) {
+              audioBaselineRef.current = average;
+              currentVolumeRef.current = average;
+              console.log('🎵 Baseline estabelecido:', average);
+              return;
+            }
            
            // Calcular mudança relativa ao baseline
            const changeFromBaseline = Math.abs(average - audioBaselineRef.current);
            const changeFromCurrent = Math.abs(average - currentVolumeRef.current);
            
-           // Só detectar se a mudança for muito significativa
-           if (changeFromBaseline > AUDIO_THRESHOLD && changeFromCurrent > AUDIO_THRESHOLD / 2) {
-             const now = Date.now();
-             
-             // Debounce mais longo para evitar falsos positivos
-             if (now - lastDetectionTimeRef.current > DEBOUNCE_TIME) {
-               console.log('🎵 Mudança significativa detectada:', {
-                 average,
-                 baseline: audioBaselineRef.current,
-                 changeFromBaseline,
-                 changeFromCurrent
-               });
-               
-               // Incrementar contador de detecções consecutivas
-               consecutiveDetectionsRef.current++;
-               
-               // Só confirmar se houver múltiplas detecções consecutivas
-               if (consecutiveDetectionsRef.current >= CONSECUTIVE_THRESHOLD) {
-                 console.log('✅ Detecção confirmada após', CONSECUTIVE_THRESHOLD, 'leituras consecutivas');
-                 currentVolumeRef.current = average;
-                 lastDetectionTimeRef.current = now;
-                 consecutiveDetectionsRef.current = 0; // Reset contador
-                 handleVolumeChange();
-               }
-             }
-           } else {
-             // Reset contador se não houver mudança significativa
-             consecutiveDetectionsRef.current = 0;
-           }
+                       // Detectar mudanças significativas (mais sensível para controles BT)
+            if (changeFromBaseline > AUDIO_THRESHOLD || changeFromCurrent > AUDIO_THRESHOLD / 2) {
+              const now = Date.now();
+              
+              // Debounce mais curto para controles BT
+              if (now - lastDetectionTimeRef.current > DEBOUNCE_TIME) {
+                console.log('🎵 Mudança de áudio detectada:', {
+                  average,
+                  baseline: audioBaselineRef.current,
+                  changeFromBaseline,
+                  changeFromCurrent,
+                  threshold: AUDIO_THRESHOLD
+                });
+                
+                // Incrementar contador de detecções consecutivas
+                consecutiveDetectionsRef.current++;
+                
+                // Confirmar com menos detecções consecutivas para controles BT
+                if (consecutiveDetectionsRef.current >= CONSECUTIVE_THRESHOLD) {
+                  console.log('✅ Detecção confirmada após', CONSECUTIVE_THRESHOLD, 'leituras consecutivas');
+                  currentVolumeRef.current = average;
+                  lastDetectionTimeRef.current = now;
+                  consecutiveDetectionsRef.current = 0; // Reset contador
+                  handleVolumeChange();
+                }
+              }
+            } else {
+              // Reset contador se não houver mudança significativa
+              consecutiveDetectionsRef.current = 0;
+            }
            
            // Continuar monitorando
            if (isListening) {
@@ -277,17 +279,16 @@ const BluetoothEVController = () => {
     try {
       console.log('📝 Registrando EV nível:', level);
       
-      // Usar Supabase diretamente em vez da API inexistente
-      const { data, error } = await supabase
-        .from('evs')
-        .insert([
-          {
-            user_id: user.id,
-            score: level,
-            notes: `EV via Botão Bluetooth - Nível ${level}`,
-            source: 'bluetooth_button'
-          }
-        ]);
+             // Usar Supabase diretamente em vez da API inexistente
+       const { data, error } = await supabase
+         .from('evs')
+         .insert([
+           {
+             user_id: user.id,
+             score: level,
+             notes: `EV via Botão Bluetooth - Nível ${level}`
+           }
+         ]);
 
       if (error) {
         console.error('❌ Erro ao registrar EV no Supabase:', error);
