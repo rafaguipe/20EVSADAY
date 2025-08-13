@@ -93,47 +93,10 @@ const BluetoothEVController = () => {
     // Detectar teclas de volume do controle Bluetooth/teclado
     const handleKeyPress = (event) => {
       console.log('⌨️ Tecla pressionada:', event.code, event.key);
-      console.log('🔍 Debug - event.code === AudioVolumeUp:', event.code === 'AudioVolumeUp');
-      console.log('🔍 Debug - event.code === AudioVolumeDown:', event.code === 'AudioVolumeDown');
-      console.log('🔍 Debug - event.code length:', event.code.length);
-      console.log('🔍 Debug - event.code char codes:', Array.from(event.code).map(c => c.charCodeAt(0)));
       
-      let isVolumeKey = false;
-      
-      // Teclas de volume padrão
-      if (event.code === 'AudioVolumeUp' || event.code === 'AudioVolumeDown') {
-        console.log('🔊 Tecla de volume padrão detectada:', event.code);
-        isVolumeKey = true;
-      }
-      
-      // Teclas de volume alternativas (alguns controles usam)
-      else if (event.code === 'F10' || event.code === 'F11') {
-        console.log('🔊 Tecla de volume alternativa detectada:', event.code);
-        isVolumeKey = true;
-      }
-      
-      // Teclas de seta (alguns controles usam)
-      else if (event.code === 'ArrowUp' || event.code === 'ArrowDown') {
-        console.log('🔊 Tecla de seta detectada:', event.code);
-        isVolumeKey = true;
-      }
-      
-      // Teclas numéricas (alguns controles usam)
-      else if (event.code === 'Digit1' || event.code === 'Digit2' || 
-               event.code === 'Digit3' || event.code === 'Digit4' || 
-               event.code === 'Digit5') {
-        console.log('🔊 Tecla numérica detectada:', event.code);
-        isVolumeKey = true;
-      }
-      
-      // Se for uma tecla de volume, processar
-      if (isVolumeKey) {
-        console.log('✅ Tecla de volume confirmada, processando...');
-        handleVolumeChange();
-      } else {
-        console.log('❌ Tecla não reconhecida como volume');
-        console.log('🔍 Debug - Comparações falharam para:', event.code);
-      }
+      // SIMPLIFICADO: Se detectou qualquer tecla, processar
+      console.log('🔊 Tecla detectada, processando...');
+      handleVolumeChange();
     };
 
     // Detectar mudanças de volume do sistema (fallback)
