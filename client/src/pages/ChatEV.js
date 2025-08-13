@@ -230,7 +230,7 @@ const EmptyState = styled.div`
 const ChatEV = () => {
   const { user } = useAuth();
   const { markAsRead } = useChatNotification();
-  const { markAsReadDM } = useDMNotification();
+  const { markDMsAsRead } = useDMNotification();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);

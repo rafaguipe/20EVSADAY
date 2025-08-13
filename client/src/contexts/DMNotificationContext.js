@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '../supabaseClient';
 import toast from 'react-hot-toast';
+import { DM_CONFIG, isDMEnabled, markCriticalError, clearCriticalError } from '../config/dmConfig';
 
 const DMNotificationContext = createContext();
 
@@ -17,10 +18,18 @@ export const DMNotificationProvider = ({ children }) => {
   const { user } = useAuth();
   const [unreadDMs, setUnreadDMs] = useState(0);
   const [lastDMNotification, setLastDMNotification] = useState(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(isDMEnabled()); // Controle de segurança
+  
+  // Usar refs para evitar re-renders desnecessários
+  const channelRef = useRef(null);
+  const isInitializedRef = useRef(false);
+  const errorCountRef = useRef(0);
+  const maxErrors = DM_CONFIG.MAX_ERRORS; // Máximo de erros antes de desabilitar
 
-  // Carregar contagem de DMs não lidas
-  const loadUnreadCount = useCallback(async () => {
+  // Função para carregar contagem de DMs não lidas
+  const loadUnreadCount = async () => {
+    if (!user || !isEnabled) return;
+    
     try {
       const { data, error } = await supabase
         .from('chat_ev_direct_messages')
@@ -36,78 +45,14 @@ export const DMNotificationProvider = ({ children }) => {
       setUnreadDMs(data?.length || 0);
     } catch (error) {
       console.error('Erro ao carregar contagem de DMs:', error);
+      handleError();
     }
-  }, [user]);
+  };
 
-  // Lidar com nova DM recebida
-  const handleNewDM = useCallback((newDM) => {
-    console.log('🎉 Nova DM recebida de:', newDM.sender_id);
+  // Função para marcar DMs como lidas
+  const markDMsAsRead = async (senderId) => {
+    if (!user || !isEnabled) return;
     
-    // Atualizar contagem
-    setUnreadDMs(prev => prev + 1);
-    
-    // Salvar notificação
-    setLastDMNotification({
-      id: newDM.id,
-      sender_id: newDM.sender_id,
-      message: newDM.message,
-      timestamp: new Date()
-    });
-
-    // Mostrar toast de notificação
-    showDMNotification(newDM);
-  }, []);
-
-  // Lidar com atualização de DM
-  const handleDMUpdate = useCallback((updatedDM) => {
-    // Se a DM foi marcada como lida, atualizar contagem
-    if (updatedDM.is_read) {
-      setUnreadDMs(prev => Math.max(0, prev - 1));
-    }
-  }, []);
-
-  // Mostrar notificação toast
-  const showDMNotification = useCallback(async (dm) => {
-    try {
-      // Buscar username do remetente
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('username')
-        .eq('user_id', dm.sender_id)
-        .single();
-
-      const senderName = profile?.username || 'Usuário';
-      
-      // Mostrar toast
-      toast.success(
-        `💬 Nova mensagem de ${senderName}`,
-        {
-          duration: 5000,
-          icon: '💬',
-          style: {
-            background: '#9C27B0',
-            color: 'white',
-            fontFamily: 'Press Start 2P, monospace'
-          }
-        }
-      );
-    } catch (error) {
-      console.error('Erro ao mostrar notificação:', error);
-      // Fallback sem username
-      toast.success('💬 Nova mensagem privada!', {
-        duration: 5000,
-        icon: '💬',
-        style: {
-          background: '#9C27B0',
-          color: 'white',
-          fontFamily: 'Press Start 2P, monospace'
-        }
-      });
-    }
-  }, []);
-
-  // Marcar DMs como lidas
-  const markDMsAsRead = useCallback(async (senderId) => {
     try {
       const { error } = await supabase.rpc('mark_dm_as_read', {
         conversation_user_id: senderId
@@ -118,34 +63,50 @@ export const DMNotificationProvider = ({ children }) => {
         return;
       }
 
-      // Atualizar contagem local
+      // Recarregar contagem
       await loadUnreadCount();
     } catch (error) {
       console.error('Erro ao marcar DMs como lidas:', error);
+      handleError();
     }
-  }, [loadUnreadCount]);
+  };
 
-  // Limpar notificação
-  const clearNotification = useCallback(() => {
+  // Função para limpar notificação
+  const clearNotification = () => {
     setLastDMNotification(null);
-  }, []);
+  };
 
-  // Carregar contagem inicial de DMs não lidas
-  useEffect(() => {
-    if (user) {
-      loadUnreadCount();
+  // Controle de erro - desabilita funcionalidade se houver muitos erros
+  const handleError = () => {
+    errorCountRef.current += 1;
+    if (errorCountRef.current >= maxErrors) {
+      console.warn('🚨 Muitos erros no sistema de DMs. Desabilitando funcionalidade.');
+      setIsEnabled(false);
+      markCriticalError(); // Marcar erro crítico no localStorage
+      // Limpar conexões
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
     }
-  }, [user, loadUnreadCount]);
+  };
 
-  // Configurar Realtime para DMs
+  // Configurar Realtime apenas uma vez por usuário
   useEffect(() => {
-    if (!user) return;
+    if (!user || isInitializedRef.current || !isEnabled) return;
 
+    isInitializedRef.current = true;
+    
     const setupRealtime = async () => {
       try {
-        // Inscrever para mudanças na tabela de DMs
+        // Limpar canal anterior se existir
+        if (channelRef.current) {
+          supabase.removeChannel(channelRef.current);
+        }
+
+        // Criar novo canal
         const channel = supabase
-          .channel('dm_notifications')
+          .channel(`dm_notifications_${user.id}`)
           .on(
             'postgres_changes',
             {
@@ -155,8 +116,34 @@ export const DMNotificationProvider = ({ children }) => {
               filter: `receiver_id=eq.${user.id}`
             },
             (payload) => {
-              console.log('🔔 Nova DM recebida:', payload);
-              handleNewDM(payload.new);
+              try {
+                console.log('🔔 Nova DM recebida:', payload);
+                
+                // Atualizar contagem
+                setUnreadDMs(prev => prev + 1);
+                
+                // Salvar notificação
+                setLastDMNotification({
+                  id: payload.new.id,
+                  sender_id: payload.new.sender_id,
+                  message: payload.new.message,
+                  timestamp: new Date()
+                });
+
+                // Mostrar toast simples (sem consulta ao banco)
+                toast.success('💬 Nova mensagem privada!', {
+                  duration: DM_CONFIG.TOAST_DURATION,
+                  icon: '💬',
+                  style: {
+                    background: '#9C27B0',
+                    color: 'white',
+                    fontFamily: 'Press Start 2P, monospace'
+                  }
+                });
+              } catch (error) {
+                console.error('Erro ao processar nova DM:', error);
+                handleError();
+              }
             }
           )
           .on(
@@ -168,141 +155,70 @@ export const DMNotificationProvider = ({ children }) => {
               filter: `receiver_id=eq.${user.id}`
             },
             (payload) => {
-              console.log('🔄 DM atualizada:', payload);
-              handleDMUpdate(payload.new);
+              try {
+                // Se a DM foi marcada como lida, atualizar contagem
+                if (payload.new.is_read) {
+                  setUnreadDMs(prev => Math.max(0, prev - 1));
+                }
+              } catch (error) {
+                console.error('Erro ao processar atualização de DM:', error);
+                handleError();
+              }
             }
           )
           .subscribe((status) => {
-            console.log('📡 Status do canal DM:', status);
-            setIsConnected(status === 'SUBSCRIBED');
+            if (status === 'CHANNEL_ERROR') {
+              console.error('❌ Erro no canal Realtime');
+              handleError();
+            }
           });
 
-        return () => {
-          supabase.removeChannel(channel);
-        };
+        channelRef.current = channel;
+        
+        // Carregar contagem inicial
+        await loadUnreadCount();
+        
       } catch (error) {
         console.error('Erro ao configurar Realtime para DMs:', error);
+        handleError();
+        isInitializedRef.current = false;
       }
     };
 
     setupRealtime();
-  }, [user, handleNewDM, handleDMUpdate]);
 
-  // Carregar contagem de DMs não lidas
-  const loadUnreadCount = useCallback(async () => {
-    try {
-      const { data, error } = await supabase
-        .from('chat_ev_direct_messages')
-        .select('id')
-        .eq('receiver_id', user.id)
-        .eq('is_read', false);
-
-      if (error) {
-        console.error('Erro ao carregar contagem de DMs:', error);
-        return;
+    // Cleanup quando o usuário mudar
+    return () => {
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
       }
+      isInitializedRef.current = false;
+    };
+  }, [user?.id, isEnabled]); // user.id e isEnabled como dependências
 
-      setUnreadDMs(data?.length || 0);
-    } catch (error) {
-      console.error('Erro ao carregar contagem de DMs:', error);
-    }
-  }, [user]);
-
-  // Lidar com nova DM recebida
-  const handleNewDM = useCallback((newDM) => {
-    console.log('🎉 Nova DM recebida de:', newDM.sender_id);
-    
-    // Atualizar contagem
-    setUnreadDMs(prev => prev + 1);
-    
-    // Salvar notificação
-    setLastDMNotification({
-      id: newDM.id,
-      sender_id: newDM.sender_id,
-      message: newDM.message,
-      timestamp: new Date()
-    });
-
-    // Mostrar toast de notificação
-    showDMNotification(newDM);
-  }, []);
-
-  // Lidar com atualização de DM
-  const handleDMUpdate = useCallback((updatedDM) => {
-    // Se a DM foi marcada como lida, atualizar contagem
-    if (updatedDM.is_read) {
-      setUnreadDMs(prev => Math.max(0, prev - 1));
-    }
-  }, []);
-
-  // Mostrar notificação toast
-  const showDMNotification = useCallback(async (dm) => {
-    try {
-      // Buscar username do remetente
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('username')
-        .eq('user_id', dm.sender_id)
-        .single();
-
-      const senderName = profile?.username || 'Usuário';
-      
-      // Mostrar toast
-      toast.success(
-        `💬 Nova mensagem de ${senderName}`,
-        {
-          duration: 5000,
-          icon: '💬',
-          style: {
-            background: '#9C27B0',
-            color: 'white',
-            fontFamily: 'Press Start 2P, monospace'
-          }
-        }
-      );
-    } catch (error) {
-      console.error('Erro ao mostrar notificação:', error);
-      // Fallback sem username
-      toast.success('💬 Nova mensagem privada!', {
-        duration: 5000,
-        icon: '💬',
-        style: {
-          background: '#9C27B0',
-          color: 'white',
-          fontFamily: 'Press Start 2P, monospace'
-        }
-      });
-    }
-  }, []);
-
-  // Marcar DMs como lidas
-  const markDMsAsRead = useCallback(async (senderId) => {
-    try {
-      const { error } = await supabase.rpc('mark_dm_as_read', {
-        conversation_user_id: senderId
-      });
-
-      if (error) {
-        console.error('Erro ao marcar DMs como lidas:', error);
-        return;
+  // Cleanup quando o componente for desmontado
+  useEffect(() => {
+    return () => {
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
       }
-
-      // Atualizar contagem local
-      await loadUnreadCount();
-    } catch (error) {
-      console.error('Erro ao marcar DMs como lidas:', error);
-    }
-  }, [loadUnreadCount]);
-
-  // Limpar notificação
-  const clearNotification = useCallback(() => {
-    setLastDMNotification(null);
+      isInitializedRef.current = false;
+    };
   }, []);
+
+  // Reset de erros quando usuário mudar
+  useEffect(() => {
+    errorCountRef.current = 0;
+    clearCriticalError(); // Limpar erro crítico
+    setIsEnabled(isDMEnabled()); // Verificar se está habilitado
+  }, [user?.id]);
 
   const value = {
-    unreadDMs,
-    lastDMNotification,
-    isConnected,
+    unreadDMs: isEnabled ? unreadDMs : 0,
+    lastDMNotification: isEnabled ? lastDMNotification : null,
+    isEnabled,
     loadUnreadCount,
     markDMsAsRead,
     clearNotification
