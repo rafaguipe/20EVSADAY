@@ -11,6 +11,7 @@ const BluetoothEVController = () => {
   const [isListening, setIsListening] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [detectionMethod, setDetectionMethod] = useState('none');
+  const [audioDetectionEnabled, setAudioDetectionEnabled] = useState(true);
   
   // Usar refs para valores que não devem causar re-renderização
   const clickCountRef = useRef(0);
@@ -20,10 +21,15 @@ const BluetoothEVController = () => {
   const analyserRef = useRef(null);
   const mediaStreamRef = useRef(null);
   const lastDetectionTimeRef = useRef(0);
+  const audioBaselineRef = useRef(0);
+  const consecutiveDetectionsRef = useRef(0);
   
   // Configurações de tolerância
   const CLICK_TIMEOUT = 1000; // 1 segundo entre cliques
   const MAX_CLICKS = 5; // Máximo 5 cliques (notas 0-4)
+  const AUDIO_THRESHOLD = 50; // Threshold muito mais alto para reduzir falsos positivos
+  const DEBOUNCE_TIME = 500; // 500ms entre detecções
+  const CONSECUTIVE_THRESHOLD = 3; // Precisa de 3 detecções consecutivas para confirmar
 
   // Função para lidar com mudanças de volume (usando refs)
   const handleVolumeChange = useCallback(() => {
@@ -131,33 +137,61 @@ const BluetoothEVController = () => {
         setDetectionMethod('audio');
         console.log('✅ Detecção de áudio iniciada com sucesso!');
         
-        // Monitorar mudanças de áudio
-        const checkAudioLevel = () => {
-          if (!isListening || !analyserRef.current) return;
-          
-          const dataArray = new Uint8Array(analyser.frequencyBinCount);
-          analyserRef.current.getByteFrequencyData(dataArray);
-          
-          const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
-          
-          // Detectar mudanças significativas (pode ser um clique)
-          // Aumentar o threshold para reduzir cliques fantasma
-          if (Math.abs(average - currentVolumeRef.current) > 25) {
-            const now = Date.now();
-            // Debounce: só detectar se passou pelo menos 200ms desde a última detecção
-            if (now - lastDetectionTimeRef.current > 200) {
-              console.log('🎵 Mudança de áudio detectada:', average);
-              currentVolumeRef.current = average;
-              lastDetectionTimeRef.current = now;
-              handleVolumeChange();
-            }
-          }
-          
-          // Continuar monitorando
-          if (isListening) {
-            requestAnimationFrame(checkAudioLevel);
-          }
-        };
+                 // Monitorar mudanças de áudio
+         const checkAudioLevel = () => {
+           if (!isListening || !analyserRef.current || !audioDetectionEnabled) return;
+           
+           const dataArray = new Uint8Array(analyser.frequencyBinCount);
+           analyserRef.current.getByteFrequencyData(dataArray);
+           
+           const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+           
+           // Estabelecer baseline na primeira execução
+           if (audioBaselineRef.current === 0) {
+             audioBaselineRef.current = average;
+             currentVolumeRef.current = average;
+             return;
+           }
+           
+           // Calcular mudança relativa ao baseline
+           const changeFromBaseline = Math.abs(average - audioBaselineRef.current);
+           const changeFromCurrent = Math.abs(average - currentVolumeRef.current);
+           
+           // Só detectar se a mudança for muito significativa
+           if (changeFromBaseline > AUDIO_THRESHOLD && changeFromCurrent > AUDIO_THRESHOLD / 2) {
+             const now = Date.now();
+             
+             // Debounce mais longo para evitar falsos positivos
+             if (now - lastDetectionTimeRef.current > DEBOUNCE_TIME) {
+               console.log('🎵 Mudança significativa detectada:', {
+                 average,
+                 baseline: audioBaselineRef.current,
+                 changeFromBaseline,
+                 changeFromCurrent
+               });
+               
+               // Incrementar contador de detecções consecutivas
+               consecutiveDetectionsRef.current++;
+               
+               // Só confirmar se houver múltiplas detecções consecutivas
+               if (consecutiveDetectionsRef.current >= CONSECUTIVE_THRESHOLD) {
+                 console.log('✅ Detecção confirmada após', CONSECUTIVE_THRESHOLD, 'leituras consecutivas');
+                 currentVolumeRef.current = average;
+                 lastDetectionTimeRef.current = now;
+                 consecutiveDetectionsRef.current = 0; // Reset contador
+                 handleVolumeChange();
+               }
+             }
+           } else {
+             // Reset contador se não houver mudança significativa
+             consecutiveDetectionsRef.current = 0;
+           }
+           
+           // Continuar monitorando
+           if (isListening) {
+             requestAnimationFrame(checkAudioLevel);
+           }
+         };
         
         checkAudioLevel();
         
@@ -204,6 +238,8 @@ const BluetoothEVController = () => {
   const resetClickCounter = useCallback(() => {
     clickCountRef.current = 0;
     lastClickTimeRef.current = 0;
+    consecutiveDetectionsRef.current = 0;
+    audioBaselineRef.current = 0;
     setClickCount(0);
     setLastClickTime(0);
   }, []);
@@ -312,6 +348,26 @@ const BluetoothEVController = () => {
         <div className="detection-status">
           <p><strong>🔍 Método de detecção:</strong> {detectionMethod}</p>
           <p><strong>💡 Dica:</strong> Use as teclas de volume do seu controle ou teclado</p>
+          
+          {/* Toggle para detecção de áudio */}
+          <div style={{ marginTop: '10px', padding: '10px', background: 'rgba(255,255,255,0.1)', borderRadius: '5px' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={audioDetectionEnabled}
+                onChange={(e) => setAudioDetectionEnabled(e.target.checked)}
+                style={{ width: '16px', height: '16px' }}
+              />
+              <span><strong>🎵 Detecção de áudio</strong></span>
+            </label>
+            <p style={{ fontSize: '12px', marginTop: '5px', opacity: 0.8 }}>
+              {audioDetectionEnabled ? 
+                '✅ Ativada (pode detectar cliques do controle)' : 
+                '❌ Desativada (apenas teclas de volume)'
+              }
+            </p>
+          </div>
+          
           <p><strong>⚠️ Nota:</strong> Se houver muitos cliques fantasma, desative a detecção de áudio</p>
         </div>
       )}
