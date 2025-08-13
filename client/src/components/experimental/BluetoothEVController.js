@@ -9,11 +9,15 @@ const BluetoothEVController = () => {
   const [lastClickTime, setLastClickTime] = useState(0);
   const [isListening, setIsListening] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
+  const [detectionMethod, setDetectionMethod] = useState('none');
   
   // Usar refs para valores que não devem causar re-renderização
   const clickCountRef = useRef(0);
   const lastClickTimeRef = useRef(0);
   const currentVolumeRef = useRef(0);
+  const audioContextRef = useRef(null);
+  const analyserRef = useRef(null);
+  const mediaStreamRef = useRef(null);
   
   // Configurações de tolerância
   const CLICK_TIMEOUT = 1000; // 1 segundo entre cliques
@@ -21,7 +25,7 @@ const BluetoothEVController = () => {
 
   // Função para lidar com mudanças de volume (usando refs)
   const handleVolumeChange = useCallback(() => {
-    console.log('🔊 Mudança de volume detectada');
+    console.log('🔊 Mudança de volume detectada!');
     
     const now = Date.now();
     const timeSinceLastClick = now - lastClickTimeRef.current;
@@ -32,6 +36,7 @@ const BluetoothEVController = () => {
       lastClickTimeRef.current = now;
       setClickCount(1);
       setLastClickTime(now);
+      console.log('🔄 Reiniciando contagem: 1 clique');
     } else {
       // Incrementa o contador
       const newCount = Math.min(clickCountRef.current + 1, MAX_CLICKS);
@@ -41,8 +46,11 @@ const BluetoothEVController = () => {
       setClickCount(newCount);
       setLastClickTime(now);
       
+      console.log(`🎯 Clique detectado! Contador: ${newCount}/${MAX_CLICKS}`);
+      
       // Se atingiu o máximo ou passou tempo, registra o EV
-      if (newCount === MAX_CLICKS || timeSinceLastClick > CLICK_TIMEOUT) {
+      if (newCount === MAX_CLICKS) {
+        console.log('🎉 Máximo de cliques atingido! Registrando EV...');
         registerEV(newCount - 1); // -1 porque queremos notas 0-4, não 1-5
         resetClickCounter();
       }
@@ -73,41 +81,114 @@ const BluetoothEVController = () => {
     checkBluetoothEVEnabled();
   }, [user]);
 
-  // Detectar mudanças de volume
+  // Detectar mudanças de volume com múltiplos métodos
   useEffect(() => {
     if (!isListening) return;
 
-    // Adicionar listener para mudanças de volume
-    window.addEventListener('volumechange', handleVolumeChange);
-    
-    // Fallback: detectar mudanças de volume via setInterval
-    const volumeCheckInterval = setInterval(() => {
-      // Tentar detectar mudanças de volume (método alternativo)
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ audio: true })
-          .then(stream => {
-            const audioContext = new AudioContext();
-            const source = audioContext.createMediaStreamSource(stream);
-            const analyser = audioContext.createAnalyser();
-            source.connect(analyser);
-            
-            const dataArray = new Uint8Array(analyser.frequencyBinCount);
-            analyser.getByteFrequencyData(dataArray);
-            
-            const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
-            
-            if (Math.abs(average - currentVolumeRef.current) > 10) { // Mudança significativa
-              currentVolumeRef.current = average;
-              handleVolumeChange();
-            }
-          })
-          .catch(err => console.log('🔊 Erro ao acessar áudio:', err));
+    console.log('🎧 Iniciando detecção de volume...');
+
+    // Método 1: Evento volumechange (funciona com teclas de volume)
+    const handleVolumeChangeEvent = () => {
+      console.log('🔊 Evento volumechange disparado');
+      handleVolumeChange();
+    };
+
+    // Método 2: Teclas de volume do teclado
+    const handleKeyPress = (event) => {
+      if (event.code === 'AudioVolumeUp' || event.code === 'AudioVolumeDown') {
+        console.log('⌨️ Tecla de volume pressionada:', event.code);
+        handleVolumeChange();
       }
-    }, 100);
+    };
+
+    // Método 3: Detecção de áudio via Web Audio API
+    const startAudioDetection = async () => {
+      try {
+        console.log('🎵 Iniciando detecção de áudio...');
+        
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+          audio: {
+            echoCancellation: false,
+            noiseSuppression: false,
+            autoGainControl: false
+          } 
+        });
+        
+        mediaStreamRef.current = stream;
+        
+        const audioContext = new AudioContext();
+        audioContextRef.current = audioContext;
+        
+        const source = audioContext.createMediaStreamSource(stream);
+        const analyser = audioContext.createAnalyser();
+        analyserRef.current = analyser;
+        
+        analyser.fftSize = 256;
+        source.connect(analyser);
+        
+        setDetectionMethod('audio');
+        console.log('✅ Detecção de áudio iniciada com sucesso!');
+        
+        // Monitorar mudanças de áudio
+        const checkAudioLevel = () => {
+          if (!isListening || !analyserRef.current) return;
+          
+          const dataArray = new Uint8Array(analyser.frequencyBinCount);
+          analyserRef.current.getByteFrequencyData(dataArray);
+          
+          const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+          
+          // Detectar mudanças significativas (pode ser um clique)
+          if (Math.abs(average - currentVolumeRef.current) > 15) {
+            console.log('🎵 Mudança de áudio detectada:', average);
+            currentVolumeRef.current = average;
+            handleVolumeChange();
+          }
+          
+          // Continuar monitorando
+          if (isListening) {
+            requestAnimationFrame(checkAudioLevel);
+          }
+        };
+        
+        checkAudioLevel();
+        
+      } catch (err) {
+        console.log('❌ Erro ao iniciar detecção de áudio:', err);
+        setDetectionMethod('keyboard');
+        
+        // Fallback: apenas teclas de volume
+        console.log('🔄 Usando detecção por teclas de volume');
+      }
+    };
+
+    // Iniciar detecção
+    startAudioDetection();
+
+    // Adicionar event listeners
+    window.addEventListener('volumechange', handleVolumeChangeEvent);
+    window.addEventListener('keydown', handleKeyPress);
 
     return () => {
-      window.removeEventListener('volumechange', handleVolumeChange);
-      clearInterval(volumeCheckInterval);
+      console.log('⏹️ Parando detecção de volume...');
+      
+      // Limpar event listeners
+      window.removeEventListener('volumechange', handleVolumeChangeEvent);
+      window.removeEventListener('keydown', handleKeyPress);
+      
+      // Limpar recursos de áudio
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach(track => track.stop());
+        mediaStreamRef.current = null;
+      }
+      
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
+      }
+      
+      analyserRef.current = null;
+      setDetectionMethod('none');
     };
   }, [isListening, handleVolumeChange]);
 
@@ -120,16 +201,19 @@ const BluetoothEVController = () => {
   }, []);
 
   const startListening = useCallback(() => {
+    console.log('🎧 Iniciando detecção...');
     setIsListening(true);
     resetClickCounter();
   }, [resetClickCounter]);
 
   const stopListening = useCallback(() => {
+    console.log('⏹️ Parando detecção...');
     setIsListening(false);
     resetClickCounter();
   }, [resetClickCounter]);
 
   const simulateClick = useCallback(() => {
+    console.log('🧪 Simulando clique...');
     const now = Date.now();
     const newCount = Math.min(clickCount + 1, MAX_CLICKS);
     
@@ -147,6 +231,8 @@ const BluetoothEVController = () => {
 
   const registerEV = useCallback(async (level) => {
     try {
+      console.log('📝 Registrando EV nível:', level);
+      
       const response = await fetch('/api/evs', {
         method: 'POST',
         headers: {
@@ -211,6 +297,14 @@ const BluetoothEVController = () => {
         </div>
       )}
 
+      {/* Status da detecção */}
+      {isListening && (
+        <div className="detection-status">
+          <p><strong>🔍 Método de detecção:</strong> {detectionMethod}</p>
+          <p><strong>💡 Dica:</strong> Use as teclas de volume do seu controle ou teclado</p>
+        </div>
+      )}
+
       {/* Simulação para teste */}
       <div className="test-mode">
         <h4>🧪 Modo Teste (simular cliques)</h4>
@@ -234,6 +328,7 @@ const BluetoothEVController = () => {
           <li><strong>5 cliques:</strong> EV nível 4</li>
         </ul>
         <p><strong>⏰ Tolerância:</strong> 1 segundo entre cliques</p>
+        <p><strong>🎮 Controles:</strong> Teclas de volume do controle Bluetooth ou teclado</p>
         <p><strong>⚠️ Nota:</strong> Ative apenas quando quiser usar o botão Bluetooth</p>
       </div>
     </div>
