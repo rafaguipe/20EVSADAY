@@ -15,9 +15,10 @@ const BluetoothEVController = () => {
   // Usar refs para valores que não devem causar re-renderização
   const clickCountRef = useRef(0);
   const lastClickTimeRef = useRef(0);
+  const clickTimeoutRef = useRef(null);
   
   // Configurações de tolerância
-  const CLICK_TIMEOUT = 1000; // 1 segundo entre cliques
+  const CLICK_TIMEOUT = 1000; // 1 segundo para aguardar mais cliques
   const MAX_CLICKS = 5; // Máximo 5 cliques (notas 0-4)
 
   // Função para lidar com mudanças de volume (usando refs)
@@ -25,33 +26,38 @@ const BluetoothEVController = () => {
     console.log('🔊 Tecla de volume detectada!');
     
     const now = Date.now();
-    const timeSinceLastClick = now - lastClickTimeRef.current;
     
-    // Se passou muito tempo, reinicia a contagem
-    if (timeSinceLastClick > CLICK_TIMEOUT) {
-      clickCountRef.current = 1;
-      lastClickTimeRef.current = now;
-      setClickCount(1);
-      setLastClickTime(now);
-      console.log('🔄 Reiniciando contagem: 1 clique');
-    } else {
-      // Incrementa o contador
-      const newCount = Math.min(clickCountRef.current + 1, MAX_CLICKS);
-      clickCountRef.current = newCount;
-      lastClickTimeRef.current = now;
-      
-      setClickCount(newCount);
-      setLastClickTime(now);
-      
-      console.log(`🎯 Clique detectado! Contador: ${newCount}/${MAX_CLICKS}`);
-      
-      // Se atingiu o máximo ou passou tempo, registra o EV
-      if (newCount === MAX_CLICKS) {
-        console.log('🎉 Máximo de cliques atingido! Registrando EV...');
-        registerEV(newCount - 1); // -1 porque queremos notas 0-4, não 1-5
-        resetClickCounter();
-      }
+    // Limpar timeout anterior se existir
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+      clickTimeoutRef.current = null;
     }
+    
+    // Incrementar contador
+    const newCount = Math.min(clickCountRef.current + 1, MAX_CLICKS);
+    clickCountRef.current = newCount;
+    lastClickTimeRef.current = now;
+    
+    setClickCount(newCount);
+    setLastClickTime(now);
+    
+    console.log(`🎯 Clique detectado! Contador: ${newCount}/${MAX_CLICKS}`);
+    
+    // Se atingiu o máximo, registra imediatamente
+    if (newCount === MAX_CLICKS) {
+      console.log('🎉 Máximo de cliques atingido! Registrando EV...');
+      registerEV(newCount - 1); // -1 porque queremos notas 0-4, não 1-5
+      resetClickCounter();
+      return;
+    }
+    
+    // Aguardar 1 segundo para mais cliques
+    clickTimeoutRef.current = setTimeout(() => {
+      console.log(`⏰ Timeout de ${CLICK_TIMEOUT}ms atingido. Registrando EV nível ${newCount - 1}...`);
+      registerEV(newCount - 1);
+      resetClickCounter();
+    }, CLICK_TIMEOUT);
+    
   }, []);
 
   // Verificar se o recurso está habilitado nas configurações
@@ -135,6 +141,12 @@ const BluetoothEVController = () => {
     return () => {
       console.log('⏹️ Parando detecção de teclas...');
       
+      // Limpar timeout se existir
+      if (clickTimeoutRef.current) {
+        clearTimeout(clickTimeoutRef.current);
+        clickTimeoutRef.current = null;
+      }
+      
       // Limpar event listeners
       window.removeEventListener('keydown', handleKeyPress);
       window.removeEventListener('volumechange', handleVolumeChangeEvent);
@@ -145,6 +157,12 @@ const BluetoothEVController = () => {
 
   // Funções auxiliares
   const resetClickCounter = useCallback(() => {
+    // Limpar timeout se existir
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+      clickTimeoutRef.current = null;
+    }
+    
     clickCountRef.current = 0;
     lastClickTimeRef.current = 0;
     setClickCount(0);
@@ -165,20 +183,8 @@ const BluetoothEVController = () => {
 
   const simulateClick = useCallback(() => {
     console.log('🧪 Simulando clique...');
-    const now = Date.now();
-    const newCount = Math.min(clickCount + 1, MAX_CLICKS);
-    
-    clickCountRef.current = newCount;
-    lastClickTimeRef.current = now;
-    setClickCount(newCount);
-    setLastClickTime(now);
-    
-    // Se atingiu o máximo, registra o EV
-    if (newCount === MAX_CLICKS) {
-      registerEV(newCount - 1);
-      resetClickCounter();
-    }
-  }, [clickCount, resetClickCounter]);
+    handleVolumeChange(); // Usar a mesma lógica
+  }, [handleVolumeChange]);
 
   const registerEV = useCallback(async (level) => {
     try {
@@ -255,6 +261,7 @@ const BluetoothEVController = () => {
           <p><strong>🔍 Método de detecção:</strong> {detectionMethod}</p>
           <p><strong>💡 Dica:</strong> Use as teclas de volume do seu controle Bluetooth</p>
           <p><strong>🔑 Teclas suportadas:</strong> Volume +/-, F10/F11, Setas, Números 1-5</p>
+          <p><strong>⏰ Lógica:</strong> Aguarda 1s após cada clique para mais cliques</p>
           <p><strong>⚠️ Nota:</strong> Não é necessário permitir acesso ao microfone</p>
         </div>
       )}
@@ -270,18 +277,23 @@ const BluetoothEVController = () => {
           🎯 Simular Clique
         </button>
         <p>Cliques atuais: {clickCount}/{MAX_CLICKS}</p>
+        {clickCount > 0 && (
+          <p style={{ color: '#4CAF50', fontWeight: 'bold' }}>
+            ⏰ Aguardando {CLICK_TIMEOUT/1000}s para mais cliques...
+          </p>
+        )}
       </div>
 
       <div className="instructions">
         <h4>📋 Como usar:</h4>
         <ul>
-          <li><strong>1 clique:</strong> EV nível 0</li>
-          <li><strong>2 cliques:</strong> EV nível 1</li>
-          <li><strong>3 cliques:</strong> EV nível 2</li>
-          <li><strong>4 cliques:</strong> EV nível 3</li>
-          <li><strong>5 cliques:</strong> EV nível 4</li>
+          <li><strong>1 clique + 1s:</strong> EV nível 0</li>
+          <li><strong>2 cliques + 1s:</strong> EV nível 1</li>
+          <li><strong>3 cliques + 1s:</strong> EV nível 2</li>
+          <li><strong>4 cliques + 1s:</strong> EV nível 3</li>
+          <li><strong>5 cliques:</strong> EV nível 4 (automático)</li>
         </ul>
-        <p><strong>⏰ Tolerância:</strong> 1 segundo entre cliques</p>
+        <p><strong>⏰ Tolerância:</strong> 1 segundo para aguardar mais cliques</p>
         <p><strong>🎮 Controles:</strong> Teclas de volume do controle Bluetooth</p>
         <p><strong>🔑 Teclas alternativas:</strong> F10/F11, Setas, Números 1-5</p>
         <p><strong>⚠️ Nota:</strong> Ative apenas quando quiser usar o botão Bluetooth</p>
