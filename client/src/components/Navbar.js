@@ -5,6 +5,7 @@ import { supabase } from '../supabaseClient';
 import styled from 'styled-components';
 import { useEVTimer } from '../contexts/EVTimerContext';
 import { useChatNotification } from '../contexts/ChatNotificationContext';
+import { useDMNotification } from '../contexts/DMNotificationContext';
 import OfflineIndicator from './OfflineIndicator';
 
 const Nav = styled.nav`
