@@ -94,34 +94,40 @@ const BluetoothEVController = () => {
     const handleKeyPress = (event) => {
       console.log('⌨️ Tecla pressionada:', event.code, event.key);
       
+      let isVolumeKey = false;
+      
       // Teclas de volume padrão
       if (event.code === 'AudioVolumeUp' || event.code === 'AudioVolumeDown') {
-        console.log('🔊 Tecla de volume detectada:', event.code);
-        handleVolumeChange();
-        return;
+        console.log('🔊 Tecla de volume padrão detectada:', event.code);
+        isVolumeKey = true;
       }
       
       // Teclas de volume alternativas (alguns controles usam)
-      if (event.code === 'F10' || event.code === 'F11') {
+      else if (event.code === 'F10' || event.code === 'F11') {
         console.log('🔊 Tecla de volume alternativa detectada:', event.code);
-        handleVolumeChange();
-        return;
+        isVolumeKey = true;
       }
       
       // Teclas de seta (alguns controles usam)
-      if (event.code === 'ArrowUp' || event.code === 'ArrowDown') {
+      else if (event.code === 'ArrowUp' || event.code === 'ArrowDown') {
         console.log('🔊 Tecla de seta detectada:', event.code);
-        handleVolumeChange();
-        return;
+        isVolumeKey = true;
       }
       
       // Teclas numéricas (alguns controles usam)
-      if (event.code === 'Digit1' || event.code === 'Digit2' || 
-          event.code === 'Digit3' || event.code === 'Digit4' || 
-          event.code === 'Digit5') {
+      else if (event.code === 'Digit1' || event.code === 'Digit2' || 
+               event.code === 'Digit3' || event.code === 'Digit4' || 
+               event.code === 'Digit5') {
         console.log('🔊 Tecla numérica detectada:', event.code);
+        isVolumeKey = true;
+      }
+      
+      // Se for uma tecla de volume, processar
+      if (isVolumeKey) {
+        console.log('✅ Tecla de volume confirmada, processando...');
         handleVolumeChange();
-        return;
+      } else {
+        console.log('❌ Tecla não reconhecida como volume');
       }
     };
 
