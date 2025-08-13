@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../supabaseClient';
 import './BluetoothEVController.css';
+import toast from 'react-hot-toast';
 
 const BluetoothEVController = () => {
   const { user } = useAuth();
@@ -18,6 +19,7 @@ const BluetoothEVController = () => {
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
   const mediaStreamRef = useRef(null);
+  const lastDetectionTimeRef = useRef(0);
   
   // Configurações de tolerância
   const CLICK_TIMEOUT = 1000; // 1 segundo entre cliques
@@ -139,10 +141,16 @@ const BluetoothEVController = () => {
           const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
           
           // Detectar mudanças significativas (pode ser um clique)
-          if (Math.abs(average - currentVolumeRef.current) > 15) {
-            console.log('🎵 Mudança de áudio detectada:', average);
-            currentVolumeRef.current = average;
-            handleVolumeChange();
+          // Aumentar o threshold para reduzir cliques fantasma
+          if (Math.abs(average - currentVolumeRef.current) > 25) {
+            const now = Date.now();
+            // Debounce: só detectar se passou pelo menos 200ms desde a última detecção
+            if (now - lastDetectionTimeRef.current > 200) {
+              console.log('🎵 Mudança de áudio detectada:', average);
+              currentVolumeRef.current = average;
+              lastDetectionTimeRef.current = now;
+              handleVolumeChange();
+            }
           }
           
           // Continuar monitorando
@@ -233,29 +241,31 @@ const BluetoothEVController = () => {
     try {
       console.log('📝 Registrando EV nível:', level);
       
-      const response = await fetch('/api/evs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('supabase.auth.token')}`
-        },
-        body: JSON.stringify({
-          score: level,
-          notes: `EV via Botão Bluetooth - Nível ${level}`,
-          source: 'bluetooth_button'
-        })
-      });
+      // Usar Supabase diretamente em vez da API inexistente
+      const { data, error } = await supabase
+        .from('evs')
+        .insert([
+          {
+            user_id: user.id,
+            score: level,
+            notes: `EV via Botão Bluetooth - Nível ${level}`,
+            source: 'bluetooth_button'
+          }
+        ]);
 
-      if (response.ok) {
+      if (error) {
+        console.error('❌ Erro ao registrar EV no Supabase:', error);
+        toast.error('Erro ao registrar EV');
+      } else {
         console.log('✅ EV nível', level, 'registrado com sucesso!');
         giveFeedback(level);
-      } else {
-        console.error('❌ Erro ao registrar EV:', response.status, response.statusText);
+        toast.success(`EV nível ${level} registrado!`);
       }
     } catch (error) {
-      console.error('❌ Erro na API:', error);
+      console.error('❌ Erro inesperado:', error);
+      toast.error('Erro inesperado ao registrar EV');
     }
-  }, []);
+  }, [user?.id]);
 
   const giveFeedback = useCallback((level) => {
     // Vibração (se suportado)
@@ -302,6 +312,7 @@ const BluetoothEVController = () => {
         <div className="detection-status">
           <p><strong>🔍 Método de detecção:</strong> {detectionMethod}</p>
           <p><strong>💡 Dica:</strong> Use as teclas de volume do seu controle ou teclado</p>
+          <p><strong>⚠️ Nota:</strong> Se houver muitos cliques fantasma, desative a detecção de áudio</p>
         </div>
       )}
 
