@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useAuth } from '../contexts/AuthContext';
 import { useChatNotification } from '../contexts/ChatNotificationContext';
+import { useDMNotification } from '../contexts/DMNotificationContext';
 import { supabase } from '../supabaseClient';
 import toast from 'react-hot-toast';
 
@@ -229,6 +230,7 @@ const EmptyState = styled.div`
 const ChatEV = () => {
   const { user } = useAuth();
   const { markAsRead } = useChatNotification();
+  const { markAsReadDM } = useDMNotification();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
@@ -335,8 +337,8 @@ const ChatEV = () => {
       setDmMessages(data || []);
       setSelectedConversation(otherUserId);
       
-      // Marcar mensagens como lidas
-      await supabase.rpc('mark_dm_as_read', { conversation_user_id: otherUserId });
+      // Marcar mensagens como lidas usando o contexto
+      await markDMsAsRead(otherUserId);
     } catch (error) {
       console.error('Erro ao carregar conversa DM:', error);
     } finally {

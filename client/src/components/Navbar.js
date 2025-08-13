@@ -224,21 +224,26 @@ const NotificationBadge = styled.div`
   }
 `;
 
+const DMNotificationBadge = styled(NotificationBadge)`
+  background: #ffd700; /* Amarelo para DMs */
+  color: #000; /* Texto preto para DMs */
+`;
+
 const Navbar = () => {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profile, setProfile] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [lojaVisible, setLojaVisible] = useState(false);
-  const [sobreVisible, setSobreVisible] = useState(false);
-  const [multimidiaVisible, setMultimidiaVisible] = useState(true);
-  const [chatVisible, setChatVisible] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [badgesVisible, setBadgesVisible] = useState(true);
   const [leaderboardVisible, setLeaderboardVisible] = useState(true);
+  const [lojaVisible, setLojaVisible] = useState(true);
+  const [multimidiaVisible, setMultimidiaVisible] = useState(true);
+  const [chatVisible, setChatVisible] = useState(true);
   const { timer: evTimer, formatTime } = useEVTimer();
   const { unreadCount } = useChatNotification();
+  const { unreadDMs } = useDMNotification();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -416,6 +421,12 @@ const Navbar = () => {
                     {unreadCount}
                   </NotificationBadge>
                 )}
+                {/* Indicador de DMs não lidas */}
+                {unreadDMs > 0 && (
+                  <DMNotificationBadge count={unreadDMs}>
+                    {unreadDMs}
+                  </DMNotificationBadge>
+                )}
               </NavLinkContainer>
             )}
             {(isAdmin || lojaVisible) && (
@@ -482,6 +493,12 @@ const Navbar = () => {
                   <NotificationBadge count={unreadCount}>
                     {unreadCount}
                   </NotificationBadge>
+                )}
+                {/* Indicador de DMs não lidas */}
+                {unreadDMs > 0 && (
+                  <DMNotificationBadge count={unreadDMs}>
+                    {unreadDMs}
+                  </DMNotificationBadge>
                 )}
               </NavLinkContainer>
             )}

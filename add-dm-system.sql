@@ -102,13 +102,13 @@ BEGIN
   ),
   
   latest_conversations AS (
-    SELECT DISTINCT ON (other_user_id)
-      other_user_id,
-      last_message,
-      last_message_time,
-      unread_count
-    FROM conversation_summary
-    ORDER BY other_user_id, last_message_time DESC
+    SELECT DISTINCT ON (cs.other_user_id)
+      cs.other_user_id,
+      cs.last_message,
+      cs.last_message_time,
+      cs.unread_count
+    FROM conversation_summary cs
+    ORDER BY cs.other_user_id, cs.last_message_time DESC
   )
   
   SELECT 

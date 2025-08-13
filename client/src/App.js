@@ -22,6 +22,8 @@ import { supabase } from './supabaseClient';
 import AnnouncementPopup from './components/AnnouncementPopup';
 import EVSMilestoneTracker from './components/EVSMilestoneTracker';
 import EVSMilestoneProgress from './components/EVSMilestoneProgress';
+import { DMNotificationProvider } from './contexts/DMNotificationContext';
+import DMNotificationIndicator from './components/DMNotificationIndicator';
 
 // Componente para rotas protegidas
 const ProtectedRoute = ({ children }) => {
@@ -106,78 +108,81 @@ function App() {
   return (
     <StyledThemeProvider theme={theme}>
       <GlobalStyle />
-      <div className="App">
-        <Navbar />
-        <AnnouncementPopup />
-        <EVSMilestoneTracker />
-        <EVSMilestoneProgress />
-        <main style={{ paddingTop: '80px', minHeight: 'calc(100vh - 80px)' }}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route 
-              path="/dashboard" 
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/leaderboard" 
-              element={
-                <ProtectedRoute>
-                  <Leaderboard />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/badges" 
-              element={
-                <ProtectedRoute>
-                  <Badges />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/estatisticas" 
-              element={
-                <ProtectedRoute>
-                  <Estatisticas />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/profile" 
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/chat" 
-              element={
-                <ProtectedRoute>
-                  <ChatEV />
-                </ProtectedRoute>
-              } 
-            />
-            <Route path="/loja" element={<Loja />} />
+      <DMNotificationProvider>
+        <div className="App">
+          <Navbar />
+          <AnnouncementPopup />
+          <EVSMilestoneTracker />
+          <EVSMilestoneProgress />
+          <DMNotificationIndicator />
+          <main style={{ paddingTop: '80px', minHeight: 'calc(100vh - 80px)' }}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route 
+                path="/dashboard" 
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/leaderboard" 
+                element={
+                  <ProtectedRoute>
+                    <Leaderboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/badges" 
+                element={
+                  <ProtectedRoute>
+                    <Badges />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/estatisticas" 
+                element={
+                  <ProtectedRoute>
+                    <Estatisticas />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/profile" 
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/chat" 
+                element={
+                  <ProtectedRoute>
+                    <ChatEV />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route path="/loja" element={<Loja />} />
 
-            <Route 
-              path="/dev" 
-              element={
-                <AdminRoute>
-                  <Dev />
-                </AdminRoute>
-              } 
-            />
-            <Route path="/multimidia" element={<Multimidia />} />
-          </Routes>
-        </main>
-      </div>
+              <Route 
+                path="/dev" 
+                element={
+                  <AdminRoute>
+                    <Dev />
+                  </AdminRoute>
+                } 
+              />
+              <Route path="/multimidia" element={<Multimidia />} />
+            </Routes>
+          </main>
+        </div>
+      </DMNotificationProvider>
     </StyledThemeProvider>
   );
 }
