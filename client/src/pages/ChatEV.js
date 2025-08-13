@@ -235,6 +235,18 @@ const ChatEV = () => {
   const [newMessage, setNewMessage] = useState('');
   const [messageType, setMessageType] = useState('encouragement');
   const messagesEndRef = useRef(null);
+  
+  // Estados para DM
+  const [showDMForm, setShowDMForm] = useState(false);
+  const [dmReceiver, setDmReceiver] = useState(null);
+  const [dmMessage, setDmMessage] = useState('');
+  const [dmMessageType, setDmMessageType] = useState('encouragement');
+  const [sendingDM, setSendingDM] = useState(false);
+  const [dmConversations, setDmConversations] = useState([]);
+  const [showDMList, setShowDMList] = useState(false);
+  const [selectedConversation, setSelectedConversation] = useState(null);
+  const [dmMessages, setDmMessages] = useState([]);
+  const [loadingDM, setLoadingDM] = useState(false);
 
   const messageTypes = [
     { value: 'encouragement', label: '💪 Incentivo', emoji: '💪' },
@@ -284,6 +296,124 @@ const ChatEV = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Funções para DM
+  const loadDMConversations = async () => {
+    try {
+      const { data, error } = await supabase
+        .rpc('get_user_dm_conversations', { user_uuid: user.id });
+
+      if (error) {
+        console.error('Erro ao carregar conversas DM:', error);
+        return;
+      }
+
+      setDmConversations(data || []);
+    } catch (error) {
+      console.error('Erro ao carregar conversas DM:', error);
+    }
+  };
+
+  const loadDMConversation = async (otherUserId) => {
+    try {
+      setLoadingDM(true);
+      
+      const { data, error } = await supabase
+        .rpc('get_dm_conversation', { 
+          user1_uuid: user.id, 
+          user2_uuid: otherUserId, 
+          limit_count: 50 
+        });
+
+      if (error) {
+        console.error('Erro ao carregar conversa DM:', error);
+        toast.error('Erro ao carregar conversa');
+        return;
+      }
+
+      setDmMessages(data || []);
+      setSelectedConversation(otherUserId);
+      
+      // Marcar mensagens como lidas
+      await supabase.rpc('mark_dm_as_read', { conversation_user_id: otherUserId });
+    } catch (error) {
+      console.error('Erro ao carregar conversa DM:', error);
+    } finally {
+      setLoadingDM(false);
+    }
+  };
+
+  const sendDM = async (e) => {
+    e.preventDefault();
+    
+    if (!dmMessage.trim() || !dmReceiver) {
+      toast.error('Preencha todos os campos');
+      return;
+    }
+
+    try {
+      setSendingDM(true);
+      
+      const dmData = {
+        sender_id: user.id,
+        receiver_id: dmReceiver.id,
+        message: dmMessage.trim(),
+        message_type: dmMessageType
+      };
+
+      const { error } = await supabase
+        .from('chat_ev_direct_messages')
+        .insert(dmData);
+
+      if (error) {
+        console.error('Erro ao enviar DM:', error);
+        toast.error('Erro ao enviar mensagem privada');
+        return;
+      }
+
+      // Limpar formulário
+      setDmMessage('');
+      setDmMessageType('encouragement');
+      setShowDMForm(false);
+      setDmReceiver(null);
+      
+      // Recarregar conversas
+      await loadDMConversations();
+      
+      toast.success('Mensagem privada enviada!');
+    } catch (error) {
+      console.error('Erro ao enviar DM:', error);
+      toast.error('Erro ao enviar mensagem privada');
+    } finally {
+      setSendingDM(false);
+    }
+  };
+
+  const openDMForm = (receiver) => {
+    setDmReceiver(receiver);
+    setShowDMForm(true);
+    setShowDMList(false);
+  };
+
+  const closeDMForm = () => {
+    setShowDMForm(false);
+    setDmReceiver(null);
+    setDmMessage('');
+    setDmMessageType('encouragement');
+  };
+
+  const openDMList = () => {
+    setShowDMList(true);
+    setShowDMForm(false);
+    setSelectedConversation(null);
+    loadDMConversations();
+  };
+
+  const closeDMList = () => {
+    setShowDMList(false);
+    setSelectedConversation(null);
+    setDmMessages([]);
   };
 
   const handleSubmit = async (e) => {
@@ -435,6 +565,30 @@ const ChatEV = () => {
                 <MessageTime>{formatTime(message.created_at)}</MessageTime>
               </MessageHeader>
               <MessageText>{message.message}</MessageText>
+              
+              {/* Botão DM - não mostrar para mensagens próprias */}
+              {!message.is_own_message && (
+                <div style={{ marginTop: '10px', textAlign: 'right' }}>
+                  <button
+                    onClick={() => openDMForm({
+                      id: message.user_id,
+                      username: message.username
+                    })}
+                    style={{
+                      background: '#9C27B0',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      padding: '5px 10px',
+                      fontSize: '10px',
+                      cursor: 'pointer',
+                      fontFamily: 'Press Start 2P, monospace'
+                    }}
+                  >
+                    💬 DM
+                  </button>
+                </div>
+              )}
             </MessageItem>
           ))
         )}
@@ -464,6 +618,328 @@ const ChatEV = () => {
           {sending ? 'Enviando...' : '📤 Enviar Mensagem'}
         </SubmitButton>
       </MessageForm>
+
+      {/* Botões de navegação DM */}
+      <div style={{ 
+        display: 'flex', 
+        gap: '10px', 
+        justifyContent: 'center', 
+        marginTop: '20px' 
+      }}>
+        <button
+          onClick={openDMList}
+          style={{
+            background: '#9C27B0',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            padding: '10px 20px',
+            fontSize: '12px',
+            cursor: 'pointer',
+            fontFamily: 'Press Start 2P, monospace'
+          }}
+        >
+          💬 Minhas Conversas
+        </button>
+      </div>
+
+      {/* Formulário de DM */}
+      {showDMForm && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: '#2a2a2a',
+            border: '2px solid #9C27B0',
+            borderRadius: '12px',
+            padding: '20px',
+            maxWidth: '500px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflow: 'auto'
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              marginBottom: '20px'
+            }}>
+              <h3 style={{ 
+                color: '#9C27B0', 
+                margin: 0,
+                fontFamily: 'Press Start 2P, monospace',
+                fontSize: '14px'
+              }}>
+                💬 Mensagem Privada para {dmReceiver?.username}
+              </h3>
+              <button
+                onClick={closeDMForm}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#666',
+                  fontSize: '20px',
+                  cursor: 'pointer'
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={sendDM}>
+              <MessageTypeSelect
+                value={dmMessageType}
+                onChange={(e) => setDmMessageType(e.target.value)}
+                style={{ marginBottom: '15px' }}
+              >
+                {messageTypes.map((type) => (
+                  <option key={type.value} value={type.value}>
+                    {type.emoji} {type.label}
+                  </option>
+                ))}
+              </MessageTypeSelect>
+
+              <MessageTextarea
+                value={dmMessage}
+                onChange={(e) => setDmMessage(e.target.value)}
+                placeholder={`Digite sua mensagem privada para ${dmReceiver?.username}...`}
+                maxLength={1000}
+                style={{ marginBottom: '15px' }}
+              />
+
+              <SubmitButton 
+                type="submit" 
+                disabled={sendingDM || !dmMessage.trim()}
+                style={{ width: '100%' }}
+              >
+                {sendingDM ? 'Enviando...' : '📤 Enviar DM'}
+              </SubmitButton>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Lista de conversas DM */}
+      {showDMList && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: '#2a2a2a',
+            border: '2px solid #9C27B0',
+            borderRadius: '12px',
+            padding: '20px',
+            maxWidth: '600px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflow: 'auto'
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              marginBottom: '20px'
+            }}>
+              <h3 style={{ 
+                color: '#9C27B0', 
+                margin: 0,
+                fontFamily: 'Press Start 2P, monospace',
+                fontSize: '14px'
+              }}>
+                💬 Minhas Conversas Privadas
+              </h3>
+              <button
+                onClick={closeDMList}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#666',
+                  fontSize: '20px',
+                  cursor: 'pointer'
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {dmConversations.length === 0 ? (
+              <div style={{ textAlign: 'center', color: '#666', padding: '40px' }}>
+                <p>Nenhuma conversa privada ainda</p>
+                <p>Use o botão 💬 DM em uma mensagem para iniciar</p>
+              </div>
+            ) : (
+              <div>
+                {dmConversations.map((conv) => (
+                  <div
+                    key={conv.conversation_id}
+                    onClick={() => loadDMConversation(conv.other_user_id)}
+                    style={{
+                      background: '#3a3a3a',
+                      border: '1px solid #4a4a4a',
+                      borderRadius: '8px',
+                      padding: '15px',
+                      marginBottom: '10px',
+                      cursor: 'pointer',
+                      borderLeft: conv.unread_count > 0 ? '4px solid #9C27B0' : '1px solid #4a4a4a'
+                    }}
+                  >
+                    <div style={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center' 
+                    }}>
+                      <strong style={{ color: '#9C27B0' }}>{conv.other_username}</strong>
+                      {conv.unread_count > 0 && (
+                        <span style={{
+                          background: '#9C27B0',
+                          color: 'white',
+                          borderRadius: '50%',
+                          padding: '2px 6px',
+                          fontSize: '10px',
+                          minWidth: '16px',
+                          textAlign: 'center'
+                        }}>
+                          {conv.unread_count}
+                        </span>
+                      )}
+                    </div>
+                    <p style={{ 
+                      color: '#ccc', 
+                      fontSize: '12px', 
+                      margin: '5px 0',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>
+                      {conv.last_message}
+                    </p>
+                    <small style={{ color: '#666', fontSize: '10px' }}>
+                      {formatTime(conv.last_message_time)}
+                    </small>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Visualização de conversa DM */}
+      {selectedConversation && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: '#2a2a2a',
+            border: '2px solid #9C27B0',
+            borderRadius: '12px',
+            padding: '20px',
+            maxWidth: '600px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflow: 'auto'
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              marginBottom: '20px'
+            }}>
+              <h3 style={{ 
+                color: '#9C27B0', 
+                margin: 0,
+                fontFamily: 'Press Start 2P, monospace',
+                fontSize: '14px'
+              }}>
+                💬 Conversa com {dmConversations.find(c => c.other_user_id === selectedConversation)?.other_username || 'Usuário'}
+              </h3>
+              <button
+                onClick={closeDMList}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#666',
+                  fontSize: '20px',
+                  cursor: 'pointer'
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {loadingDM ? (
+              <div style={{ textAlign: 'center', padding: '40px' }}>
+                <LoadingSpinner>Carregando conversa...</LoadingSpinner>
+              </div>
+            ) : (
+              <div>
+                {dmMessages.length === 0 ? (
+                  <div style={{ textAlign: 'center', color: '#666', padding: '40px' }}>
+                    <p>Nenhuma mensagem nesta conversa</p>
+                  </div>
+                ) : (
+                  <div style={{ marginBottom: '20px' }}>
+                    {dmMessages.map((msg) => (
+                      <div
+                        key={msg.id}
+                        style={{
+                          background: msg.is_own_message ? 'rgba(74, 106, 138, 0.2)' : '#3a3a3a',
+                          border: '1px solid',
+                          borderColor: msg.is_own_message ? '#4a6a8a' : '#4a4a4a',
+                          borderRadius: '8px',
+                          padding: '10px',
+                          marginBottom: '10px',
+                          textAlign: msg.is_own_message ? 'right' : 'left'
+                        }}
+                      >
+                        <div style={{ 
+                          fontSize: '10px', 
+                          color: '#666',
+                          marginBottom: '5px'
+                        }}>
+                          {msg.is_own_message ? 'Você' : dmConversations.find(c => c.other_user_id === selectedConversation)?.other_username || 'Usuário'}
+                          {' • '}
+                          {formatTime(msg.created_at)}
+                        </div>
+                        <div style={{ color: '#fff', fontSize: '12px' }}>
+                          {msg.message}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </ChatContainer>
   );
 };

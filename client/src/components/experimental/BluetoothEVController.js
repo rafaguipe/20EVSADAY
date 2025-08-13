@@ -99,15 +99,28 @@ const BluetoothEVController = () => {
       handleVolumeChange();
     };
 
-    // Detectar mudanças de volume do sistema (fallback)
+    // Detectar mudanças de volume do sistema (funciona globalmente)
     const handleVolumeChangeEvent = () => {
       console.log('🔊 Evento volumechange disparado');
+      handleVolumeChange();
+    };
+
+    // Detectar mudanças de volume via MediaSession API (funciona globalmente)
+    const handleMediaSessionVolumeChange = () => {
+      console.log('🔊 MediaSession volume change detectado');
       handleVolumeChange();
     };
 
     // Adicionar event listeners
     window.addEventListener('keydown', handleKeyPress);
     window.addEventListener('volumechange', handleVolumeChangeEvent);
+    
+    // MediaSession API para detecção global
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.setActionHandler('previoustrack', handleMediaSessionVolumeChange);
+      navigator.mediaSession.setActionHandler('nexttrack', handleMediaSessionVolumeChange);
+      console.log('✅ MediaSession API configurada para detecção global');
+    }
     
     setDetectionMethod('keyboard');
     console.log('✅ Detecção de teclas iniciada com sucesso!');
@@ -124,6 +137,12 @@ const BluetoothEVController = () => {
       // Limpar event listeners
       window.removeEventListener('keydown', handleKeyPress);
       window.removeEventListener('volumechange', handleVolumeChangeEvent);
+      
+      // Limpar MediaSession
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.setActionHandler('previoustrack', null);
+        navigator.mediaSession.setActionHandler('nexttrack', null);
+      }
       
       setDetectionMethod('none');
     };
@@ -234,9 +253,8 @@ const BluetoothEVController = () => {
         <div className="detection-status">
           <p><strong>🔍 Método de detecção:</strong> {detectionMethod}</p>
           <p><strong>💡 Dica:</strong> Use as teclas de volume do seu controle Bluetooth</p>
-          <p><strong>🔑 Teclas suportadas:</strong> Volume +/-, F10/F11, Setas, Números 1-5</p>
           <p><strong>⏰ Lógica:</strong> Aguarda 1s após cada clique para mais cliques</p>
-          <p><strong>⚠️ Nota:</strong> Não é necessário permitir acesso ao microfone</p>
+          <p><strong>⚠️ Nota:</strong> Funciona mesmo com a aba não focada</p>
         </div>
       )}
 
@@ -269,7 +287,6 @@ const BluetoothEVController = () => {
         </ul>
         <p><strong>⏰ Tolerância:</strong> 1 segundo para aguardar mais cliques</p>
         <p><strong>🎮 Controles:</strong> Teclas de volume do controle Bluetooth</p>
-        <p><strong>🔑 Teclas alternativas:</strong> F10/F11, Setas, Números 1-5</p>
         <p><strong>⚠️ Nota:</strong> Ative apenas quando quiser usar o botão Bluetooth</p>
       </div>
     </div>
