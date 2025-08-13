@@ -231,7 +231,7 @@ const DMNotificationBadge = styled(NotificationBadge)`
 `;
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [profile, setProfile] = useState(null);
@@ -240,6 +240,7 @@ const Navbar = () => {
   const [badgesVisible, setBadgesVisible] = useState(true);
   const [leaderboardVisible, setLeaderboardVisible] = useState(true);
   const [lojaVisible, setLojaVisible] = useState(true);
+  const [sobreVisible, setSobreVisible] = useState(false);
   const [multimidiaVisible, setMultimidiaVisible] = useState(true);
   const [chatVisible, setChatVisible] = useState(true);
   const { timer: evTimer, formatTime } = useEVTimer();

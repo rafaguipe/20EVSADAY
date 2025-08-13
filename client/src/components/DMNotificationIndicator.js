@@ -68,26 +68,33 @@ const NotificationMessage = styled.div`
 `;
 
 const DMNotificationIndicator = () => {
-  const { lastDMNotification, clearNotification } = useDMNotification();
+  try {
+    const { lastDMNotification, clearNotification } = useDMNotification();
 
-  if (!lastDMNotification) return null;
+    // Se não há notificação ou o sistema está desabilitado, não renderizar nada
+    if (!lastDMNotification) return null;
 
-  return (
-    <NotificationContainer>
-      <DMNotification>
-        <NotificationHeader>
-          <NotificationTitle>💬 Nova DM</NotificationTitle>
-          <CloseButton onClick={clearNotification}>✕</CloseButton>
-        </NotificationHeader>
-        <NotificationMessage>
-          {lastDMNotification.message.length > 50 
-            ? `${lastDMNotification.message.substring(0, 50)}...`
-            : lastDMNotification.message
-          }
-        </NotificationMessage>
-      </DMNotification>
-    </NotificationContainer>
-  );
+    return (
+      <NotificationContainer>
+        <DMNotification>
+          <NotificationHeader>
+            <NotificationTitle>💬 Nova DM</NotificationTitle>
+            <CloseButton onClick={clearNotification}>✕</CloseButton>
+          </NotificationHeader>
+          <NotificationMessage>
+            {lastDMNotification.message && lastDMNotification.message.length > 50 
+              ? `${lastDMNotification.message.substring(0, 50)}...`
+              : lastDMNotification.message || 'Nova mensagem'
+            }
+          </NotificationMessage>
+        </DMNotification>
+      </NotificationContainer>
+    );
+  } catch (error) {
+    // Se houver qualquer erro, não renderizar nada
+    console.error('Erro no DMNotificationIndicator:', error);
+    return null;
+  }
 };
 
 export default DMNotificationIndicator;
