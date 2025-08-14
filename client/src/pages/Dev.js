@@ -415,6 +415,35 @@ const Dev = () => {
               <LojaProductManager />
               <WelcomeEmailTester />
               <BulkEmailSender />
+
+              <Card>
+                <CardTitle>📚 Manual de Instruções</CardTitle>
+                
+                <InfoText>
+                  <strong>📧 Sistema de Emails:</strong>
+                  <br />
+                  • <strong>Teste de Email:</strong> Envia email de boas-vindas para um usuário específico
+                  <br />
+                  • <strong>Email de Boas-vindas em Massa:</strong> Envia emails automáticos para usuários pendentes
+                  <br />
+                  • <strong>Email Personalizado em Massa:</strong> Envia mensagem personalizada para TODA a base
+                  <br />
+                  <br />
+                  <strong>💡 Dica Importante:</strong> Use {usuario} no texto para personalizar com o nome do usuário
+                  <br />
+                  <br />
+                  <strong>⚠️ Atenção:</strong> O email personalizado envia para TODOS os usuários cadastrados com email confirmado
+                  <br />
+                  <br />
+                  <strong>🔧 Outras Ferramentas:</strong>
+                  <br />
+                  • Controle de visibilidade da loja e produtos
+                  <br />
+                  • Gerenciamento de abas e conteúdo da página Sobre
+                  <br />
+                  • Sistema de anúncios e notificações
+                </InfoText>
+              </Card>
     </Container>
   );
 };
