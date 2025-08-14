@@ -429,7 +429,7 @@ const Dev = () => {
                   • <strong>Email Personalizado em Massa:</strong> Envia mensagem personalizada para TODA a base
                   <br />
                   <br />
-                  <strong>💡 Dica Importante:</strong> Use {usuario} no texto para personalizar com o nome do usuário
+                  <strong>💡 Dica Importante:</strong> Use {'{usuario}'} no texto para personalizar com o nome do usuário
                   <br />
                   <br />
                   <strong>⚠️ Atenção:</strong> O email personalizado envia para TODOS os usuários cadastrados com email confirmado

@@ -367,7 +367,7 @@ const BulkEmailSender = () => {
         <FormTitle>📝 Email Personalizado em Massa</FormTitle>
         
         <HelpText>
-          💡 Use {usuario} no texto para personalizar com o nome do usuário
+          💡 Use {'{usuario}'} no texto para personalizar com o nome do usuário
           <br />
           📧 Enviará para TODOS os usuários cadastrados com email confirmado
         </HelpText>
@@ -380,7 +380,7 @@ const BulkEmailSender = () => {
         />
 
         <TextArea
-          placeholder="Digite sua mensagem aqui... Use {usuario} para personalizar"
+          placeholder="Digite sua mensagem aqui... Use {'{usuario}'} para personalizar"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
