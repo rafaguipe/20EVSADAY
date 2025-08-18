@@ -6,8 +6,12 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+function chunkArray(array, size) {
+  const result = [];
+  for (let i = 0; i < array.length; i += size) {
+    result.push(array.slice(i, i + size));
+  }
+  return result;
 }
 
 serve(async (req) => {
@@ -16,7 +20,7 @@ serve(async (req) => {
   }
 
   try {
-    console.log('=== INICIANDO ENVIO EM MASSA ===');
+    console.log('=== INICIANDO ENVIO EM MASSA (BATCH) ===');
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
     if (!supabaseUrl || !supabaseServiceKey) throw new Error('Missing Supabase environment variables')
@@ -66,39 +70,57 @@ serve(async (req) => {
 
     console.log('Found users to email:', usersToEmail.length)
 
+    // Divide em lotes de até 100
+    const batchChunks = chunkArray(usersToEmail, 100);
+
     let successCount = 0;
     let errorCount = 0;
     const results = [];
 
-    for (const userToEmail of usersToEmail) {
-      try {
-        const personalizedMessage = message.replace(/{usuario}/g, userToEmail.username)
-        const personalizedSubject = subject.replace(/{usuario}/g, userToEmail.username)
-        const htmlContent = generateCustomEmailHTML(personalizedSubject, personalizedMessage, userToEmail.username)
-        console.log('Enviando para:', userToEmail.email)
-        const emailSent = await sendCustomEmail(userToEmail.email, personalizedSubject, htmlContent)
-        const logData = {
-          user_id: userToEmail.user_id,
-          username: userToEmail.username,
-          email: userToEmail.email,
-          status: emailSent ? 'sent' : 'failed',
-          sent_at: new Date().toISOString(),
-          email_type: 'custom_bulk',
-          subject: personalizedSubject
+    for (const chunk of batchChunks) {
+      const batchMessages = chunk.map(userToEmail => ({
+        from: 'contato@jogosevolutivos.com.br',
+        to: [userToEmail.email],
+        subject: subject.replace(/{usuario}/g, userToEmail.username),
+        html: generateCustomEmailHTML(
+          subject.replace(/{usuario}/g, userToEmail.username),
+          message.replace(/{usuario}/g, userToEmail.username),
+          userToEmail.username
+        ),
+      }));
+
+      const batchResult = await sendBatchEmails(batchMessages);
+      console.log('Batch result:', batchResult);
+
+      if (Array.isArray(batchResult)) {
+        for (let i = 0; i < chunk.length; i++) {
+          const userToEmail = chunk[i];
+          const result = batchResult[i];
+          const emailSent = !result?.error;
+          const logData = {
+            user_id: userToEmail.user_id,
+            username: userToEmail.username,
+            email: userToEmail.email,
+            status: emailSent ? 'sent' : 'failed',
+            sent_at: new Date().toISOString(),
+            email_type: 'custom_bulk',
+            subject: subject.replace(/{usuario}/g, userToEmail.username)
+          }
+          await supabaseClient.from('welcome_email_logs').insert(logData)
+          if (emailSent) {
+            successCount++;
+            results.push({ user_id: userToEmail.user_id, email: userToEmail.email, success: true, message: 'Email sent successfully' });
+          } else {
+            errorCount++;
+            results.push({ user_id: userToEmail.user_id, email: userToEmail.email, success: false, error: result?.error?.message || 'Failed to send email' });
+          }
         }
-        await supabaseClient.from('welcome_email_logs').insert(logData)
-        if (emailSent) {
-          successCount++;
-          results.push({ user_id: userToEmail.user_id, email: userToEmail.email, success: true, message: 'Email sent successfully' });
-        } else {
-          errorCount++;
-          results.push({ user_id: userToEmail.user_id, email: userToEmail.email, success: false, error: 'Failed to send email' });
-        }
-        // Aguarda 600ms para respeitar o rate limit do Resend
-        await sleep(600);
-      } catch (error) {
-        errorCount++;
-        results.push({ user_id: userToEmail.user_id, email: userToEmail.email, success: false, error: error.message });
+      } else {
+        // fallback: erro geral
+        errorCount += chunk.length;
+        chunk.forEach(userToEmail => {
+          results.push({ user_id: userToEmail.user_id, email: userToEmail.email, success: false, error: 'Batch send failed' });
+        })
       }
     }
 
@@ -165,21 +187,20 @@ function generateCustomEmailHTML(subject, message, username) {
   `
 }
 
-async function sendCustomEmail(email, subject, htmlContent) {
+async function sendBatchEmails(batchMessages) {
   try {
     const resendApiKey = Deno.env.get('RESEND_API_KEY');
-    if (!resendApiKey) return true; // Simula envio em dev
+    if (!resendApiKey) return batchMessages.map(() => true); // Simula envio em dev
     const { Resend } = await import('https://esm.sh/resend@2.0.0');
     const resend = new Resend(resendApiKey);
-    const { error } = await resend.emails.send({
-      from: 'onboarding@resend.dev', // Remetente padrão do Resend
-      to: [email],
-      subject: subject,
-      html: htmlContent,
-    });
-    if (error) return false;
-    return true;
+    const { error, data } = await resend.batch.send(batchMessages);
+    if (error) {
+      console.error('Batch send error:', error);
+      return batchMessages.map(() => ({ error }));
+    }
+    return data;
   } catch (error) {
-    return false;
+    console.error('Batch send error:', error);
+    return batchMessages.map(() => ({ error }));
   }
 }
