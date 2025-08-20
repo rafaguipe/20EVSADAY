@@ -239,7 +239,19 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   
   // Verificar se o concurso do mascote está habilitado
-  const mascoteContestEnabled = isFeatureEnabled('MASCOTE_CONTEST', user?.user_metadata?.username, true);
+  const mascoteContestEnabled = isFeatureEnabled('MASCOTE_CONTEST', user?.user_metadata?.username, false);
+  
+  // Debug logs
+  console.log('🔍 DEBUG - Home Component:');
+  console.log('isAuthenticated:', isAuthenticated);
+  console.log('user:', user);
+  console.log('user?.user_metadata?.username:', user?.user_metadata?.username);
+  console.log('mascoteContestEnabled:', mascoteContestEnabled);
+  console.log('Feature flag check:', { 
+    feature: 'MASCOTE_CONTEST', 
+    username: user?.user_metadata?.username, 
+    hasDevAccess: false 
+  });
 
   useEffect(() => {
     loadAboutContent();
@@ -372,6 +384,24 @@ const Home = () => {
       {/* Concurso do Mascote - Só aparece quando habilitado e usuário logado */}
       {mascoteContestEnabled && isAuthenticated && (
         <MascoteContest />
+      )}
+      
+      {/* Debug: Mostrar sempre para testar */}
+      {isAuthenticated && (
+        <div style={{ 
+          background: 'rgba(255, 0, 0, 0.1)', 
+          border: '2px solid red', 
+          padding: '20px', 
+          margin: '20px 0',
+          textAlign: 'center',
+          color: 'white'
+        }}>
+          <h3>🔍 DEBUG - Concurso do Mascote</h3>
+          <p>isAuthenticated: {isAuthenticated.toString()}</p>
+          <p>mascoteContestEnabled: {mascoteContestEnabled.toString()}</p>
+          <p>user: {user ? 'Logado' : 'Não logado'}</p>
+          <p>username: {user?.user_metadata?.username || 'N/A'}</p>
+        </div>
       )}
 
       <Stats>

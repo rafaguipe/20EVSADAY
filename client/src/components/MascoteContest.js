@@ -176,6 +176,8 @@ const MascoteContest = () => {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  console.log('🎯 MascoteContest Component - Renderizando:', { user, isAuthenticated: !!user });
+
   useEffect(() => {
     if (user) {
       loadSuggestions();

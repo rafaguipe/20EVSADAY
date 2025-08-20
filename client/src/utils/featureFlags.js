@@ -6,8 +6,8 @@ export const FEATURE_FLAGS = {
   },
   MASCOTE_CONTEST: {
     enabled: true,
-    requiresDevMenu: true,
-    productionEnabled: false
+    requiresDevMenu: false,
+    productionEnabled: true
   }
 };
 
@@ -18,6 +18,11 @@ export function isFeatureEnabled(featureName, username, hasDevAccess = false) {
   
   // Se requer acesso ao Dev, verificar se o usuário tem
   if (feature.requiresDevMenu && !hasDevAccess) return false;
+  
+  // Para o concurso do mascote, sempre retornar true se enabled
+  if (featureName === 'MASCOTE_CONTEST') {
+    return feature.enabled;
+  }
   
   // Se não requer Dev, verificar se é usuário de teste
   if (!feature.requiresDevMenu && feature.betaUsers) {
