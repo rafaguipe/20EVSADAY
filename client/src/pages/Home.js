@@ -316,24 +316,6 @@ const Home = () => {
       {mascoteContestEnabled && isAuthenticated && (
         <MascoteContest />
       )}
-      
-      {/* Debug: Mostrar sempre para testar */}
-      {isAuthenticated && (
-        <div style={{ 
-          background: 'rgba(255, 0, 0, 0.1)', 
-          border: '2px solid red', 
-          padding: '20px', 
-          margin: '20px 0',
-          textAlign: 'center',
-          color: 'white'
-        }}>
-          <h3>🔍 DEBUG - Concurso do Mascote</h3>
-          <p>isAuthenticated: {isAuthenticated.toString()}</p>
-          <p>mascoteContestEnabled: {mascoteContestEnabled.toString()}</p>
-          <p>user: {user ? 'Logado' : 'Não logado'}</p>
-          <p>username: {user?.user_metadata?.username || 'N/A'}</p>
-        </div>
-      )}
 
       <Features>
         <FeatureCard>
