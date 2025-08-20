@@ -3,6 +3,11 @@ export const FEATURE_FLAGS = {
     enabled: true,
     requiresDevMenu: true,
     productionEnabled: false
+  },
+  MASCOTE_CONTEST: {
+    enabled: true,
+    requiresDevMenu: true,
+    productionEnabled: false
   }
 };
 

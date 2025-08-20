@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import styled from 'styled-components';
 import { supabase } from '../supabaseClient';
+import { isFeatureEnabled } from '../utils/featureFlags';
+import MascoteContest from '../components/MascoteContest';
 
 const Hero = styled.div`
   min-height: 100vh;
@@ -231,10 +233,13 @@ const AboutCardText = styled.div`
 `;
 
 const Home = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [gpcText, setGpcText] = useState('');
   const [liderareText, setLiderareText] = useState('');
   const [loading, setLoading] = useState(true);
+  
+  // Verificar se o concurso do mascote está habilitado
+  const mascoteContestEnabled = isFeatureEnabled('MASCOTE_CONTEST', user?.user_metadata?.username, true);
 
   useEffect(() => {
     loadAboutContent();
@@ -363,6 +368,11 @@ const Home = () => {
           </FeatureText>
         </FeatureCard>
       </Features>
+
+      {/* Concurso do Mascote - Só aparece quando habilitado e usuário logado */}
+      {mascoteContestEnabled && isAuthenticated && (
+        <MascoteContest />
+      )}
 
       <Stats>
         <StatCard>

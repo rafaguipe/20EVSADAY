@@ -11,6 +11,7 @@ import LojaProductManager from '../components/LojaProductManager';
 import TabVisibilityControl from '../components/TabVisibilityControl';
 import SobreTextEditor from '../components/SobreTextEditor';
 import AnnouncementManager from '../components/AnnouncementManager';
+import { FEATURE_FLAGS, isFeatureEnabled } from '../utils/featureFlags';
 
 const Container = styled.div`
   padding: 20px;
@@ -384,6 +385,26 @@ const Dev = () => {
               {status}
             </StatusText>
           )}
+        </Card>
+
+        <Card>
+          <CardTitle>🎯 Concurso do Mascote</CardTitle>
+          
+          <InfoText>
+            <strong>Status:</strong> {FEATURE_FLAGS.MASCOTE_CONTEST.enabled ? '✅ Habilitado' : '❌ Desabilitado'}
+            <br />
+            <br />
+            <strong>Descrição:</strong> Sistema de concurso para escolher o nome do mascote
+            <br />
+            • Usuários logados podem sugerir nomes
+            <br />
+            • Lista de sugestões em tempo real
+            <br />
+            • Visual otimizado para mobile
+            <br />
+            <br />
+            <strong>Localização:</strong> Aparece na Home page entre as Features
+          </InfoText>
         </Card>
 
         <Card>
