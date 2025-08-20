@@ -176,8 +176,6 @@ const MascoteContest = () => {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  console.log('🎯 MascoteContest Component - Renderizando:', { user, isAuthenticated: !!user });
-
   useEffect(() => {
     if (user) {
       loadSuggestions();
@@ -252,8 +250,8 @@ const MascoteContest = () => {
     <ContestContainer>
       <ContestTitle>🎯 Concurso: Nome do Mascote</ContestTitle>
       <ContestDescription>
-        Sugira um nome para o nosso mascote! 
-        O nome mais votado será escolhido.
+        Sugira um nome para o nosso mascote até dia 15/9/2025. 
+        Depois faremos uma votação!
       </ContestDescription>
       
       <form onSubmit={handleSubmit}>
