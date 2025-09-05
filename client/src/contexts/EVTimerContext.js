@@ -87,7 +87,17 @@ export const EVTimerProvider = ({ children }) => {
       // Tocar som apenas se estiver habilitado
       if (soundEnabled && audioRef.current) {
         audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(e => console.log('Erro ao tocar som:', e));
+        audioRef.current.play().catch(e => {
+          console.log('Erro ao tocar som:', e);
+          // Se falhar por falta de interação, tentar novamente após um clique
+          if (e.name === 'NotAllowedError') {
+            const playOnClick = () => {
+              audioRef.current.play().catch(() => {});
+              document.removeEventListener('click', playOnClick);
+            };
+            document.addEventListener('click', playOnClick);
+          }
+        });
       }
       
       // Piscar aba se estiver habilitado

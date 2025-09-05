@@ -104,9 +104,26 @@ export const DMNotificationProvider = ({ children }) => {
           supabase.removeChannel(channelRef.current);
         }
 
-        // Criar novo canal
+        // Verificar se a tabela existe antes de criar o canal
+        const { data: tableExists, error: tableError } = await supabase
+          .from('chat_ev_direct_messages')
+          .select('id')
+          .limit(1);
+
+        if (tableError) {
+          console.error('❌ Tabela chat_ev_direct_messages não existe ou não é acessível:', tableError);
+          handleError();
+          return;
+        }
+
+        // Criar novo canal com timeout
         const channel = supabase
-          .channel(`dm_notifications_${user.id}`)
+          .channel(`dm_notifications_${user.id}`, {
+            config: {
+              presence: { key: user.id },
+              broadcast: { self: true }
+            }
+          })
           .on(
             'postgres_changes',
             {
@@ -166,10 +183,14 @@ export const DMNotificationProvider = ({ children }) => {
               }
             }
           )
-          .subscribe((status) => {
-            if (status === 'CHANNEL_ERROR') {
-              console.error('❌ Erro no canal Realtime');
+          .subscribe((status, err) => {
+            console.log('📡 Status do canal Realtime:', status);
+            if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') {
+              console.error('❌ Erro no canal Realtime:', status, err);
               handleError();
+            } else if (status === 'SUBSCRIBED') {
+              console.log('✅ Canal Realtime conectado com sucesso');
+              errorCountRef.current = 0; // Reset contador de erros em caso de sucesso
             }
           });
 
@@ -185,10 +206,12 @@ export const DMNotificationProvider = ({ children }) => {
       }
     };
 
-    setupRealtime();
+    // Aguardar um pouco antes de configurar para evitar conflitos
+    const timeoutId = setTimeout(setupRealtime, 1000);
 
     // Cleanup quando o usuário mudar
     return () => {
+      clearTimeout(timeoutId);
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);
         channelRef.current = null;
