@@ -708,7 +708,11 @@ const Dashboard = () => {
 
       // Verificar badge de Fundador (cadastro até 31/7/2025)
       if (userCreatedAt <= foundationEndDate) {
-        await awardBadge('Fundador', 'Usuário fundador do #20EVSADAY', '🏗️');
+        try {
+          await awardBadge('Fundador', 'Usuário fundador do #20EVSADAY', '🏗️');
+        } catch (error) {
+          console.error('Erro ao verificar badge Fundador:', error);
+        }
       }
 
       // Verificar badge de Líder 4 Anos de Fundação (EVs de 1/7/2025 a 31/7/2025)
@@ -722,7 +726,11 @@ const Dashboard = () => {
         .lte('created_at', foundationEndDate.toISOString());
 
       if (foundationEVs && foundationEVs.length > 0) {
-        await awardBadge('Líder 4 Anos de Fundação', 'EVs registrados durante período de fundação', '👑');
+        try {
+          await awardBadge('Líder 4 Anos de Fundação', 'EVs registrados durante período de fundação', '👑');
+        } catch (error) {
+          console.error('Erro ao verificar badge Líder 4 Anos de Fundação:', error);
+        }
       }
 
     } catch (error) {
