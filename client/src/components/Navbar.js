@@ -439,6 +439,9 @@ const Navbar = () => {
             <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
               Estatísticas
             </NavLink>
+            <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')}>
+              🗳️ Votação
+            </NavLink>
             {(isAdmin || multimidiaVisible) && (
               <NavLink to="/multimidia" active={isActive('/multimidia')}>
                 Multimídia
@@ -511,6 +514,9 @@ const Navbar = () => {
             )}
             <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
               Estatísticas
+            </NavLink>
+            <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')}>
+              🗳️ Votação
             </NavLink>
             {(isAdmin || multimidiaVisible) && (
               <NavLink to="/multimidia" active={isActive('/multimidia')}>

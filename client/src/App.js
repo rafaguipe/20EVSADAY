@@ -17,6 +17,7 @@ import LoadingSpinner from './components/LoadingSpinner';
 import Multimidia from './pages/Multimidia';
 import ChatEV from './pages/ChatEV';
 import Loja from './pages/Loja';
+import VotacaoMascote from './pages/VotacaoMascote';
 
 import { supabase } from './supabaseClient';
 import AnnouncementPopup from './components/AnnouncementPopup';
@@ -169,6 +170,14 @@ function App() {
                 } 
               />
               <Route path="/loja" element={<Loja />} />
+              <Route 
+                path="/votacao-mascote" 
+                element={
+                  <ProtectedRoute>
+                    <VotacaoMascote />
+                  </ProtectedRoute>
+                } 
+              />
 
               <Route 
                 path="/dev" 

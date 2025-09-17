@@ -214,6 +214,22 @@ const EVSMilestoneTracker = () => {
       audio.volume = 0.7;
       audio.play().catch(error => {
         console.log('Erro ao tocar som de vitória:', error);
+        
+        // Se for NotAllowedError, aguardar interação do usuário
+        if (error.name === 'NotAllowedError') {
+          console.log('Som bloqueado pelo navegador. Aguardando interação do usuário...');
+          
+          const playOnInteraction = () => {
+            audio.play().catch(() => {
+              console.log('Ainda não foi possível tocar o som');
+            });
+            document.removeEventListener('click', playOnInteraction);
+            document.removeEventListener('keydown', playOnInteraction);
+          };
+          
+          document.addEventListener('click', playOnInteraction);
+          document.addEventListener('keydown', playOnInteraction);
+        }
       });
     } catch (error) {
       console.log('Erro ao carregar som de vitória:', error);

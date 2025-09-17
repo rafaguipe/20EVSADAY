@@ -217,7 +217,25 @@ const BluetoothEVController = () => {
     
     // Som de confirmação
     const audio = new Audio('/sounds/coin.mp3');
-    audio.play().catch(e => console.log('🔊 Erro ao tocar som:', e));
+    audio.play().catch(e => {
+      console.log('🔊 Erro ao tocar som:', e);
+      
+      // Se for NotAllowedError, aguardar interação do usuário
+      if (e.name === 'NotAllowedError') {
+        console.log('Som bloqueado pelo navegador. Aguardando interação do usuário...');
+        
+        const playOnInteraction = () => {
+          audio.play().catch(() => {
+            console.log('Ainda não foi possível tocar o som');
+          });
+          document.removeEventListener('click', playOnInteraction);
+          document.removeEventListener('keydown', playOnInteraction);
+        };
+        
+        document.addEventListener('click', playOnInteraction);
+        document.addEventListener('keydown', playOnInteraction);
+      }
+    });
   }, []);
 
   // Só renderiza se estiver habilitado nas configurações

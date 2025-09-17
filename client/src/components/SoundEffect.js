@@ -9,6 +9,22 @@ const SoundEffect = ({ soundFile, play, volume = 0.5 }) => {
       audioRef.current.currentTime = 0;
       audioRef.current.play().catch(error => {
         console.log('Erro ao tocar som:', error);
+        
+        // Se for NotAllowedError, aguardar interação do usuário
+        if (error.name === 'NotAllowedError') {
+          console.log('Som bloqueado pelo navegador. Aguardando interação do usuário...');
+          
+          const playOnInteraction = () => {
+            audioRef.current.play().catch(() => {
+              console.log('Ainda não foi possível tocar o som');
+            });
+            document.removeEventListener('click', playOnInteraction);
+            document.removeEventListener('keydown', playOnInteraction);
+          };
+          
+          document.addEventListener('click', playOnInteraction);
+          document.addEventListener('keydown', playOnInteraction);
+        }
       });
     }
   }, [play, volume]);
