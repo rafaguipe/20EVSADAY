@@ -312,10 +312,10 @@ const Home = () => {
         </CTAButtons>
       </Hero>
 
-      {/* Concurso do Mascote - Só aparece quando habilitado e usuário logado */}
-      {mascoteContestEnabled && isAuthenticated && (
+      {/* Concurso do Mascote - INATIVADO - Sistema de votação implementado separadamente */}
+      {/* {mascoteContestEnabled && isAuthenticated && (
         <MascoteContest />
-      )}
+      )} */}
 
       <Features>
         <FeatureCard>

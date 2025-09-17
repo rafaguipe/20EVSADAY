@@ -243,6 +243,7 @@ const Navbar = () => {
   const [sobreVisible, setSobreVisible] = useState(false);
   const [multimidiaVisible, setMultimidiaVisible] = useState(true);
   const [chatVisible, setChatVisible] = useState(true);
+  const [votacaoVisible, setVotacaoVisible] = useState(false);
   const { timer: evTimer, formatTime } = useEVTimer();
   const { unreadCount } = useChatNotification();
   const { unreadDMs } = useDMNotification();
@@ -306,6 +307,7 @@ const Navbar = () => {
         setChatVisible(true);
         setBadgesVisible(true);
         setLeaderboardVisible(true);
+        setVotacaoVisible(false);
         return;
       }
 
@@ -316,7 +318,8 @@ const Navbar = () => {
           'multimidia_visible',
           'chat_visible',
           'badges_visible',
-          'leaderboard_visible'
+          'leaderboard_visible',
+          'votacao_visible'
         ];
 
         for (const tab of tabs) {
@@ -355,6 +358,8 @@ const Navbar = () => {
               setBadgesVisible(isVisible);
             } else if (tab === 'leaderboard_visible') {
               setLeaderboardVisible(isVisible);
+            } else if (tab === 'votacao_visible') {
+              setVotacaoVisible(isVisible);
             }
           }
         }
@@ -367,6 +372,7 @@ const Navbar = () => {
         setChatVisible(true);
         setBadgesVisible(true);
         setLeaderboardVisible(true);
+        setVotacaoVisible(false);
       }
     };
 
@@ -439,9 +445,11 @@ const Navbar = () => {
             <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
               Estatísticas
             </NavLink>
-            <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')}>
-              🗳️ Votação
-            </NavLink>
+            {(isAdmin || votacaoVisible) && (
+              <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')}>
+                🗳️ Votação
+              </NavLink>
+            )}
             {(isAdmin || multimidiaVisible) && (
               <NavLink to="/multimidia" active={isActive('/multimidia')}>
                 Multimídia
@@ -515,9 +523,11 @@ const Navbar = () => {
             <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
               Estatísticas
             </NavLink>
-            <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')}>
-              🗳️ Votação
-            </NavLink>
+            {(isAdmin || votacaoVisible) && (
+              <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')}>
+                🗳️ Votação
+              </NavLink>
+            )}
             {(isAdmin || multimidiaVisible) && (
               <NavLink to="/multimidia" active={isActive('/multimidia')}>
                 Multimídia

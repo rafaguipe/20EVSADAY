@@ -140,7 +140,8 @@ const TabVisibilityControl = () => {
     multimidia_visible: true,
     chat_visible: true,
     badges_visible: true,
-    leaderboard_visible: true
+    leaderboard_visible: true,
+    votacao_visible: false
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -159,7 +160,8 @@ const TabVisibilityControl = () => {
         'multimidia_visible',
         'chat_visible',
         'badges_visible',
-        'leaderboard_visible'
+        'leaderboard_visible',
+        'votacao_visible'
       ];
 
       const settings = {};
@@ -226,7 +228,8 @@ const TabVisibilityControl = () => {
       'multimidia_visible': 'Multimídia',
       'chat_visible': 'Chat',
       'badges_visible': 'Badges',
-      'leaderboard_visible': 'Ranking'
+      'leaderboard_visible': 'Ranking',
+      'votacao_visible': 'Votação'
     };
     return names[tabKey] || tabKey;
   };
@@ -238,7 +241,8 @@ const TabVisibilityControl = () => {
       'multimidia_visible': 'Vídeos e referências',
       'chat_visible': 'Chat entre usuários',
       'badges_visible': 'Conquistas e badges',
-      'leaderboard_visible': 'Ranking de usuários'
+      'leaderboard_visible': 'Ranking de usuários',
+      'votacao_visible': 'Votação do nome do mascote'
     };
     return descriptions[tabKey] || '';
   };
@@ -250,7 +254,8 @@ const TabVisibilityControl = () => {
       'multimidia_visible': '📺',
       'chat_visible': '💬',
       'badges_visible': '🏆',
-      'leaderboard_visible': '📊'
+      'leaderboard_visible': '📊',
+      'votacao_visible': '🗳️'
     };
     return icons[tabKey] || '📄';
   };
