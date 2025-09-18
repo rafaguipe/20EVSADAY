@@ -447,12 +447,11 @@ const Navbar = () => {
             <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
               Estatísticas
             </NavLink>
-            {/* Link da votação temporariamente desativado */}
-            {/* {(isAdmin || votacaoVisible) && (
+            {(isAdmin || votacaoVisible) && (
               <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')}>
                 🗳️ Votação
               </NavLink>
-            )} */}
+            )}
             {(isAdmin || multimidiaVisible) && (
               <NavLink to="/multimidia" active={isActive('/multimidia')}>
                 Multimídia
@@ -526,12 +525,11 @@ const Navbar = () => {
             <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
               Estatísticas
             </NavLink>
-            {/* Link da votação temporariamente desativado */}
-            {/* {(isAdmin || votacaoVisible) && (
+            {(isAdmin || votacaoVisible) && (
               <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')}>
                 🗳️ Votação
               </NavLink>
-            )} */}
+            )}
             {(isAdmin || multimidiaVisible) && (
               <NavLink to="/multimidia" active={isActive('/multimidia')}>
                 Multimídia
