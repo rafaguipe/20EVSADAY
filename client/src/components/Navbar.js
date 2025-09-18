@@ -343,6 +343,8 @@ const Navbar = () => {
               setBadgesVisible(true);
             } else if (tab === 'leaderboard_visible') {
               setLeaderboardVisible(true);
+            } else if (tab === 'votacao_visible') {
+              setVotacaoVisible(false);
             }
           } else {
             const isVisible = data === 'true';
@@ -445,11 +447,12 @@ const Navbar = () => {
             <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
               Estatísticas
             </NavLink>
-            {(isAdmin || votacaoVisible) && (
+            {/* Link da votação temporariamente desativado */}
+            {/* {(isAdmin || votacaoVisible) && (
               <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')}>
                 🗳️ Votação
               </NavLink>
-            )}
+            )} */}
             {(isAdmin || multimidiaVisible) && (
               <NavLink to="/multimidia" active={isActive('/multimidia')}>
                 Multimídia
@@ -523,11 +526,12 @@ const Navbar = () => {
             <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
               Estatísticas
             </NavLink>
-            {(isAdmin || votacaoVisible) && (
+            {/* Link da votação temporariamente desativado */}
+            {/* {(isAdmin || votacaoVisible) && (
               <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')}>
                 🗳️ Votação
               </NavLink>
-            )}
+            )} */}
             {(isAdmin || multimidiaVisible) && (
               <NavLink to="/multimidia" active={isActive('/multimidia')}>
                 Multimídia

@@ -170,14 +170,15 @@ function App() {
                 } 
               />
               <Route path="/loja" element={<Loja />} />
-              <Route 
+              {/* Rota da votação temporariamente desativada */}
+              {/* <Route 
                 path="/votacao-mascote" 
                 element={
                   <ProtectedRoute>
                     <VotacaoMascote />
                   </ProtectedRoute>
                 } 
-              />
+              /> */}
 
               <Route 
                 path="/dev" 

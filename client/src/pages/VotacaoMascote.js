@@ -165,9 +165,10 @@ const LoadingContainer = styled.div`
 const VotacaoMascote = () => {
   const { user } = useAuth();
   const [mascotOptions, setMascotOptions] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const [hasVoted, setHasVoted] = useState(false);
-  const [userVote, setUserVote] = useState(null);
+  const [userVotes, setUserVotes] = useState([]);
+  const [voteStatus, setVoteStatus] = useState(null);
   const [votingResults, setVotingResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -194,22 +195,24 @@ const VotacaoMascote = () => {
 
       setMascotOptions(options || []);
 
-      // Verificar se usuário já votou
-      const { data: voteCheck, error: voteError } = await supabase
-        .rpc('user_has_voted');
+      // Verificar status de voto do usuário
+      const { data: voteStatusData, error: voteStatusError } = await supabase
+        .rpc('check_user_vote_status', { user_uuid: user.id });
 
-      if (voteError) throw voteError;
+      if (voteStatusError) throw voteStatusError;
 
-      setHasVoted(voteCheck);
+      const status = voteStatusData?.[0];
+      setVoteStatus(status);
+      setHasVoted(status?.has_voted || false);
 
-      // Se já votou, carregar o voto e resultados
-      if (voteCheck) {
-        const { data: userVoteData, error: userVoteError } = await supabase
-          .rpc('get_user_vote');
+      // Se já votou, carregar os votos e resultados
+      if (status?.has_voted) {
+        const { data: userVotesData, error: userVotesError } = await supabase
+          .rpc('get_user_votes', { user_uuid: user.id });
 
-        if (userVoteError) throw userVoteError;
+        if (userVotesError) throw userVotesError;
 
-        setUserVote(userVoteData?.[0] || null);
+        setUserVotes(userVotesData || []);
 
         // Carregar resultados
         await loadResults();
@@ -236,24 +239,40 @@ const VotacaoMascote = () => {
     }
   };
 
+  const handleOptionToggle = (optionId) => {
+    if (selectedOptions.includes(optionId)) {
+      // Remover da seleção
+      setSelectedOptions(prev => prev.filter(id => id !== optionId));
+    } else {
+      // Adicionar à seleção (máximo 3)
+      if (selectedOptions.length < 3) {
+        setSelectedOptions(prev => [...prev, optionId]);
+      } else {
+        toast.error('Você pode escolher no máximo 3 opções!');
+      }
+    }
+  };
+
   const handleVote = async () => {
-    if (!selectedOption || !user) return;
+    if (selectedOptions.length === 0 || !user) return;
 
     try {
       setSubmitting(true);
       setError(null);
 
-      // Inserir voto
+      // Inserir todos os votos selecionados
+      const votes = selectedOptions.map(optionId => ({
+        user_id: user.id,
+        mascot_option_id: optionId
+      }));
+
       const { error: voteError } = await supabase
         .from('mascot_votes')
-        .insert({
-          user_id: user.id,
-          mascot_option_id: selectedOption
-        });
+        .insert(votes);
 
       if (voteError) throw voteError;
 
-      toast.success('Voto registrado com sucesso! 🎉');
+      toast.success(`${selectedOptions.length} voto(s) registrado(s) com sucesso! 🎉`);
       
       // Recarregar dados
       await loadVotingData();
@@ -291,7 +310,7 @@ const VotacaoMascote = () => {
     <Container>
       <Title>🗳️ Votação do Mascote</Title>
       <Subtitle>
-        Escolha o nome para o mascote do #20EVSADAY!
+        Escolha até 3 nomes para o mascote do #20EVSADAY!
       </Subtitle>
 
       {error && <ErrorMessage>{error}</ErrorMessage>}
@@ -301,9 +320,9 @@ const VotacaoMascote = () => {
           <ThankYouMessage>
             <ThankYouTitle>🎉 Obrigado por votar!</ThankYouTitle>
             <ThankYouText>
-              Seu voto foi registrado com sucesso.
-              {userVote && (
-                <><br />Você votou em: <strong>{userVote.mascot_name}</strong></>
+              Seus {userVotes.length} voto(s) foram registrados com sucesso.
+              {userVotes.length > 0 && (
+                <><br />Você votou em: <strong>{userVotes.map(v => v.mascot_name).join(', ')}</strong></>
               )}
             </ThankYouText>
           </ThankYouMessage>
@@ -326,26 +345,43 @@ const VotacaoMascote = () => {
       ) : (
         <VotingCard>
           <h3 style={{ color: '#00ff88', marginBottom: '20px', textAlign: 'center' }}>
-            Escolha seu favorito:
+            Escolha até 3 opções ({selectedOptions.length}/3):
           </h3>
+          
+          {voteStatus && (
+            <div style={{ 
+              color: '#ccc', 
+              textAlign: 'center', 
+              marginBottom: '20px',
+              fontSize: '0.9rem'
+            }}>
+              {voteStatus.has_voted ? (
+                `Você já votou ${voteStatus.vote_count} vez(es). ${voteStatus.remaining_votes} voto(s) restante(s).`
+              ) : (
+                'Você ainda não votou. Escolha até 3 opções!'
+              )}
+            </div>
+          )}
           
           <OptionsGrid>
             {mascotOptions.map((option) => (
               <OptionButton
                 key={option.id}
-                selected={selectedOption === option.id}
-                onClick={() => setSelectedOption(option.id)}
+                selected={selectedOptions.includes(option.id)}
+                onClick={() => handleOptionToggle(option.id)}
+                disabled={!selectedOptions.includes(option.id) && selectedOptions.length >= 3}
               >
                 {option.name}
+                {selectedOptions.includes(option.id) && ' ✓'}
               </OptionButton>
             ))}
           </OptionsGrid>
 
           <SubmitButton
             onClick={handleVote}
-            disabled={!selectedOption || submitting}
+            disabled={selectedOptions.length === 0 || submitting}
           >
-            {submitting ? 'Registrando voto...' : '🗳️ Votar'}
+            {submitting ? 'Registrando voto(s)...' : `🗳️ Votar (${selectedOptions.length} opção${selectedOptions.length !== 1 ? 'ões' : ''})`}
           </SubmitButton>
         </VotingCard>
       )}

@@ -263,11 +263,11 @@ const Leaderboard = () => {
       switch (activeTab) {
         case 'daily':
           const today = new Date();
-          today.setHours(0, 0, 0, 0);
+          const dayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0);
           const { data: dailyData } = await supabase
             .from('evs')
             .select('score, created_at, user_id')
-            .gte('created_at', today.toISOString());
+            .gte('created_at', dayStart.toISOString());
           
           if (dailyData && dailyData.length > 0) {
             const dailyStats = dailyData.reduce((acc, ev) => {
@@ -293,16 +293,18 @@ const Leaderboard = () => {
               }))
               .sort((a, b) => b.total_points - a.total_points);
           }
-          info = `Data: ${today.toLocaleDateString('pt-BR')} • ${leaderboard.length} jogadores`;
+          info = `Data: ${dayStart.toLocaleDateString('pt-BR')} • ${leaderboard.length} jogadores`;
           break;
 
         case 'weekly':
-          const weekAgo = new Date();
-          weekAgo.setDate(weekAgo.getDate() - 7);
+          const weekCurrentDate = new Date();
+          const weekStart = new Date(weekCurrentDate);
+          weekStart.setDate(weekCurrentDate.getDate() - weekCurrentDate.getDay()); // Domingo da semana atual
+          weekStart.setHours(0, 0, 0, 0);
           const { data: weeklyData } = await supabase
             .from('evs')
             .select('score, created_at, user_id')
-            .gte('created_at', weekAgo.toISOString());
+            .gte('created_at', weekStart.toISOString());
           
           if (weeklyData && weeklyData.length > 0) {
             const weeklyStats = weeklyData.reduce((acc, ev) => {
@@ -328,16 +330,16 @@ const Leaderboard = () => {
               }))
               .sort((a, b) => b.total_points - a.total_points);
           }
-          info = `${weekAgo.toLocaleDateString('pt-BR')} a ${new Date().toLocaleDateString('pt-BR')} • ${leaderboard.length} jogadores`;
+          info = `${weekStart.toLocaleDateString('pt-BR')} a ${weekCurrentDate.toLocaleDateString('pt-BR')} • ${leaderboard.length} jogadores`;
           break;
 
         case 'monthly':
-          const monthAgo = new Date();
-          monthAgo.setMonth(monthAgo.getMonth() - 1);
+          const monthCurrentDate = new Date();
+          const monthStart = new Date(monthCurrentDate.getFullYear(), monthCurrentDate.getMonth(), 1, 0, 0, 0, 0);
           const { data: monthlyData } = await supabase
             .from('evs')
             .select('score, created_at, user_id')
-            .gte('created_at', monthAgo.toISOString());
+            .gte('created_at', monthStart.toISOString());
           
           if (monthlyData && monthlyData.length > 0) {
             const monthlyStats = monthlyData.reduce((acc, ev) => {
@@ -363,7 +365,7 @@ const Leaderboard = () => {
               }))
               .sort((a, b) => b.total_points - a.total_points);
           }
-          info = `${monthAgo.toLocaleDateString('pt-BR')} a ${new Date().toLocaleDateString('pt-BR')} • ${leaderboard.length} jogadores`;
+          info = `${monthStart.toLocaleDateString('pt-BR')} a ${monthCurrentDate.toLocaleDateString('pt-BR')} • ${leaderboard.length} jogadores`;
           break;
 
         case 'all-time':
@@ -399,9 +401,8 @@ const Leaderboard = () => {
           break;
 
         case 'yearly':
-          const yearStart = new Date();
-          yearStart.setMonth(0, 1);
-          yearStart.setHours(0, 0, 0, 0);
+          const currentYear = new Date().getFullYear();
+          const yearStart = new Date(currentYear, 0, 1, 0, 0, 0, 0);
           const { data: yearlyData } = await supabase
             .from('evs')
             .select('score, created_at, user_id')
@@ -428,13 +429,14 @@ const Leaderboard = () => {
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
                 max_score: Math.max(...stats.scores)
-              }));
+              }))
+              .sort((a, b) => b.total_points - a.total_points);
           }
-          info = `${yearStart.getFullYear()} • ${leaderboard.length} jogadores`;
+          info = `${currentYear} • ${leaderboard.length} jogadores`;
           break;
 
         case '2025':
-          const year2025Start = new Date('2025-01-01T00:00:00.000Z');
+          const year2025Start = new Date(2025, 0, 1, 0, 0, 0, 0);
           const { data: year2025Data } = await supabase
             .from('evs')
             .select('score, created_at, user_id')
@@ -461,7 +463,8 @@ const Leaderboard = () => {
                 evs_count: stats.evs_count,
                 average_score: (stats.total_points / stats.evs_count).toFixed(1),
                 max_score: Math.max(...stats.scores)
-              }));
+              }))
+              .sort((a, b) => b.total_points - a.total_points);
           }
           info = `2025 • ${leaderboard.length} jogadores`;
           break;
