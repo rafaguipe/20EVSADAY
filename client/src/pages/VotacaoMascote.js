@@ -330,9 +330,9 @@ const VotacaoMascote = () => {
           <ResultsTitle>📊 Resultados da Votação</ResultsTitle>
           <ResultsList>
             {votingResults.slice(0, 10).map((result, index) => (
-              <ResultItem key={result.mascot_name} rank={index + 1}>
+              <ResultItem key={result.name} rank={index + 1}>
                 <ResultName rank={index + 1}>
-                  {index + 1}º {result.mascot_name}
+                  {index + 1}º {result.name}
                 </ResultName>
                 <ResultVotes>
                   {result.vote_count} voto{result.vote_count !== 1 ? 's' : ''} 
