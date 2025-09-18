@@ -434,9 +434,10 @@
       try {
         setSending(true);
         
-        // Buscar dados do perfil do usuário
-        let profile;
-        try {
+      // Buscar dados do perfil do usuário ou usar dados padrão
+      let profile;
+      try {
+        if (user && user.id) {
           const { data: profileData, error: profileError } = await supabase
             .from('profiles')
             .select('username, avatar_url')
@@ -445,26 +446,24 @@
 
           if (profileError) {
             console.error('Erro ao buscar perfil:', profileError);
-            toast.error(`Erro ao buscar dados do perfil: ${profileError.message}`);
-            return;
+            // Usar dados padrão se não conseguir buscar
+            profile = { username: 'Usuário', avatar_url: 'avatar_1.png' };
+          } else {
+            profile = profileData || { username: 'Usuário', avatar_url: 'avatar_1.png' };
           }
-
-          if (!profileData) {
-            console.error('Perfil não encontrado');
-            toast.error('Perfil do usuário não encontrado');
-            return;
-          }
-
-          profile = profileData;
-        } catch (profileException) {
-          console.error('Exceção ao buscar perfil:', profileException);
-          toast.error(`Exceção ao buscar perfil: ${profileException.message}`);
-          return;
+        } else {
+          // Usar dados padrão se não houver usuário
+          profile = { username: 'Usuário', avatar_url: 'avatar_1.png' };
         }
+      } catch (profileException) {
+        console.error('Exceção ao buscar perfil:', profileException);
+        // Usar dados padrão em caso de erro
+        profile = { username: 'Usuário', avatar_url: 'avatar_1.png' };
+      }
 
         // Inserir mensagem diretamente na tabela
         const messageData = {
-          user_id: user.id,
+          user_id: user?.id || '00000000-0000-0000-0000-000000000000',
           username: profile?.username || 'Usuário',
           avatar_url: profile?.avatar_url || 'avatar_1.png',
           message: newMessage.trim(),
@@ -484,14 +483,25 @@
           return;
         }
 
-        // Recarregar mensagens
-        await loadMessages();
-        
-        // Limpar formulário
-        setNewMessage('');
-        setMessageType('encouragement');
-        
-        toast.success('Mensagem enviada com sucesso!');
+      // Adicionar mensagem diretamente ao estado (sem recarregar)
+      const newMessageData = {
+        id: data.id,
+        user_id: user?.id || '00000000-0000-0000-0000-000000000000',
+        username: profile?.username || 'Usuário',
+        avatar_url: profile?.avatar_url || 'avatar_1.png',
+        message: newMessage.trim(),
+        message_type: messageType,
+        created_at: new Date().toISOString(),
+        is_own_message: true
+      };
+      
+      setMessages(prev => [...prev, newMessageData]);
+      
+      // Limpar formulário
+      setNewMessage('');
+      setMessageType('encouragement');
+      
+      toast.success('Mensagem enviada com sucesso!');
       } catch (error) {
         console.error('Erro geral ao enviar mensagem:', error);
         toast.error(`Erro ao enviar mensagem: ${error.message}`);
