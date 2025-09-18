@@ -310,7 +310,7 @@ const VotacaoMascote = () => {
     <Container>
       <Title>🗳️ Votação do Mascote</Title>
       <Subtitle>
-        Escolha até 3 nomes para o mascote do #20EVSADAY!
+        Escolha 3 nomes para o mascote do #20EVSADAY!
       </Subtitle>
 
       {error && <ErrorMessage>{error}</ErrorMessage>}
