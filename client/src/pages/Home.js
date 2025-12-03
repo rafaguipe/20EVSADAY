@@ -232,17 +232,144 @@ const AboutCardText = styled.div`
   white-space: pre-wrap;
 `;
 
+// Estilos para o componente de progresso do próximo marco na Home
+const MilestoneContainer = styled.div`
+  background: rgba(26, 26, 26, 0.95);
+  border: 2px solid #4a6a8a;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
+  margin: 20px auto;
+  backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 15px;
+  }
+`;
+
+const MilestoneTitle = styled.div`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: #4a6a8a;
+  margin-bottom: 12px;
+  text-align: center;
+  
+  @media (max-width: 768px) {
+    font-size: 10px;
+  }
+`;
+
+const MilestoneProgressContainer = styled.div`
+  margin-bottom: 12px;
+`;
+
+const MilestoneProgressBar = styled.div`
+  width: 100%;
+  height: 12px;
+  background: #2a2a2a;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+`;
+
+const MilestoneProgressFill = styled.div`
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50, #45a049);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+`;
+
+const MilestoneProgressText = styled.div`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #ffffff;
+  text-align: center;
+  margin-top: 6px;
+  
+  @media (max-width: 768px) {
+    font-size: 8px;
+  }
+`;
+
+const MilestoneCurrentTotal = styled.div`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 16px;
+  color: #4CAF50;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 6px;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+`;
+
+const MilestoneNext = styled.div`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #666;
+  text-align: center;
+  
+  @media (max-width: 768px) {
+    font-size: 8px;
+  }
+`;
+
 const Home = () => {
   const { isAuthenticated, user } = useAuth();
   const [gpcText, setGpcText] = useState('');
   const [liderareText, setLiderareText] = useState('');
   const [loading, setLoading] = useState(true);
   
+  // Estados para o progresso do próximo marco
+  const [totalEVS, setTotalEVS] = useState(0);
+  const [nextMilestone, setNextMilestone] = useState(1000);
+  const [progress, setProgress] = useState(0);
+  
   // Verificar se o concurso do mascote está habilitado
   const mascoteContestEnabled = isFeatureEnabled('MASCOTE_CONTEST', user?.user_metadata?.username, false);
 
   useEffect(() => {
     loadAboutContent();
+    loadMilestoneProgress();
+    
+    // Atualizar progresso a cada 10 segundos
+    const interval = setInterval(loadMilestoneProgress, 10000);
+    
+    // Escutar mudanças em tempo real
+    const subscription = supabase
+      .channel('evs_progress')
+      .on('postgres_changes', 
+        { event: 'INSERT', schema: 'public', table: 'evs' },
+        () => {
+          setTimeout(loadMilestoneProgress, 500);
+        }
+      )
+      .subscribe();
+    
+    return () => {
+      clearInterval(interval);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const loadAboutContent = async () => {
@@ -280,12 +407,60 @@ const Home = () => {
     }
   };
 
+  const loadMilestoneProgress = async () => {
+    try {
+      const { count, error } = await supabase
+        .from('evs')
+        .select('*', { count: 'exact' });
+
+      if (error) {
+        console.error('Erro ao buscar total de EVS:', error);
+        return;
+      }
+
+      const total = count || 0;
+      setTotalEVS(total);
+
+      // Calcular próximo marco
+      const currentMilestone = Math.floor(total / 1000) * 1000;
+      const next = currentMilestone + 1000;
+      setNextMilestone(next);
+
+      // Calcular progresso
+      const progressPercent = ((total - currentMilestone) / 1000) * 100;
+      setProgress(Math.min(progressPercent, 100));
+    } catch (error) {
+      console.error('Erro ao carregar progresso:', error);
+    }
+  };
+
   return (
     <div>
       <Hero>
         <Logo>
           <LogoImage src="/assets/boneco1.png" alt="Logo" />
         </Logo>
+        
+        {/* Componente de progresso do próximo marco */}
+        {totalEVS >= 100 && (
+          <MilestoneContainer>
+            <MilestoneTitle>🎯 PRÓXIMO MARCO</MilestoneTitle>
+            <MilestoneProgressContainer>
+              <MilestoneProgressBar>
+                <MilestoneProgressFill style={{ width: `${progress}%` }} />
+              </MilestoneProgressBar>
+              <MilestoneProgressText>
+                {totalEVS.toLocaleString()} / {nextMilestone.toLocaleString()} EVS
+              </MilestoneProgressText>
+            </MilestoneProgressContainer>
+            <MilestoneCurrentTotal>
+              {totalEVS.toLocaleString()} EVS
+            </MilestoneCurrentTotal>
+            <MilestoneNext>
+              Próximo: {nextMilestone.toLocaleString()} EVS
+            </MilestoneNext>
+          </MilestoneContainer>
+        )}
         
         <Title>#20EVSADAY</Title>
         <Subtitle>

@@ -21,8 +21,9 @@ import VotacaoMascote from './pages/VotacaoMascote';
 
 import { supabase } from './supabaseClient';
 import AnnouncementPopup from './components/AnnouncementPopup';
-import EVSMilestoneTracker from './components/EVSMilestoneTracker';
-import EVSMilestoneProgress from './components/EVSMilestoneProgress';
+// Pop-up do próximo marco - COMENTADO: estava sobrepondo elementos no celular
+// Vamos usar o componente EVSMilestoneProgress na Home page em vez do pop-up
+// import EVSMilestoneTracker from './components/EVSMilestoneTracker';
 import { DMNotificationProvider } from './contexts/DMNotificationContext';
 import DMNotificationIndicator from './components/DMNotificationIndicator';
 
@@ -113,8 +114,9 @@ function App() {
         <div className="App">
           <Navbar />
           <AnnouncementPopup />
-          <EVSMilestoneTracker />
-          <EVSMilestoneProgress />
+          {/* Pop-up do próximo marco - COMENTADO: estava sobrepondo elementos no celular */}
+          {/* <EVSMilestoneTracker /> */}
+          {/* EVSMilestoneProgress agora está na Home page */}
           <DMNotificationIndicator />
           <main style={{ paddingTop: '80px', minHeight: 'calc(100vh - 80px)' }}>
             <Routes>
