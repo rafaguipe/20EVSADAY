@@ -388,6 +388,11 @@ const Navbar = () => {
 
   const isActive = (path) => location.pathname === path;
 
+  // Função para fechar o menu mobile quando um link é clicado
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+  };
+
   // Extrair o emoji do avatar_url
   const getAvatarEmoji = () => {
     if (!profile?.avatar_url) {
@@ -486,64 +491,64 @@ const Navbar = () => {
               ☰
             </MobileMenuBtn>
             <MobileMenuContent open={mobileMenuOpen}>
-                          <NavLink to="/dashboard" active={isActive('/dashboard')}>
-              Registro
-            </NavLink>
-            {(isAdmin || leaderboardVisible) && (
-              <NavLink to="/leaderboard" active={isActive('/leaderboard')}>
-                Ranking
+              <NavLink to="/dashboard" active={isActive('/dashboard')} onClick={closeMobileMenu}>
+                Registro
               </NavLink>
-            )}
-            {(isAdmin || badgesVisible) && (
-              <NavLink to="/badges" active={isActive('/badges')}>
-                Conquistas
-              </NavLink>
-            )}
-            {(isAdmin || chatVisible) && (
-              <NavLinkContainer>
-                <NavLink to="/chat" active={isActive('/chat')}>
-                  Chat
+              {(isAdmin || leaderboardVisible) && (
+                <NavLink to="/leaderboard" active={isActive('/leaderboard')} onClick={closeMobileMenu}>
+                  Ranking
                 </NavLink>
-                {unreadCount > 0 && (
-                  <NotificationBadge count={unreadCount}>
-                    {unreadCount}
-                  </NotificationBadge>
-                )}
-                {/* Indicador de DMs não lidas */}
-                {unreadDMs > 0 && (
-                  <DMNotificationBadge count={unreadDMs}>
-                    {unreadDMs}
-                  </DMNotificationBadge>
-                )}
-              </NavLinkContainer>
-            )}
-            {(isAdmin || lojaVisible) && (
-              <NavLink to="/loja" active={isActive('/loja')}>
-                Loja
+              )}
+              {(isAdmin || badgesVisible) && (
+                <NavLink to="/badges" active={isActive('/badges')} onClick={closeMobileMenu}>
+                  Conquistas
+                </NavLink>
+              )}
+              {(isAdmin || chatVisible) && (
+                <NavLinkContainer>
+                  <NavLink to="/chat" active={isActive('/chat')} onClick={closeMobileMenu}>
+                    Chat
+                  </NavLink>
+                  {unreadCount > 0 && (
+                    <NotificationBadge count={unreadCount}>
+                      {unreadCount}
+                    </NotificationBadge>
+                  )}
+                  {/* Indicador de DMs não lidas */}
+                  {unreadDMs > 0 && (
+                    <DMNotificationBadge count={unreadDMs}>
+                      {unreadDMs}
+                    </DMNotificationBadge>
+                  )}
+                </NavLinkContainer>
+              )}
+              {(isAdmin || lojaVisible) && (
+                <NavLink to="/loja" active={isActive('/loja')} onClick={closeMobileMenu}>
+                  Loja
+                </NavLink>
+              )}
+              <NavLink to="/estatisticas" active={isActive('/estatisticas')} onClick={closeMobileMenu}>
+                Estatísticas
               </NavLink>
-            )}
-            <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
-              Estatísticas
-            </NavLink>
-            {(isAdmin || votacaoVisible) && (
-              <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')}>
-                🗳️ Votação
+              {(isAdmin || votacaoVisible) && (
+                <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')} onClick={closeMobileMenu}>
+                  🗳️ Votação
+                </NavLink>
+              )}
+              {(isAdmin || multimidiaVisible) && (
+                <NavLink to="/multimidia" active={isActive('/multimidia')} onClick={closeMobileMenu}>
+                  Multimídia
+                </NavLink>
+              )}
+              <NavLink to="/profile" active={isActive('/profile')} onClick={closeMobileMenu}>
+                Configurações
               </NavLink>
-            )}
-            {(isAdmin || multimidiaVisible) && (
-              <NavLink to="/multimidia" active={isActive('/multimidia')}>
-                Multimídia
-              </NavLink>
-            )}
-            <NavLink to="/profile" active={isActive('/profile')}>
-              Configurações
-            </NavLink>
               {isAdmin && (
-                <NavLink to="/dev" active={isActive('/dev')}>
+                <NavLink to="/dev" active={isActive('/dev')} onClick={closeMobileMenu}>
                   🔧 Dev
                 </NavLink>
               )}
-              <LogoutBtn onClick={handleLogout}>Sair</LogoutBtn>
+              <LogoutBtn onClick={() => { closeMobileMenu(); handleLogout(); }}>Sair</LogoutBtn>
             </MobileMenuContent>
           </MobileMenu>
         </>
