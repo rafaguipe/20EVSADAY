@@ -268,6 +268,11 @@ const Login = () => {
           Não tem uma conta?
           <StyledLink to="/register">Faça o cadastro</StyledLink>
         </LinkText>
+        
+        <LinkText>
+          Esqueceu sua senha?
+          <StyledLink to="/forgot-password">Recuperar senha</StyledLink>
+        </LinkText>
       </FormCard>
     </Container>
   );

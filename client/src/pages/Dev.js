@@ -154,6 +154,36 @@ const StatLabel = styled.div`
   text-transform: uppercase;
 `;
 
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+`;
+
+const Label = styled.label`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #ffffff;
+  text-transform: uppercase;
+`;
+
+const Input = styled.input`
+  font-family: 'Press Start 2P', monospace;
+  padding: 10px;
+  border: 2px solid #4a4a4a;
+  background: #1a1a1a;
+  color: #ffffff;
+  font-size: 12px;
+  border-radius: 4px;
+  
+  &:focus {
+    outline: none;
+    border-color: #6a6a6a;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+`;
+
 const Dev = () => {
   const { user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
@@ -313,6 +343,56 @@ const Dev = () => {
     }
   };
 
+  // Função para resetar senha de usuário (admin)
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetPassword, setResetPassword] = useState('');
+  const [resettingPassword, setResettingPassword] = useState(false);
+
+  const handleResetUserPassword = async () => {
+    if (!resetEmail || !resetPassword) {
+      toast.error('Preencha o e-mail e a nova senha');
+      return;
+    }
+
+    if (resetPassword.length < 6) {
+      toast.error('A senha deve ter pelo menos 6 caracteres');
+      return;
+    }
+
+    if (!window.confirm(`Tem certeza que deseja resetar a senha do usuário ${resetEmail}?\n\nNova senha: ${resetPassword}\n\n⚠️ Anote esta senha para informar ao usuário!`)) {
+      return;
+    }
+
+    setResettingPassword(true);
+    try {
+      // Nota: Para resetar senha de outro usuário, você precisa usar o Admin API do Supabase
+      // que requer service_role key (não deve ser exposta no frontend)
+      // 
+      // SOLUÇÃO TEMPORÁRIA SEM SMTP:
+      // 1. Use o painel do Supabase: Authentication → Users → Selecione o usuário → Reset Password
+      // 2. Ou configure uma Edge Function no Supabase que use service_role
+      // 3. Ou use o método abaixo que tenta enviar email de reset (pode não funcionar sem SMTP)
+      
+      // Tentar enviar email de reset (pode não funcionar sem SMTP)
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${window.location.origin}/reset-password`
+      });
+
+      if (resetError) {
+        toast.error(`❌ Erro: ${resetError.message}\n\n💡 SOLUÇÃO: Acesse o painel do Supabase (Authentication → Users) para resetar a senha manualmente.`);
+      } else {
+        toast.success(`✅ Link de recuperação enviado para ${resetEmail}!\n\n⚠️ Se não receber o e-mail (sem SMTP), use o painel do Supabase para resetar manualmente.`);
+        setResetEmail('');
+        setResetPassword('');
+      }
+    } catch (error) {
+      console.error('Erro ao resetar senha:', error);
+      toast.error('❌ Erro ao resetar senha.\n\n💡 SOLUÇÃO: Acesse o painel do Supabase:\n1. Vá em Authentication → Users\n2. Encontre o usuário pelo e-mail\n3. Clique em "Reset Password"');
+    } finally {
+      setResettingPassword(false);
+    }
+  };
+
   if (loading) {
     return (
       <Container>
@@ -404,6 +484,63 @@ const Dev = () => {
             <br />
             <br />
             <strong>Localização:</strong> Aparece na Home page entre as Features
+          </InfoText>
+        </Card>
+
+        <Card>
+          <CardTitle>🔐 Resetar Senha de Usuário</CardTitle>
+          
+          <InfoText style={{ marginBottom: '15px' }}>
+            ⚠️ <strong>Sem SMTP configurado:</strong> Use esta ferramenta para resetar senhas manualmente quando um usuário esquecer a senha.
+            <br />
+            <br />
+            Digite o e-mail do usuário e defina uma nova senha temporária.
+          </InfoText>
+
+          <FormGroup style={{ marginBottom: '10px' }}>
+            <Label htmlFor="resetEmail">E-mail do Usuário</Label>
+            <Input
+              type="email"
+              id="resetEmail"
+              value={resetEmail}
+              onChange={(e) => setResetEmail(e.target.value)}
+              placeholder="usuario@email.com"
+            />
+          </FormGroup>
+
+          <FormGroup style={{ marginBottom: '15px' }}>
+            <Label htmlFor="resetPassword">Nova Senha</Label>
+            <Input
+              type="password"
+              id="resetPassword"
+              value={resetPassword}
+              onChange={(e) => setResetPassword(e.target.value)}
+              placeholder="Mínimo 6 caracteres"
+              minLength={6}
+            />
+          </FormGroup>
+
+          <Button 
+            onClick={handleResetUserPassword} 
+            disabled={resettingPassword || !resetEmail || !resetPassword}
+          >
+            {resettingPassword ? 'Resetando...' : '🔐 Resetar Senha'}
+          </Button>
+
+          <InfoText style={{ marginTop: '15px', fontSize: '8px' }}>
+            ⚠️ <strong>Sem SMTP:</strong> Esta função tentará enviar um e-mail de recuperação, mas pode não funcionar sem SMTP configurado.
+            <br />
+            <br />
+            💡 <strong>Alternativa:</strong> Use o painel do Supabase:
+            <br />
+            1. Acesse: Authentication → Users
+            <br />
+            2. Encontre o usuário pelo e-mail
+            <br />
+            3. Clique em "Reset Password" ou edite o usuário
+            <br />
+            <br />
+            📧 <strong>Para produção:</strong> Configure SMTP no Supabase para envio automático de e-mails.
           </InfoText>
         </Card>
 
