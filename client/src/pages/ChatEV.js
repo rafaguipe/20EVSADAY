@@ -279,11 +279,13 @@
       try {
         setLoading(true);
         
+        // Usar a função RPC do banco para buscar as últimas 200 mensagens aprovadas
+        // Isso evita o limite de 1000 do Supabase e é mais eficiente
         const { data, error } = await supabase
-          .from('chat_ev_messages')
-          .select('*')
-          .order('created_at', { ascending: true })
-          .limit(50);
+          .rpc('get_chat_ev_messages', {
+            p_limit: 200,
+            p_offset: 0
+          });
 
         if (error) {
           console.error('Erro ao carregar mensagens:', error);
@@ -291,7 +293,11 @@
           return;
         }
 
-        setMessages(data || []);
+        // A função RPC retorna as mensagens ordenadas por created_at DESC (mais recentes primeiro)
+        // Inverter a ordem para exibir as mais antigas primeiro (no topo)
+        // e as mais recentes por último (no final)
+        const reversedData = (data || []).reverse();
+        setMessages(reversedData);
       } catch (error) {
         console.error('Erro ao carregar mensagens:', error);
         toast.error('Erro ao carregar mensagens');
