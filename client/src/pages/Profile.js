@@ -445,22 +445,47 @@ const Profile = () => {
 
   const loadStats = async () => {
     try {
-      const { data: evs, error } = await supabase
+      // Obter o total real de EVs usando count
+      const { count: totalEVsCount, error: countError } = await supabase
         .from('evs')
-        .select('score, created_at')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
 
-      if (error) throw error;
+      if (countError) throw countError;
 
-      if (evs && evs.length > 0) {
-        const scores = evs.map(ev => ev.score);
-        const total_evs = evs.length;
+      // Carregar todos os scores e created_at para cálculos (usando paginação se necessário)
+      let allEVs = [];
+      const pageSize = 1000;
+      let from = 0;
+      let hasMore = true;
+
+      while (hasMore) {
+        const { data: evsPage, error: pageError } = await supabase
+          .from('evs')
+          .select('score, created_at')
+          .eq('user_id', user.id)
+          .order('id', { ascending: true })
+          .range(from, from + pageSize - 1);
+
+        if (pageError) throw pageError;
+
+        if (evsPage && evsPage.length > 0) {
+          allEVs = allEVs.concat(evsPage);
+          from += pageSize;
+          hasMore = evsPage.length === pageSize;
+        } else {
+          hasMore = false;
+        }
+      }
+
+      if (allEVs && allEVs.length > 0) {
+        const scores = allEVs.map(ev => ev.score);
+        const total_evs = totalEVsCount || allEVs.length;
         const total_points = scores.reduce((sum, score) => sum + score, 0);
         const average_score = (total_points / total_evs).toFixed(1);
         const max_score = Math.max(...scores);
         const min_score = Math.min(...scores);
-        const consecutive_days = calculateConsecutiveDays(evs);
+        const consecutive_days = calculateConsecutiveDays(allEVs);
 
         setStats({
           total_evs,

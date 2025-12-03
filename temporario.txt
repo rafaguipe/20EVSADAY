@@ -1,0 +1,3024 @@
+RELATÓRIO DE ESTADOS VIBRACIONAIS
+=====================================
+
+Usuário: valansil@gmail.com
+Período: 28/07/2025 14:30 a 24/09/2025 18:57
+Total de EVs: 1000
+
+ESTATÍSTICAS:
+Média: 3.00
+Máxima: 3
+Mínima: 3
+
+REGISTROS:
+==========
+
+1. 24/09/2025 18:57
+   Intensidade: Alta (3/4)
+
+2. 22/09/2025 12:51
+   Intensidade: Alta (3/4)
+
+3. 22/09/2025 12:51
+   Intensidade: Alta (3/4)
+
+4. 22/09/2025 12:51
+   Intensidade: Alta (3/4)
+
+5. 21/09/2025 21:43
+   Intensidade: Alta (3/4)
+
+6. 21/09/2025 21:43
+   Intensidade: Alta (3/4)
+
+7. 21/09/2025 21:43
+   Intensidade: Alta (3/4)
+
+8. 21/09/2025 21:43
+   Intensidade: Alta (3/4)
+
+9. 21/09/2025 21:43
+   Intensidade: Alta (3/4)
+
+10. 21/09/2025 21:43
+   Intensidade: Alta (3/4)
+
+11. 21/09/2025 21:43
+   Intensidade: Alta (3/4)
+
+12. 21/09/2025 21:43
+   Intensidade: Alta (3/4)
+
+13. 21/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+14. 21/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+15. 21/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+16. 21/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+17. 21/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+18. 21/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+19. 21/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+20. 21/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+21. 21/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+22. 21/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+23. 21/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+24. 21/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+25. 21/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+26. 21/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+27. 20/09/2025 19:02
+   Intensidade: Alta (3/4)
+
+28. 20/09/2025 19:02
+   Intensidade: Alta (3/4)
+
+29. 20/09/2025 19:02
+   Intensidade: Alta (3/4)
+
+30. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+31. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+32. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+33. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+34. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+35. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+36. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+37. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+38. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+39. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+40. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+41. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+42. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+43. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+44. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+45. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+46. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+47. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+48. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+49. 20/09/2025 19:01
+   Intensidade: Alta (3/4)
+
+50. 20/09/2025 19:00
+   Intensidade: Alta (3/4)
+
+51. 20/09/2025 09:12
+   Intensidade: Alta (3/4)
+
+52. 20/09/2025 00:44
+   Intensidade: Alta (3/4)
+
+53. 18/09/2025 22:12
+   Intensidade: Alta (3/4)
+
+54. 18/09/2025 22:12
+   Intensidade: Alta (3/4)
+
+55. 18/09/2025 22:12
+   Intensidade: Alta (3/4)
+
+56. 18/09/2025 22:12
+   Intensidade: Alta (3/4)
+
+57. 18/09/2025 22:12
+   Intensidade: Alta (3/4)
+
+58. 18/09/2025 22:12
+   Intensidade: Alta (3/4)
+
+59. 18/09/2025 22:12
+   Intensidade: Alta (3/4)
+
+60. 18/09/2025 22:12
+   Intensidade: Alta (3/4)
+
+61. 18/09/2025 22:12
+   Intensidade: Alta (3/4)
+
+62. 18/09/2025 22:11
+   Intensidade: Alta (3/4)
+
+63. 18/09/2025 09:24
+   Intensidade: Alta (3/4)
+
+64. 18/09/2025 09:24
+   Intensidade: Alta (3/4)
+
+65. 17/09/2025 22:53
+   Intensidade: Alta (3/4)
+
+66. 17/09/2025 22:53
+   Intensidade: Alta (3/4)
+
+67. 17/09/2025 19:29
+   Intensidade: Alta (3/4)
+
+68. 17/09/2025 19:23
+   Intensidade: Alta (3/4)
+
+69. 17/09/2025 17:25
+   Intensidade: Alta (3/4)
+
+70. 17/09/2025 17:25
+   Intensidade: Alta (3/4)
+
+71. 17/09/2025 17:25
+   Intensidade: Alta (3/4)
+
+72. 17/09/2025 17:25
+   Intensidade: Alta (3/4)
+
+73. 17/09/2025 17:25
+   Intensidade: Alta (3/4)
+
+74. 17/09/2025 17:25
+   Intensidade: Alta (3/4)
+
+75. 17/09/2025 17:24
+   Intensidade: Alta (3/4)
+
+76. 17/09/2025 08:09
+   Intensidade: Alta (3/4)
+
+77. 16/09/2025 22:57
+   Intensidade: Alta (3/4)
+
+78. 16/09/2025 22:57
+   Intensidade: Alta (3/4)
+
+79. 16/09/2025 22:57
+   Intensidade: Alta (3/4)
+
+80. 16/09/2025 22:57
+   Intensidade: Alta (3/4)
+
+81. 16/09/2025 22:57
+   Intensidade: Alta (3/4)
+
+82. 16/09/2025 22:25
+   Intensidade: Alta (3/4)
+
+83. 16/09/2025 21:51
+   Intensidade: Alta (3/4)
+
+84. 16/09/2025 20:59
+   Intensidade: Alta (3/4)
+
+85. 16/09/2025 20:59
+   Intensidade: Alta (3/4)
+
+86. 16/09/2025 20:59
+   Intensidade: Alta (3/4)
+
+87. 16/09/2025 20:59
+   Intensidade: Alta (3/4)
+
+88. 16/09/2025 20:59
+   Intensidade: Alta (3/4)
+
+89. 16/09/2025 20:59
+   Intensidade: Alta (3/4)
+
+90. 16/09/2025 20:59
+   Intensidade: Alta (3/4)
+
+91. 16/09/2025 20:59
+   Intensidade: Alta (3/4)
+
+92. 16/09/2025 20:59
+   Intensidade: Alta (3/4)
+
+93. 16/09/2025 20:59
+   Intensidade: Alta (3/4)
+
+94. 16/09/2025 20:59
+   Intensidade: Alta (3/4)
+
+95. 16/09/2025 20:59
+   Intensidade: Alta (3/4)
+
+96. 16/09/2025 20:59
+   Intensidade: Alta (3/4)
+
+97. 15/09/2025 23:51
+   Intensidade: Alta (3/4)
+
+98. 15/09/2025 23:48
+   Intensidade: Alta (3/4)
+
+99. 15/09/2025 23:45
+   Intensidade: Alta (3/4)
+
+100. 15/09/2025 23:43
+   Intensidade: Alta (3/4)
+
+101. 15/09/2025 23:40
+   Intensidade: Alta (3/4)
+
+102. 15/09/2025 23:39
+   Intensidade: Alta (3/4)
+
+103. 15/09/2025 23:33
+   Intensidade: Alta (3/4)
+
+104. 15/09/2025 23:25
+   Intensidade: Alta (3/4)
+
+105. 15/09/2025 23:21
+   Intensidade: Alta (3/4)
+
+106. 15/09/2025 23:18
+   Intensidade: Alta (3/4)
+
+107. 15/09/2025 23:14
+   Intensidade: Alta (3/4)
+
+108. 15/09/2025 20:31
+   Intensidade: Alta (3/4)
+
+109. 15/09/2025 20:31
+   Intensidade: Alta (3/4)
+
+110. 15/09/2025 20:30
+   Intensidade: Alta (3/4)
+
+111. 15/09/2025 20:30
+   Intensidade: Alta (3/4)
+
+112. 15/09/2025 20:30
+   Intensidade: Alta (3/4)
+
+113. 15/09/2025 20:30
+   Intensidade: Alta (3/4)
+
+114. 15/09/2025 12:35
+   Intensidade: Alta (3/4)
+
+115. 15/09/2025 11:54
+   Intensidade: Alta (3/4)
+
+116. 15/09/2025 11:54
+   Intensidade: Alta (3/4)
+
+117. 15/09/2025 11:54
+   Intensidade: Alta (3/4)
+
+118. 15/09/2025 11:54
+   Intensidade: Alta (3/4)
+
+119. 15/09/2025 11:54
+   Intensidade: Alta (3/4)
+
+120. 14/09/2025 23:32
+   Intensidade: Alta (3/4)
+
+121. 14/09/2025 23:32
+   Intensidade: Alta (3/4)
+
+122. 14/09/2025 23:32
+   Intensidade: Alta (3/4)
+
+123. 14/09/2025 23:32
+   Intensidade: Alta (3/4)
+
+124. 14/09/2025 22:52
+   Intensidade: Alta (3/4)
+
+125. 14/09/2025 22:37
+   Intensidade: Alta (3/4)
+
+126. 14/09/2025 21:36
+   Intensidade: Alta (3/4)
+
+127. 14/09/2025 20:34
+   Intensidade: Alta (3/4)
+
+128. 14/09/2025 20:34
+   Intensidade: Alta (3/4)
+
+129. 14/09/2025 19:53
+   Intensidade: Alta (3/4)
+
+130. 14/09/2025 19:17
+   Intensidade: Alta (3/4)
+
+131. 14/09/2025 19:11
+   Intensidade: Alta (3/4)
+
+132. 14/09/2025 18:00
+   Intensidade: Alta (3/4)
+
+133. 14/09/2025 16:25
+   Intensidade: Alta (3/4)
+
+134. 14/09/2025 16:13
+   Intensidade: Alta (3/4)
+
+135. 14/09/2025 16:12
+   Intensidade: Alta (3/4)
+
+136. 14/09/2025 16:12
+   Intensidade: Alta (3/4)
+
+137. 14/09/2025 16:12
+   Intensidade: Alta (3/4)
+
+138. 14/09/2025 16:12
+   Intensidade: Alta (3/4)
+
+139. 14/09/2025 16:12
+   Intensidade: Alta (3/4)
+
+140. 14/09/2025 16:12
+   Intensidade: Alta (3/4)
+
+141. 14/09/2025 09:08
+   Intensidade: Alta (3/4)
+
+142. 13/09/2025 23:46
+   Intensidade: Alta (3/4)
+
+143. 13/09/2025 23:46
+   Intensidade: Alta (3/4)
+
+144. 13/09/2025 23:46
+   Intensidade: Alta (3/4)
+
+145. 13/09/2025 23:45
+   Intensidade: Alta (3/4)
+
+146. 13/09/2025 23:45
+   Intensidade: Alta (3/4)
+
+147. 13/09/2025 23:45
+   Intensidade: Alta (3/4)
+
+148. 13/09/2025 23:45
+   Intensidade: Alta (3/4)
+
+149. 13/09/2025 22:37
+   Intensidade: Alta (3/4)
+
+150. 13/09/2025 22:32
+   Intensidade: Alta (3/4)
+
+151. 13/09/2025 22:32
+   Intensidade: Alta (3/4)
+
+152. 13/09/2025 22:32
+   Intensidade: Alta (3/4)
+
+153. 13/09/2025 22:32
+   Intensidade: Alta (3/4)
+
+154. 13/09/2025 22:32
+   Intensidade: Alta (3/4)
+
+155. 13/09/2025 22:32
+   Intensidade: Alta (3/4)
+
+156. 13/09/2025 18:34
+   Intensidade: Alta (3/4)
+
+157. 13/09/2025 17:01
+   Intensidade: Alta (3/4)
+
+158. 13/09/2025 16:35
+   Intensidade: Alta (3/4)
+
+159. 13/09/2025 12:28
+   Intensidade: Alta (3/4)
+
+160. 13/09/2025 12:06
+   Intensidade: Alta (3/4)
+
+161. 13/09/2025 11:59
+   Intensidade: Alta (3/4)
+
+162. 13/09/2025 10:19
+   Intensidade: Alta (3/4)
+
+163. 13/09/2025 10:18
+   Intensidade: Alta (3/4)
+
+164. 12/09/2025 22:40
+   Intensidade: Alta (3/4)
+
+165. 12/09/2025 22:40
+   Intensidade: Alta (3/4)
+
+166. 12/09/2025 22:40
+   Intensidade: Alta (3/4)
+
+167. 12/09/2025 22:39
+   Intensidade: Alta (3/4)
+
+168. 12/09/2025 22:39
+   Intensidade: Alta (3/4)
+
+169. 12/09/2025 22:14
+   Intensidade: Alta (3/4)
+
+170. 12/09/2025 21:57
+   Intensidade: Alta (3/4)
+
+171. 12/09/2025 21:49
+   Intensidade: Alta (3/4)
+
+172. 12/09/2025 21:31
+   Intensidade: Alta (3/4)
+
+173. 12/09/2025 20:42
+   Intensidade: Alta (3/4)
+
+174. 12/09/2025 20:07
+   Intensidade: Alta (3/4)
+
+175. 12/09/2025 20:07
+   Intensidade: Alta (3/4)
+
+176. 12/09/2025 20:07
+   Intensidade: Alta (3/4)
+
+177. 12/09/2025 17:17
+   Intensidade: Alta (3/4)
+
+178. 12/09/2025 17:17
+   Intensidade: Alta (3/4)
+
+179. 12/09/2025 15:47
+   Intensidade: Alta (3/4)
+
+180. 12/09/2025 13:17
+   Intensidade: Alta (3/4)
+
+181. 12/09/2025 11:49
+   Intensidade: Alta (3/4)
+
+182. 12/09/2025 11:22
+   Intensidade: Alta (3/4)
+
+183. 12/09/2025 11:17
+   Intensidade: Alta (3/4)
+
+184. 12/09/2025 10:01
+   Intensidade: Alta (3/4)
+
+185. 12/09/2025 09:33
+   Intensidade: Alta (3/4)
+
+186. 11/09/2025 23:14
+   Intensidade: Alta (3/4)
+
+187. 11/09/2025 23:14
+   Intensidade: Alta (3/4)
+
+188. 11/09/2025 23:14
+   Intensidade: Alta (3/4)
+
+189. 11/09/2025 23:14
+   Intensidade: Alta (3/4)
+
+190. 11/09/2025 23:13
+   Intensidade: Alta (3/4)
+
+191. 11/09/2025 22:53
+   Intensidade: Alta (3/4)
+
+192. 11/09/2025 22:40
+   Intensidade: Alta (3/4)
+
+193. 11/09/2025 22:15
+   Intensidade: Alta (3/4)
+
+194. 11/09/2025 22:15
+   Intensidade: Alta (3/4)
+
+195. 11/09/2025 20:58
+   Intensidade: Alta (3/4)
+
+196. 11/09/2025 20:25
+   Intensidade: Alta (3/4)
+
+197. 11/09/2025 20:05
+   Intensidade: Alta (3/4)
+
+198. 11/09/2025 19:43
+   Intensidade: Alta (3/4)
+
+199. 11/09/2025 19:40
+   Intensidade: Alta (3/4)
+
+200. 11/09/2025 17:01
+   Intensidade: Alta (3/4)
+
+201. 11/09/2025 16:25
+   Intensidade: Alta (3/4)
+
+202. 11/09/2025 16:00
+   Intensidade: Alta (3/4)
+
+203. 11/09/2025 15:37
+   Intensidade: Alta (3/4)
+
+204. 11/09/2025 15:37
+   Intensidade: Alta (3/4)
+
+205. 11/09/2025 15:37
+   Intensidade: Alta (3/4)
+
+206. 11/09/2025 12:56
+   Intensidade: Alta (3/4)
+
+207. 11/09/2025 11:37
+   Intensidade: Alta (3/4)
+
+208. 11/09/2025 11:30
+   Intensidade: Alta (3/4)
+
+209. 10/09/2025 23:10
+   Intensidade: Alta (3/4)
+
+210. 10/09/2025 23:09
+   Intensidade: Alta (3/4)
+
+211. 10/09/2025 23:09
+   Intensidade: Alta (3/4)
+
+212. 10/09/2025 23:09
+   Intensidade: Alta (3/4)
+
+213. 10/09/2025 22:38
+   Intensidade: Alta (3/4)
+
+214. 10/09/2025 22:19
+   Intensidade: Alta (3/4)
+
+215. 10/09/2025 21:46
+   Intensidade: Alta (3/4)
+
+216. 10/09/2025 20:34
+   Intensidade: Alta (3/4)
+
+217. 10/09/2025 20:30
+   Intensidade: Alta (3/4)
+
+218. 10/09/2025 20:23
+   Intensidade: Alta (3/4)
+
+219. 10/09/2025 18:24
+   Intensidade: Alta (3/4)
+
+220. 10/09/2025 18:07
+   Intensidade: Alta (3/4)
+
+221. 10/09/2025 18:03
+   Intensidade: Alta (3/4)
+
+222. 10/09/2025 14:06
+   Intensidade: Alta (3/4)
+
+223. 10/09/2025 13:21
+   Intensidade: Alta (3/4)
+
+224. 10/09/2025 12:12
+   Intensidade: Alta (3/4)
+
+225. 10/09/2025 11:59
+   Intensidade: Alta (3/4)
+
+226. 10/09/2025 11:27
+   Intensidade: Alta (3/4)
+
+227. 10/09/2025 10:49
+   Intensidade: Alta (3/4)
+
+228. 10/09/2025 09:50
+   Intensidade: Alta (3/4)
+
+229. 10/09/2025 09:48
+   Intensidade: Alta (3/4)
+
+230. 10/09/2025 09:48
+   Intensidade: Alta (3/4)
+
+231. 09/09/2025 23:22
+   Intensidade: Alta (3/4)
+
+232. 09/09/2025 23:21
+   Intensidade: Alta (3/4)
+
+233. 09/09/2025 23:21
+   Intensidade: Alta (3/4)
+
+234. 09/09/2025 23:17
+   Intensidade: Alta (3/4)
+
+235. 09/09/2025 22:54
+   Intensidade: Alta (3/4)
+
+236. 09/09/2025 22:42
+   Intensidade: Alta (3/4)
+
+237. 09/09/2025 22:22
+   Intensidade: Alta (3/4)
+
+238. 09/09/2025 22:06
+   Intensidade: Alta (3/4)
+
+239. 09/09/2025 21:53
+   Intensidade: Alta (3/4)
+
+240. 09/09/2025 21:35
+   Intensidade: Alta (3/4)
+
+241. 09/09/2025 21:25
+   Intensidade: Alta (3/4)
+
+242. 09/09/2025 20:34
+   Intensidade: Alta (3/4)
+
+243. 09/09/2025 19:30
+   Intensidade: Alta (3/4)
+
+244. 09/09/2025 18:57
+   Intensidade: Alta (3/4)
+
+245. 09/09/2025 18:09
+   Intensidade: Alta (3/4)
+
+246. 09/09/2025 17:00
+   Intensidade: Alta (3/4)
+
+247. 09/09/2025 15:03
+   Intensidade: Alta (3/4)
+
+248. 09/09/2025 14:34
+   Intensidade: Alta (3/4)
+
+249. 09/09/2025 12:08
+   Intensidade: Alta (3/4)
+
+250. 09/09/2025 11:32
+   Intensidade: Alta (3/4)
+
+251. 09/09/2025 10:03
+   Intensidade: Alta (3/4)
+
+252. 09/09/2025 10:03
+   Intensidade: Alta (3/4)
+
+253. 07/09/2025 23:22
+   Intensidade: Alta (3/4)
+
+254. 07/09/2025 22:43
+   Intensidade: Alta (3/4)
+
+255. 07/09/2025 22:03
+   Intensidade: Alta (3/4)
+
+256. 07/09/2025 21:02
+   Intensidade: Alta (3/4)
+
+257. 07/09/2025 20:28
+   Intensidade: Alta (3/4)
+
+258. 07/09/2025 20:19
+   Intensidade: Alta (3/4)
+
+259. 07/09/2025 20:11
+   Intensidade: Alta (3/4)
+
+260. 07/09/2025 20:11
+   Intensidade: Alta (3/4)
+
+261. 07/09/2025 20:11
+   Intensidade: Alta (3/4)
+
+262. 07/09/2025 20:11
+   Intensidade: Alta (3/4)
+
+263. 07/09/2025 20:11
+   Intensidade: Alta (3/4)
+
+264. 07/09/2025 20:11
+   Intensidade: Alta (3/4)
+
+265. 07/09/2025 20:11
+   Intensidade: Alta (3/4)
+
+266. 07/09/2025 20:11
+   Intensidade: Alta (3/4)
+
+267. 07/09/2025 20:11
+   Intensidade: Alta (3/4)
+
+268. 07/09/2025 20:11
+   Intensidade: Alta (3/4)
+
+269. 07/09/2025 20:11
+   Intensidade: Alta (3/4)
+
+270. 07/09/2025 20:10
+   Intensidade: Alta (3/4)
+
+271. 07/09/2025 20:10
+   Intensidade: Alta (3/4)
+
+272. 07/09/2025 20:10
+   Intensidade: Alta (3/4)
+
+273. 07/09/2025 20:10
+   Intensidade: Alta (3/4)
+
+274. 06/09/2025 23:46
+   Intensidade: Alta (3/4)
+
+275. 06/09/2025 23:21
+   Intensidade: Alta (3/4)
+
+276. 06/09/2025 23:21
+   Intensidade: Alta (3/4)
+
+277. 06/09/2025 23:21
+   Intensidade: Alta (3/4)
+
+278. 06/09/2025 22:20
+   Intensidade: Alta (3/4)
+
+279. 06/09/2025 20:28
+   Intensidade: Alta (3/4)
+
+280. 06/09/2025 20:17
+   Intensidade: Alta (3/4)
+
+281. 06/09/2025 19:56
+   Intensidade: Alta (3/4)
+
+282. 06/09/2025 18:09
+   Intensidade: Alta (3/4)
+
+283. 06/09/2025 18:04
+   Intensidade: Alta (3/4)
+
+284. 06/09/2025 18:01
+   Intensidade: Alta (3/4)
+
+285. 06/09/2025 18:01
+   Intensidade: Alta (3/4)
+
+286. 06/09/2025 16:16
+   Intensidade: Alta (3/4)
+
+287. 06/09/2025 16:04
+   Intensidade: Alta (3/4)
+
+288. 06/09/2025 14:46
+   Intensidade: Alta (3/4)
+
+289. 06/09/2025 14:45
+   Intensidade: Alta (3/4)
+
+290. 06/09/2025 14:36
+   Intensidade: Alta (3/4)
+
+291. 06/09/2025 14:36
+   Intensidade: Alta (3/4)
+
+292. 06/09/2025 14:35
+   Intensidade: Alta (3/4)
+
+293. 06/09/2025 14:35
+   Intensidade: Alta (3/4)
+
+294. 06/09/2025 00:00
+   Intensidade: Alta (3/4)
+
+295. 05/09/2025 22:50
+   Intensidade: Alta (3/4)
+
+296. 05/09/2025 22:34
+   Intensidade: Alta (3/4)
+
+297. 05/09/2025 21:52
+   Intensidade: Alta (3/4)
+
+298. 05/09/2025 20:57
+   Intensidade: Alta (3/4)
+
+299. 05/09/2025 20:51
+   Intensidade: Alta (3/4)
+
+300. 05/09/2025 20:31
+   Intensidade: Alta (3/4)
+
+301. 05/09/2025 20:30
+   Intensidade: Alta (3/4)
+
+302. 05/09/2025 20:30
+   Intensidade: Alta (3/4)
+
+303. 05/09/2025 16:43
+   Intensidade: Alta (3/4)
+
+304. 05/09/2025 15:49
+   Intensidade: Alta (3/4)
+
+305. 05/09/2025 15:17
+   Intensidade: Alta (3/4)
+
+306. 05/09/2025 15:17
+   Intensidade: Alta (3/4)
+
+307. 05/09/2025 15:17
+   Intensidade: Alta (3/4)
+
+308. 05/09/2025 15:17
+   Intensidade: Alta (3/4)
+
+309. 05/09/2025 15:17
+   Intensidade: Alta (3/4)
+
+310. 05/09/2025 15:17
+   Intensidade: Alta (3/4)
+
+311. 05/09/2025 15:17
+   Intensidade: Alta (3/4)
+
+312. 05/09/2025 15:17
+   Intensidade: Alta (3/4)
+
+313. 05/09/2025 15:17
+   Intensidade: Alta (3/4)
+
+314. 04/09/2025 19:23
+   Intensidade: Alta (3/4)
+
+315. 04/09/2025 19:02
+   Intensidade: Alta (3/4)
+
+316. 04/09/2025 18:41
+   Intensidade: Alta (3/4)
+
+317. 04/09/2025 18:26
+   Intensidade: Alta (3/4)
+
+318. 04/09/2025 18:25
+   Intensidade: Alta (3/4)
+
+319. 04/09/2025 18:25
+   Intensidade: Alta (3/4)
+
+320. 04/09/2025 14:47
+   Intensidade: Alta (3/4)
+
+321. 04/09/2025 14:38
+   Intensidade: Alta (3/4)
+
+322. 04/09/2025 14:30
+   Intensidade: Alta (3/4)
+
+323. 04/09/2025 14:30
+   Intensidade: Alta (3/4)
+
+324. 04/09/2025 14:30
+   Intensidade: Alta (3/4)
+
+325. 04/09/2025 14:29
+   Intensidade: Alta (3/4)
+
+326. 04/09/2025 14:29
+   Intensidade: Alta (3/4)
+
+327. 04/09/2025 14:29
+   Intensidade: Alta (3/4)
+
+328. 04/09/2025 14:29
+   Intensidade: Alta (3/4)
+
+329. 04/09/2025 14:29
+   Intensidade: Alta (3/4)
+
+330. 03/09/2025 23:42
+   Intensidade: Alta (3/4)
+
+331. 03/09/2025 23:42
+   Intensidade: Alta (3/4)
+
+332. 03/09/2025 23:42
+   Intensidade: Alta (3/4)
+
+333. 03/09/2025 23:06
+   Intensidade: Alta (3/4)
+
+334. 03/09/2025 23:05
+   Intensidade: Alta (3/4)
+
+335. 03/09/2025 23:04
+   Intensidade: Alta (3/4)
+
+336. 03/09/2025 22:46
+   Intensidade: Alta (3/4)
+
+337. 03/09/2025 22:28
+   Intensidade: Alta (3/4)
+
+338. 03/09/2025 22:10
+   Intensidade: Alta (3/4)
+
+339. 03/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+340. 03/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+341. 03/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+342. 03/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+343. 03/09/2025 21:42
+   Intensidade: Alta (3/4)
+
+344. 03/09/2025 12:04
+   Intensidade: Alta (3/4)
+
+345. 03/09/2025 12:04
+   Intensidade: Alta (3/4)
+
+346. 03/09/2025 12:04
+   Intensidade: Alta (3/4)
+
+347. 03/09/2025 12:03
+   Intensidade: Alta (3/4)
+
+348. 02/09/2025 23:52
+   Intensidade: Alta (3/4)
+
+349. 02/09/2025 22:28
+   Intensidade: Alta (3/4)
+
+350. 02/09/2025 21:31
+   Intensidade: Alta (3/4)
+
+351. 02/09/2025 20:43
+   Intensidade: Alta (3/4)
+
+352. 02/09/2025 19:44
+   Intensidade: Alta (3/4)
+
+353. 02/09/2025 19:44
+   Intensidade: Alta (3/4)
+
+354. 02/09/2025 18:25
+   Intensidade: Alta (3/4)
+
+355. 02/09/2025 18:25
+   Intensidade: Alta (3/4)
+
+356. 02/09/2025 18:24
+   Intensidade: Alta (3/4)
+
+357. 02/09/2025 16:59
+   Intensidade: Alta (3/4)
+
+358. 02/09/2025 16:58
+   Intensidade: Alta (3/4)
+
+359. 02/09/2025 16:58
+   Intensidade: Alta (3/4)
+
+360. 02/09/2025 14:10
+   Intensidade: Alta (3/4)
+
+361. 02/09/2025 14:09
+   Intensidade: Alta (3/4)
+
+362. 02/09/2025 14:09
+   Intensidade: Alta (3/4)
+
+363. 02/09/2025 12:07
+   Intensidade: Alta (3/4)
+
+364. 02/09/2025 12:07
+   Intensidade: Alta (3/4)
+
+365. 02/09/2025 12:07
+   Intensidade: Alta (3/4)
+
+366. 02/09/2025 12:07
+   Intensidade: Alta (3/4)
+
+367. 02/09/2025 08:24
+   Intensidade: Alta (3/4)
+
+368. 02/09/2025 08:24
+   Intensidade: Alta (3/4)
+
+369. 02/09/2025 07:31
+   Intensidade: Alta (3/4)
+
+370. 01/09/2025 20:55
+   Intensidade: Alta (3/4)
+
+371. 01/09/2025 20:32
+   Intensidade: Alta (3/4)
+
+372. 01/09/2025 20:07
+   Intensidade: Alta (3/4)
+
+373. 01/09/2025 20:06
+   Intensidade: Alta (3/4)
+
+374. 01/09/2025 20:06
+   Intensidade: Alta (3/4)
+
+375. 01/09/2025 18:05
+   Intensidade: Alta (3/4)
+
+376. 01/09/2025 18:05
+   Intensidade: Alta (3/4)
+
+377. 01/09/2025 18:05
+   Intensidade: Alta (3/4)
+
+378. 01/09/2025 18:05
+   Intensidade: Alta (3/4)
+
+379. 01/09/2025 18:05
+   Intensidade: Alta (3/4)
+
+380. 01/09/2025 18:05
+   Intensidade: Alta (3/4)
+
+381. 01/09/2025 18:05
+   Intensidade: Alta (3/4)
+
+382. 01/09/2025 18:05
+   Intensidade: Alta (3/4)
+
+383. 31/08/2025 23:32
+   Intensidade: Alta (3/4)
+
+384. 31/08/2025 23:31
+   Intensidade: Alta (3/4)
+
+385. 31/08/2025 23:31
+   Intensidade: Alta (3/4)
+
+386. 31/08/2025 23:19
+   Intensidade: Alta (3/4)
+
+387. 31/08/2025 22:12
+   Intensidade: Alta (3/4)
+
+388. 31/08/2025 21:52
+   Intensidade: Alta (3/4)
+
+389. 31/08/2025 21:52
+   Intensidade: Alta (3/4)
+
+390. 31/08/2025 21:52
+   Intensidade: Alta (3/4)
+
+391. 31/08/2025 21:52
+   Intensidade: Alta (3/4)
+
+392. 31/08/2025 21:52
+   Intensidade: Alta (3/4)
+
+393. 31/08/2025 21:52
+   Intensidade: Alta (3/4)
+
+394. 31/08/2025 21:51
+   Intensidade: Alta (3/4)
+
+395. 31/08/2025 21:51
+   Intensidade: Alta (3/4)
+
+396. 31/08/2025 21:51
+   Intensidade: Alta (3/4)
+
+397. 31/08/2025 21:51
+   Intensidade: Alta (3/4)
+
+398. 31/08/2025 21:51
+   Intensidade: Alta (3/4)
+
+399. 31/08/2025 21:51
+   Intensidade: Alta (3/4)
+
+400. 31/08/2025 21:51
+   Intensidade: Alta (3/4)
+
+401. 31/08/2025 21:51
+   Intensidade: Alta (3/4)
+
+402. 31/08/2025 21:51
+   Intensidade: Alta (3/4)
+
+403. 30/08/2025 23:58
+   Intensidade: Alta (3/4)
+
+404. 30/08/2025 23:58
+   Intensidade: Alta (3/4)
+
+405. 30/08/2025 20:57
+   Intensidade: Alta (3/4)
+
+406. 30/08/2025 20:57
+   Intensidade: Alta (3/4)
+
+407. 30/08/2025 20:57
+   Intensidade: Alta (3/4)
+
+408. 30/08/2025 20:57
+   Intensidade: Alta (3/4)
+
+409. 30/08/2025 20:57
+   Intensidade: Alta (3/4)
+
+410. 30/08/2025 18:23
+   Intensidade: Alta (3/4)
+
+411. 30/08/2025 18:23
+   Intensidade: Alta (3/4)
+
+412. 30/08/2025 18:23
+   Intensidade: Alta (3/4)
+
+413. 30/08/2025 18:23
+   Intensidade: Alta (3/4)
+
+414. 30/08/2025 18:23
+   Intensidade: Alta (3/4)
+
+415. 30/08/2025 18:23
+   Intensidade: Alta (3/4)
+
+416. 30/08/2025 18:23
+   Intensidade: Alta (3/4)
+
+417. 30/08/2025 18:22
+   Intensidade: Alta (3/4)
+
+418. 30/08/2025 18:22
+   Intensidade: Alta (3/4)
+
+419. 30/08/2025 18:22
+   Intensidade: Alta (3/4)
+
+420. 30/08/2025 18:22
+   Intensidade: Alta (3/4)
+
+421. 30/08/2025 18:22
+   Intensidade: Alta (3/4)
+
+422. 30/08/2025 18:22
+   Intensidade: Alta (3/4)
+
+423. 30/08/2025 18:22
+   Intensidade: Alta (3/4)
+
+424. 29/08/2025 14:31
+   Intensidade: Alta (3/4)
+
+425. 29/08/2025 14:31
+   Intensidade: Alta (3/4)
+
+426. 28/08/2025 23:28
+   Intensidade: Alta (3/4)
+
+427. 28/08/2025 23:28
+   Intensidade: Alta (3/4)
+
+428. 28/08/2025 23:28
+   Intensidade: Alta (3/4)
+
+429. 28/08/2025 23:00
+   Intensidade: Alta (3/4)
+
+430. 28/08/2025 22:58
+   Intensidade: Alta (3/4)
+
+431. 28/08/2025 22:58
+   Intensidade: Alta (3/4)
+
+432. 28/08/2025 22:58
+   Intensidade: Alta (3/4)
+
+433. 28/08/2025 11:38
+   Intensidade: Alta (3/4)
+
+434. 28/08/2025 10:35
+   Intensidade: Alta (3/4)
+
+435. 28/08/2025 10:26
+   Intensidade: Alta (3/4)
+
+436. 28/08/2025 10:26
+   Intensidade: Alta (3/4)
+
+437. 28/08/2025 10:26
+   Intensidade: Alta (3/4)
+
+438. 28/08/2025 10:26
+   Intensidade: Alta (3/4)
+
+439. 28/08/2025 10:25
+   Intensidade: Alta (3/4)
+
+440. 28/08/2025 10:25
+   Intensidade: Alta (3/4)
+
+441. 27/08/2025 23:32
+   Intensidade: Alta (3/4)
+
+442. 27/08/2025 23:20
+   Intensidade: Alta (3/4)
+
+443. 27/08/2025 23:17
+   Intensidade: Alta (3/4)
+
+444. 27/08/2025 23:11
+   Intensidade: Alta (3/4)
+
+445. 27/08/2025 23:08
+   Intensidade: Alta (3/4)
+
+446. 27/08/2025 23:08
+   Intensidade: Alta (3/4)
+
+447. 27/08/2025 23:08
+   Intensidade: Alta (3/4)
+
+448. 27/08/2025 23:08
+   Intensidade: Alta (3/4)
+
+449. 27/08/2025 23:08
+   Intensidade: Alta (3/4)
+
+450. 27/08/2025 23:08
+   Intensidade: Alta (3/4)
+
+451. 27/08/2025 23:08
+   Intensidade: Alta (3/4)
+
+452. 27/08/2025 19:04
+   Intensidade: Alta (3/4)
+
+453. 27/08/2025 19:04
+   Intensidade: Alta (3/4)
+
+454. 27/08/2025 19:04
+   Intensidade: Alta (3/4)
+
+455. 27/08/2025 19:04
+   Intensidade: Alta (3/4)
+
+456. 27/08/2025 12:36
+   Intensidade: Alta (3/4)
+
+457. 27/08/2025 12:36
+   Intensidade: Alta (3/4)
+
+458. 27/08/2025 12:05
+   Intensidade: Alta (3/4)
+
+459. 27/08/2025 12:05
+   Intensidade: Alta (3/4)
+
+460. 27/08/2025 12:05
+   Intensidade: Alta (3/4)
+
+461. 26/08/2025 23:10
+   Intensidade: Alta (3/4)
+
+462. 26/08/2025 23:10
+   Intensidade: Alta (3/4)
+
+463. 26/08/2025 23:10
+   Intensidade: Alta (3/4)
+
+464. 26/08/2025 23:10
+   Intensidade: Alta (3/4)
+
+465. 26/08/2025 19:03
+   Intensidade: Alta (3/4)
+
+466. 26/08/2025 16:17
+   Intensidade: Alta (3/4)
+
+467. 26/08/2025 16:00
+   Intensidade: Alta (3/4)
+
+468. 26/08/2025 15:51
+   Intensidade: Alta (3/4)
+
+469. 26/08/2025 11:44
+   Intensidade: Alta (3/4)
+
+470. 26/08/2025 11:44
+   Intensidade: Alta (3/4)
+
+471. 26/08/2025 11:43
+   Intensidade: Alta (3/4)
+
+472. 26/08/2025 11:43
+   Intensidade: Alta (3/4)
+
+473. 25/08/2025 23:48
+   Intensidade: Alta (3/4)
+
+474. 25/08/2025 23:48
+   Intensidade: Alta (3/4)
+
+475. 25/08/2025 22:33
+   Intensidade: Alta (3/4)
+
+476. 25/08/2025 21:53
+   Intensidade: Alta (3/4)
+
+477. 25/08/2025 21:26
+   Intensidade: Alta (3/4)
+
+478. 25/08/2025 21:09
+   Intensidade: Alta (3/4)
+
+479. 25/08/2025 21:01
+   Intensidade: Alta (3/4)
+
+480. 25/08/2025 19:44
+   Intensidade: Alta (3/4)
+
+481. 25/08/2025 18:35
+   Intensidade: Alta (3/4)
+
+482. 25/08/2025 18:12
+   Intensidade: Alta (3/4)
+
+483. 25/08/2025 18:12
+   Intensidade: Alta (3/4)
+
+484. 25/08/2025 16:07
+   Intensidade: Alta (3/4)
+
+485. 25/08/2025 16:07
+   Intensidade: Alta (3/4)
+
+486. 25/08/2025 16:07
+   Intensidade: Alta (3/4)
+
+487. 25/08/2025 16:06
+   Intensidade: Alta (3/4)
+
+488. 25/08/2025 16:06
+   Intensidade: Alta (3/4)
+
+489. 25/08/2025 16:06
+   Intensidade: Alta (3/4)
+
+490. 25/08/2025 08:14
+   Intensidade: Alta (3/4)
+
+491. 25/08/2025 08:14
+   Intensidade: Alta (3/4)
+
+492. 25/08/2025 08:14
+   Intensidade: Alta (3/4)
+
+493. 24/08/2025 21:39
+   Intensidade: Alta (3/4)
+
+494. 24/08/2025 21:39
+   Intensidade: Alta (3/4)
+
+495. 24/08/2025 21:39
+   Intensidade: Alta (3/4)
+
+496. 24/08/2025 21:39
+   Intensidade: Alta (3/4)
+
+497. 24/08/2025 21:19
+   Intensidade: Alta (3/4)
+
+498. 24/08/2025 21:16
+   Intensidade: Alta (3/4)
+
+499. 24/08/2025 20:26
+   Intensidade: Alta (3/4)
+
+500. 24/08/2025 20:26
+   Intensidade: Alta (3/4)
+
+501. 24/08/2025 20:26
+   Intensidade: Alta (3/4)
+
+502. 24/08/2025 20:26
+   Intensidade: Alta (3/4)
+
+503. 24/08/2025 20:25
+   Intensidade: Alta (3/4)
+
+504. 24/08/2025 20:25
+   Intensidade: Alta (3/4)
+
+505. 24/08/2025 20:25
+   Intensidade: Alta (3/4)
+
+506. 24/08/2025 20:25
+   Intensidade: Alta (3/4)
+
+507. 24/08/2025 20:25
+   Intensidade: Alta (3/4)
+
+508. 24/08/2025 20:25
+   Intensidade: Alta (3/4)
+
+509. 24/08/2025 20:25
+   Intensidade: Alta (3/4)
+
+510. 24/08/2025 20:25
+   Intensidade: Alta (3/4)
+
+511. 24/08/2025 20:25
+   Intensidade: Alta (3/4)
+
+512. 24/08/2025 20:25
+   Intensidade: Alta (3/4)
+
+513. 23/08/2025 23:57
+   Intensidade: Alta (3/4)
+
+514. 23/08/2025 23:54
+   Intensidade: Alta (3/4)
+
+515. 23/08/2025 23:52
+   Intensidade: Alta (3/4)
+
+516. 23/08/2025 23:48
+   Intensidade: Alta (3/4)
+
+517. 23/08/2025 23:45
+   Intensidade: Alta (3/4)
+
+518. 23/08/2025 23:40
+   Intensidade: Alta (3/4)
+
+519. 23/08/2025 22:38
+   Intensidade: Alta (3/4)
+
+520. 23/08/2025 22:30
+   Intensidade: Alta (3/4)
+
+521. 23/08/2025 22:28
+   Intensidade: Alta (3/4)
+
+522. 23/08/2025 22:28
+   Intensidade: Alta (3/4)
+
+523. 23/08/2025 22:28
+   Intensidade: Alta (3/4)
+
+524. 23/08/2025 22:28
+   Intensidade: Alta (3/4)
+
+525. 23/08/2025 22:28
+   Intensidade: Alta (3/4)
+
+526. 23/08/2025 22:28
+   Intensidade: Alta (3/4)
+
+527. 23/08/2025 22:28
+   Intensidade: Alta (3/4)
+
+528. 23/08/2025 22:28
+   Intensidade: Alta (3/4)
+
+529. 23/08/2025 22:28
+   Intensidade: Alta (3/4)
+
+530. 23/08/2025 22:27
+   Intensidade: Alta (3/4)
+
+531. 22/08/2025 23:52
+   Intensidade: Alta (3/4)
+
+532. 22/08/2025 23:52
+   Intensidade: Alta (3/4)
+
+533. 22/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+534. 22/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+535. 22/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+536. 22/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+537. 22/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+538. 22/08/2025 23:50
+   Intensidade: Alta (3/4)
+
+539. 22/08/2025 23:50
+   Intensidade: Alta (3/4)
+
+540. 22/08/2025 23:50
+   Intensidade: Alta (3/4)
+
+541. 22/08/2025 14:30
+   Intensidade: Alta (3/4)
+
+542. 22/08/2025 14:29
+   Intensidade: Alta (3/4)
+
+543. 22/08/2025 14:29
+   Intensidade: Alta (3/4)
+
+544. 22/08/2025 14:29
+   Intensidade: Alta (3/4)
+
+545. 22/08/2025 14:29
+   Intensidade: Alta (3/4)
+
+546. 22/08/2025 14:29
+   Intensidade: Alta (3/4)
+
+547. 22/08/2025 10:16
+   Intensidade: Alta (3/4)
+
+548. 22/08/2025 10:14
+   Intensidade: Alta (3/4)
+
+549. 22/08/2025 10:13
+   Intensidade: Alta (3/4)
+
+550. 22/08/2025 10:13
+   Intensidade: Alta (3/4)
+
+551. 21/08/2025 23:53
+   Intensidade: Alta (3/4)
+
+552. 21/08/2025 22:42
+   Intensidade: Alta (3/4)
+
+553. 21/08/2025 22:15
+   Intensidade: Alta (3/4)
+
+554. 21/08/2025 21:32
+   Intensidade: Alta (3/4)
+
+555. 21/08/2025 20:02
+   Intensidade: Alta (3/4)
+
+556. 21/08/2025 18:53
+   Intensidade: Alta (3/4)
+
+557. 21/08/2025 16:44
+   Intensidade: Alta (3/4)
+
+558. 21/08/2025 15:39
+   Intensidade: Alta (3/4)
+
+559. 21/08/2025 14:52
+   Intensidade: Alta (3/4)
+   Comentário: cinco dos EV's foram no tertuliarium
+
+
+560. 21/08/2025 14:45
+   Intensidade: Alta (3/4)
+
+561. 21/08/2025 14:45
+   Intensidade: Alta (3/4)
+
+562. 21/08/2025 14:45
+   Intensidade: Alta (3/4)
+
+563. 21/08/2025 14:44
+   Intensidade: Alta (3/4)
+
+564. 21/08/2025 14:44
+   Intensidade: Alta (3/4)
+
+565. 21/08/2025 14:44
+   Intensidade: Alta (3/4)
+
+566. 21/08/2025 12:10
+   Intensidade: Alta (3/4)
+
+567. 21/08/2025 08:09
+   Intensidade: Alta (3/4)
+
+568. 21/08/2025 07:43
+   Intensidade: Alta (3/4)
+
+569. 21/08/2025 07:37
+   Intensidade: Alta (3/4)
+
+570. 21/08/2025 07:36
+   Intensidade: Alta (3/4)
+
+571. 20/08/2025 23:56
+   Intensidade: Alta (3/4)
+
+572. 20/08/2025 23:56
+   Intensidade: Alta (3/4)
+
+573. 20/08/2025 23:56
+   Intensidade: Alta (3/4)
+
+574. 20/08/2025 23:56
+   Intensidade: Alta (3/4)
+
+575. 20/08/2025 23:56
+   Intensidade: Alta (3/4)
+
+576. 20/08/2025 23:56
+   Intensidade: Alta (3/4)
+
+577. 20/08/2025 23:56
+   Intensidade: Alta (3/4)
+
+578. 20/08/2025 23:56
+   Intensidade: Alta (3/4)
+
+579. 20/08/2025 23:55
+   Intensidade: Alta (3/4)
+
+580. 20/08/2025 23:55
+   Intensidade: Alta (3/4)
+
+581. 20/08/2025 23:55
+   Intensidade: Alta (3/4)
+
+582. 20/08/2025 23:55
+   Intensidade: Alta (3/4)
+
+583. 20/08/2025 23:55
+   Intensidade: Alta (3/4)
+
+584. 20/08/2025 13:47
+   Intensidade: Alta (3/4)
+
+585. 20/08/2025 12:06
+   Intensidade: Alta (3/4)
+
+586. 20/08/2025 11:48
+   Intensidade: Alta (3/4)
+
+587. 20/08/2025 10:40
+   Intensidade: Alta (3/4)
+
+588. 20/08/2025 10:29
+   Intensidade: Alta (3/4)
+   Comentário: Conversa ligeira e estimulante, com Marcelo Cover
+
+589. 20/08/2025 10:28
+   Intensidade: Alta (3/4)
+
+590. 20/08/2025 10:28
+   Intensidade: Alta (3/4)
+
+591. 20/08/2025 10:28
+   Intensidade: Alta (3/4)
+
+592. 19/08/2025 22:08
+   Intensidade: Alta (3/4)
+
+593. 19/08/2025 22:08
+   Intensidade: Alta (3/4)
+
+594. 19/08/2025 22:08
+   Intensidade: Alta (3/4)
+
+595. 19/08/2025 22:07
+   Intensidade: Alta (3/4)
+
+596. 19/08/2025 22:07
+   Intensidade: Alta (3/4)
+
+597. 19/08/2025 19:04
+   Intensidade: Alta (3/4)
+
+598. 19/08/2025 19:03
+   Intensidade: Alta (3/4)
+
+599. 19/08/2025 19:03
+   Intensidade: Alta (3/4)
+
+600. 19/08/2025 14:14
+   Intensidade: Alta (3/4)
+
+601. 19/08/2025 14:14
+   Intensidade: Alta (3/4)
+
+602. 19/08/2025 14:13
+   Intensidade: Alta (3/4)
+
+603. 19/08/2025 13:47
+   Intensidade: Alta (3/4)
+
+604. 19/08/2025 13:47
+   Intensidade: Alta (3/4)
+
+605. 19/08/2025 13:46
+   Intensidade: Alta (3/4)
+
+606. 19/08/2025 10:37
+   Intensidade: Alta (3/4)
+
+607. 19/08/2025 10:26
+   Intensidade: Alta (3/4)
+
+608. 19/08/2025 09:51
+   Intensidade: Alta (3/4)
+
+609. 19/08/2025 08:49
+   Intensidade: Alta (3/4)
+
+610. 19/08/2025 08:49
+   Intensidade: Alta (3/4)
+
+611. 19/08/2025 08:49
+   Intensidade: Alta (3/4)
+
+612. 18/08/2025 23:50
+   Intensidade: Alta (3/4)
+
+613. 18/08/2025 23:50
+   Intensidade: Alta (3/4)
+
+614. 18/08/2025 23:50
+   Intensidade: Alta (3/4)
+
+615. 18/08/2025 23:50
+   Intensidade: Alta (3/4)
+
+616. 18/08/2025 23:50
+   Intensidade: Alta (3/4)
+
+617. 18/08/2025 23:50
+   Intensidade: Alta (3/4)
+
+618. 18/08/2025 23:38
+   Intensidade: Alta (3/4)
+
+619. 18/08/2025 23:38
+   Intensidade: Alta (3/4)
+
+620. 18/08/2025 23:38
+   Intensidade: Alta (3/4)
+
+621. 18/08/2025 23:38
+   Intensidade: Alta (3/4)
+
+622. 18/08/2025 23:38
+   Intensidade: Alta (3/4)
+
+623. 18/08/2025 20:02
+   Intensidade: Alta (3/4)
+
+624. 18/08/2025 19:31
+   Intensidade: Alta (3/4)
+
+625. 18/08/2025 17:29
+   Intensidade: Alta (3/4)
+
+626. 18/08/2025 17:07
+   Intensidade: Alta (3/4)
+
+627. 18/08/2025 17:05
+   Intensidade: Alta (3/4)
+
+628. 18/08/2025 16:51
+   Intensidade: Alta (3/4)
+
+629. 18/08/2025 16:51
+   Intensidade: Alta (3/4)
+
+630. 18/08/2025 16:51
+   Intensidade: Alta (3/4)
+
+631. 18/08/2025 16:51
+   Intensidade: Alta (3/4)
+
+632. 18/08/2025 16:51
+   Intensidade: Alta (3/4)
+
+633. 17/08/2025 23:12
+   Intensidade: Alta (3/4)
+
+634. 17/08/2025 23:06
+   Intensidade: Alta (3/4)
+
+635. 17/08/2025 23:06
+   Intensidade: Alta (3/4)
+
+636. 17/08/2025 22:01
+   Intensidade: Alta (3/4)
+
+637. 17/08/2025 22:00
+   Intensidade: Alta (3/4)
+
+638. 17/08/2025 21:47
+   Intensidade: Alta (3/4)
+
+639. 17/08/2025 21:47
+   Intensidade: Alta (3/4)
+
+640. 17/08/2025 19:00
+   Intensidade: Alta (3/4)
+
+641. 17/08/2025 17:40
+   Intensidade: Alta (3/4)
+
+642. 17/08/2025 15:23
+   Intensidade: Alta (3/4)
+
+643. 17/08/2025 15:18
+   Intensidade: Alta (3/4)
+
+644. 17/08/2025 15:18
+   Intensidade: Alta (3/4)
+
+645. 17/08/2025 12:59
+   Intensidade: Alta (3/4)
+
+646. 17/08/2025 12:55
+   Intensidade: Alta (3/4)
+
+647. 17/08/2025 11:59
+   Intensidade: Alta (3/4)
+
+648. 17/08/2025 11:59
+   Intensidade: Alta (3/4)
+
+649. 17/08/2025 11:59
+   Intensidade: Alta (3/4)
+
+650. 16/08/2025 23:02
+   Intensidade: Alta (3/4)
+
+651. 16/08/2025 22:58
+   Intensidade: Alta (3/4)
+
+652. 16/08/2025 22:28
+   Intensidade: Alta (3/4)
+
+653. 16/08/2025 22:15
+   Intensidade: Alta (3/4)
+
+654. 16/08/2025 22:08
+   Intensidade: Alta (3/4)
+
+655. 16/08/2025 22:08
+   Intensidade: Alta (3/4)
+
+656. 16/08/2025 21:01
+   Intensidade: Alta (3/4)
+
+657. 16/08/2025 21:01
+   Intensidade: Alta (3/4)
+
+658. 16/08/2025 19:36
+   Intensidade: Alta (3/4)
+
+659. 16/08/2025 19:35
+   Intensidade: Alta (3/4)
+
+660. 16/08/2025 17:07
+   Intensidade: Alta (3/4)
+
+661. 16/08/2025 16:24
+   Intensidade: Alta (3/4)
+
+662. 16/08/2025 15:49
+   Intensidade: Alta (3/4)
+
+663. 16/08/2025 15:10
+   Intensidade: Alta (3/4)
+
+664. 16/08/2025 15:10
+   Intensidade: Alta (3/4)
+
+665. 16/08/2025 15:10
+   Intensidade: Alta (3/4)
+
+666. 16/08/2025 15:10
+   Intensidade: Alta (3/4)
+
+667. 16/08/2025 15:10
+   Intensidade: Alta (3/4)
+
+668. 16/08/2025 15:10
+   Intensidade: Alta (3/4)
+
+669. 16/08/2025 15:10
+   Intensidade: Alta (3/4)
+
+670. 16/08/2025 15:10
+   Intensidade: Alta (3/4)
+
+671. 15/08/2025 23:48
+   Intensidade: Alta (3/4)
+
+672. 15/08/2025 23:42
+   Intensidade: Alta (3/4)
+
+673. 15/08/2025 22:59
+   Intensidade: Alta (3/4)
+
+674. 15/08/2025 22:59
+   Intensidade: Alta (3/4)
+
+675. 15/08/2025 22:59
+   Intensidade: Alta (3/4)
+
+676. 15/08/2025 22:59
+   Intensidade: Alta (3/4)
+
+677. 15/08/2025 22:59
+   Intensidade: Alta (3/4)
+
+678. 15/08/2025 22:59
+   Intensidade: Alta (3/4)
+
+679. 15/08/2025 22:59
+   Intensidade: Alta (3/4)
+
+680. 15/08/2025 22:59
+   Intensidade: Alta (3/4)
+
+681. 15/08/2025 18:18
+   Intensidade: Alta (3/4)
+
+682. 15/08/2025 18:08
+   Intensidade: Alta (3/4)
+
+683. 15/08/2025 16:01
+   Intensidade: Alta (3/4)
+
+684. 15/08/2025 16:01
+   Intensidade: Alta (3/4)
+
+685. 15/08/2025 16:01
+   Intensidade: Alta (3/4)
+
+686. 15/08/2025 12:05
+   Intensidade: Alta (3/4)
+
+687. 15/08/2025 12:05
+   Intensidade: Alta (3/4)
+
+688. 15/08/2025 08:42
+   Intensidade: Alta (3/4)
+
+689. 15/08/2025 07:48
+   Intensidade: Alta (3/4)
+
+690. 14/08/2025 23:53
+   Intensidade: Alta (3/4)
+
+691. 14/08/2025 23:53
+   Intensidade: Alta (3/4)
+
+692. 14/08/2025 23:35
+   Intensidade: Alta (3/4)
+
+693. 14/08/2025 23:08
+   Intensidade: Alta (3/4)
+
+694. 14/08/2025 22:47
+   Intensidade: Alta (3/4)
+
+695. 14/08/2025 22:35
+   Intensidade: Alta (3/4)
+
+696. 14/08/2025 22:24
+   Intensidade: Alta (3/4)
+
+697. 14/08/2025 22:22
+   Intensidade: Alta (3/4)
+
+698. 14/08/2025 22:22
+   Intensidade: Alta (3/4)
+
+699. 14/08/2025 22:22
+   Intensidade: Alta (3/4)
+
+700. 14/08/2025 22:22
+   Intensidade: Alta (3/4)
+
+701. 14/08/2025 20:44
+   Intensidade: Alta (3/4)
+
+702. 14/08/2025 20:44
+   Intensidade: Alta (3/4)
+
+703. 14/08/2025 20:16
+   Intensidade: Alta (3/4)
+
+704. 14/08/2025 20:16
+   Intensidade: Alta (3/4)
+
+705. 14/08/2025 18:56
+   Intensidade: Alta (3/4)
+
+706. 14/08/2025 18:15
+   Intensidade: Alta (3/4)
+
+707. 14/08/2025 18:11
+   Intensidade: Alta (3/4)
+
+708. 14/08/2025 18:10
+   Intensidade: Alta (3/4)
+
+709. 14/08/2025 10:33
+   Intensidade: Alta (3/4)
+
+710. 14/08/2025 09:09
+   Intensidade: Alta (3/4)
+
+711. 13/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+712. 13/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+713. 13/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+714. 13/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+715. 13/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+716. 13/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+717. 13/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+718. 13/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+719. 13/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+720. 13/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+721. 13/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+722. 13/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+723. 13/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+724. 13/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+725. 13/08/2025 11:47
+   Intensidade: Alta (3/4)
+
+726. 13/08/2025 11:47
+   Intensidade: Alta (3/4)
+
+727. 13/08/2025 09:59
+   Intensidade: Alta (3/4)
+
+728. 13/08/2025 09:59
+   Intensidade: Alta (3/4)
+
+729. 13/08/2025 09:59
+   Intensidade: Alta (3/4)
+
+730. 13/08/2025 09:59
+   Intensidade: Alta (3/4)
+
+731. 12/08/2025 23:20
+   Intensidade: Alta (3/4)
+
+732. 12/08/2025 23:20
+   Intensidade: Alta (3/4)
+
+733. 12/08/2025 23:20
+   Intensidade: Alta (3/4)
+
+734. 12/08/2025 23:19
+   Intensidade: Alta (3/4)
+
+735. 12/08/2025 23:19
+   Intensidade: Alta (3/4)
+
+736. 12/08/2025 23:19
+   Intensidade: Alta (3/4)
+
+737. 12/08/2025 23:19
+   Intensidade: Alta (3/4)
+
+738. 12/08/2025 23:19
+   Intensidade: Alta (3/4)
+
+739. 12/08/2025 23:19
+   Intensidade: Alta (3/4)
+
+740. 12/08/2025 23:18
+   Intensidade: Alta (3/4)
+
+741. 11/08/2025 23:15
+   Intensidade: Alta (3/4)
+
+742. 11/08/2025 23:15
+   Intensidade: Alta (3/4)
+
+743. 11/08/2025 23:15
+   Intensidade: Alta (3/4)
+
+744. 11/08/2025 23:15
+   Intensidade: Alta (3/4)
+
+745. 11/08/2025 22:56
+   Intensidade: Alta (3/4)
+
+746. 11/08/2025 22:40
+   Intensidade: Alta (3/4)
+
+747. 11/08/2025 21:28
+   Intensidade: Alta (3/4)
+
+748. 11/08/2025 21:25
+   Intensidade: Alta (3/4)
+
+749. 11/08/2025 21:24
+   Intensidade: Alta (3/4)
+
+750. 11/08/2025 19:49
+   Intensidade: Alta (3/4)
+
+751. 11/08/2025 19:44
+   Intensidade: Alta (3/4)
+
+752. 11/08/2025 15:36
+   Intensidade: Alta (3/4)
+
+753. 11/08/2025 15:23
+   Intensidade: Alta (3/4)
+
+754. 11/08/2025 14:34
+   Intensidade: Alta (3/4)
+
+755. 11/08/2025 14:34
+   Intensidade: Alta (3/4)
+
+756. 11/08/2025 12:40
+   Intensidade: Alta (3/4)
+
+757. 11/08/2025 12:25
+   Intensidade: Alta (3/4)
+
+758. 11/08/2025 11:58
+   Intensidade: Alta (3/4)
+
+759. 11/08/2025 11:58
+   Intensidade: Alta (3/4)
+
+760. 11/08/2025 11:58
+   Intensidade: Alta (3/4)
+
+761. 11/08/2025 11:58
+   Intensidade: Alta (3/4)
+
+762. 10/08/2025 21:14
+   Intensidade: Alta (3/4)
+
+763. 10/08/2025 20:59
+   Intensidade: Alta (3/4)
+
+764. 10/08/2025 19:40
+   Intensidade: Alta (3/4)
+
+765. 10/08/2025 19:17
+   Intensidade: Alta (3/4)
+
+766. 10/08/2025 19:17
+   Intensidade: Alta (3/4)
+
+767. 10/08/2025 16:35
+   Intensidade: Alta (3/4)
+
+768. 10/08/2025 16:23
+   Intensidade: Alta (3/4)
+
+769. 10/08/2025 16:16
+   Intensidade: Alta (3/4)
+
+770. 10/08/2025 16:16
+   Intensidade: Alta (3/4)
+
+771. 10/08/2025 16:16
+   Intensidade: Alta (3/4)
+
+772. 10/08/2025 16:16
+   Intensidade: Alta (3/4)
+
+773. 10/08/2025 16:15
+   Intensidade: Alta (3/4)
+
+774. 09/08/2025 22:27
+   Intensidade: Alta (3/4)
+
+775. 09/08/2025 22:27
+   Intensidade: Alta (3/4)
+
+776. 09/08/2025 22:27
+   Intensidade: Alta (3/4)
+
+777. 09/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+778. 09/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+779. 09/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+780. 09/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+781. 09/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+782. 09/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+783. 09/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+784. 09/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+785. 09/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+786. 09/08/2025 22:19
+   Intensidade: Alta (3/4)
+
+787. 09/08/2025 17:55
+   Intensidade: Alta (3/4)
+
+788. 09/08/2025 17:32
+   Intensidade: Alta (3/4)
+
+789. 09/08/2025 17:11
+   Intensidade: Alta (3/4)
+
+790. 09/08/2025 16:00
+   Intensidade: Alta (3/4)
+
+791. 09/08/2025 16:00
+   Intensidade: Alta (3/4)
+
+792. 09/08/2025 15:59
+   Intensidade: Alta (3/4)
+
+793. 09/08/2025 15:59
+   Intensidade: Alta (3/4)
+
+794. 09/08/2025 05:19
+   Intensidade: Alta (3/4)
+
+795. 08/08/2025 22:01
+   Intensidade: Alta (3/4)
+
+796. 08/08/2025 22:00
+   Intensidade: Alta (3/4)
+
+797. 08/08/2025 22:00
+   Intensidade: Alta (3/4)
+
+798. 08/08/2025 22:00
+   Intensidade: Alta (3/4)
+
+799. 08/08/2025 21:52
+   Intensidade: Alta (3/4)
+
+800. 08/08/2025 21:42
+   Intensidade: Alta (3/4)
+
+801. 08/08/2025 21:29
+   Intensidade: Alta (3/4)
+
+802. 08/08/2025 21:23
+   Intensidade: Alta (3/4)
+
+803. 08/08/2025 21:18
+   Intensidade: Alta (3/4)
+
+804. 08/08/2025 20:03
+   Intensidade: Alta (3/4)
+
+805. 08/08/2025 17:58
+   Intensidade: Alta (3/4)
+
+806. 08/08/2025 17:01
+   Intensidade: Alta (3/4)
+
+807. 08/08/2025 15:47
+   Intensidade: Alta (3/4)
+
+808. 08/08/2025 15:44
+   Intensidade: Alta (3/4)
+
+809. 08/08/2025 15:22
+   Intensidade: Alta (3/4)
+
+810. 08/08/2025 15:22
+   Intensidade: Alta (3/4)
+
+811. 08/08/2025 15:22
+   Intensidade: Alta (3/4)
+
+812. 08/08/2025 15:22
+   Intensidade: Alta (3/4)
+
+813. 08/08/2025 15:21
+   Intensidade: Alta (3/4)
+
+814. 08/08/2025 08:45
+   Intensidade: Alta (3/4)
+
+815. 08/08/2025 08:29
+   Intensidade: Alta (3/4)
+
+816. 07/08/2025 23:52
+   Intensidade: Alta (3/4)
+
+817. 07/08/2025 23:31
+   Intensidade: Alta (3/4)
+
+818. 07/08/2025 22:51
+   Intensidade: Alta (3/4)
+
+819. 07/08/2025 22:27
+   Intensidade: Alta (3/4)
+
+820. 07/08/2025 22:11
+   Intensidade: Alta (3/4)
+
+821. 07/08/2025 21:19
+   Intensidade: Alta (3/4)
+
+822. 07/08/2025 19:08
+   Intensidade: Alta (3/4)
+
+823. 07/08/2025 19:00
+   Intensidade: Alta (3/4)
+
+824. 07/08/2025 18:54
+   Intensidade: Alta (3/4)
+
+825. 07/08/2025 18:11
+   Intensidade: Alta (3/4)
+
+826. 07/08/2025 18:11
+   Intensidade: Alta (3/4)
+
+827. 07/08/2025 18:11
+   Intensidade: Alta (3/4)
+
+828. 07/08/2025 15:41
+   Intensidade: Alta (3/4)
+
+829. 07/08/2025 15:29
+   Intensidade: Alta (3/4)
+
+830. 07/08/2025 15:29
+   Intensidade: Alta (3/4)
+
+831. 07/08/2025 13:45
+   Intensidade: Alta (3/4)
+
+832. 07/08/2025 13:19
+   Intensidade: Alta (3/4)
+
+833. 07/08/2025 13:19
+   Intensidade: Alta (3/4)
+
+834. 07/08/2025 13:18
+   Intensidade: Alta (3/4)
+
+835. 06/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+836. 06/08/2025 23:33
+   Intensidade: Alta (3/4)
+
+837. 06/08/2025 23:20
+   Intensidade: Alta (3/4)
+
+838. 06/08/2025 23:04
+   Intensidade: Alta (3/4)
+
+839. 06/08/2025 22:57
+   Intensidade: Alta (3/4)
+
+840. 06/08/2025 22:51
+   Intensidade: Alta (3/4)
+
+841. 06/08/2025 22:50
+   Intensidade: Alta (3/4)
+
+842. 06/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+843. 06/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+844. 06/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+845. 06/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+846. 06/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+847. 06/08/2025 22:20
+   Intensidade: Alta (3/4)
+
+848. 06/08/2025 12:58
+   Intensidade: Alta (3/4)
+
+849. 06/08/2025 12:37
+   Intensidade: Alta (3/4)
+
+850. 06/08/2025 12:37
+   Intensidade: Alta (3/4)
+
+851. 06/08/2025 12:37
+   Intensidade: Alta (3/4)
+
+852. 06/08/2025 12:37
+   Intensidade: Alta (3/4)
+
+853. 06/08/2025 12:37
+   Intensidade: Alta (3/4)
+
+854. 05/08/2025 23:37
+   Intensidade: Alta (3/4)
+
+855. 05/08/2025 23:37
+   Intensidade: Alta (3/4)
+
+856. 05/08/2025 23:37
+   Intensidade: Alta (3/4)
+
+857. 05/08/2025 23:37
+   Intensidade: Alta (3/4)
+
+858. 05/08/2025 22:25
+   Intensidade: Alta (3/4)
+
+859. 05/08/2025 21:49
+   Intensidade: Alta (3/4)
+
+860. 05/08/2025 21:16
+   Intensidade: Alta (3/4)
+
+861. 05/08/2025 20:58
+   Intensidade: Alta (3/4)
+
+862. 05/08/2025 20:58
+   Intensidade: Alta (3/4)
+
+863. 05/08/2025 19:54
+   Intensidade: Alta (3/4)
+
+864. 05/08/2025 19:39
+   Intensidade: Alta (3/4)
+
+865. 05/08/2025 19:38
+   Intensidade: Alta (3/4)
+
+866. 05/08/2025 12:00
+   Intensidade: Alta (3/4)
+
+867. 05/08/2025 11:11
+   Intensidade: Alta (3/4)
+
+868. 05/08/2025 11:11
+   Intensidade: Alta (3/4)
+
+869. 05/08/2025 11:11
+   Intensidade: Alta (3/4)
+
+870. 05/08/2025 08:34
+   Intensidade: Alta (3/4)
+
+871. 05/08/2025 06:31
+   Intensidade: Alta (3/4)
+
+872. 04/08/2025 23:27
+   Intensidade: Alta (3/4)
+
+873. 04/08/2025 23:17
+   Intensidade: Alta (3/4)
+
+874. 04/08/2025 23:13
+   Intensidade: Alta (3/4)
+
+875. 04/08/2025 23:08
+   Intensidade: Alta (3/4)
+
+876. 04/08/2025 22:21
+   Intensidade: Alta (3/4)
+
+877. 04/08/2025 22:04
+   Intensidade: Alta (3/4)
+
+878. 04/08/2025 20:40
+   Intensidade: Alta (3/4)
+
+879. 04/08/2025 20:40
+   Intensidade: Alta (3/4)
+
+880. 04/08/2025 17:10
+   Intensidade: Alta (3/4)
+
+881. 04/08/2025 16:48
+   Intensidade: Alta (3/4)
+
+882. 04/08/2025 16:48
+   Intensidade: Alta (3/4)
+
+883. 04/08/2025 14:31
+   Intensidade: Alta (3/4)
+
+884. 04/08/2025 14:31
+   Intensidade: Alta (3/4)
+
+885. 04/08/2025 14:31
+   Intensidade: Alta (3/4)
+
+886. 04/08/2025 14:31
+   Intensidade: Alta (3/4)
+
+887. 04/08/2025 14:31
+   Intensidade: Alta (3/4)
+
+888. 04/08/2025 14:31
+   Intensidade: Alta (3/4)
+
+889. 03/08/2025 22:12
+   Intensidade: Alta (3/4)
+
+890. 03/08/2025 22:07
+   Intensidade: Alta (3/4)
+
+891. 03/08/2025 21:58
+   Intensidade: Alta (3/4)
+
+892. 03/08/2025 21:47
+   Intensidade: Alta (3/4)
+
+893. 03/08/2025 21:47
+   Intensidade: Alta (3/4)
+
+894. 03/08/2025 21:47
+   Intensidade: Alta (3/4)
+
+895. 03/08/2025 20:23
+   Intensidade: Alta (3/4)
+
+896. 03/08/2025 19:21
+   Intensidade: Alta (3/4)
+
+897. 03/08/2025 19:21
+   Intensidade: Alta (3/4)
+
+898. 03/08/2025 18:09
+   Intensidade: Alta (3/4)
+
+899. 03/08/2025 18:04
+   Intensidade: Alta (3/4)
+
+900. 03/08/2025 18:04
+   Intensidade: Alta (3/4)
+
+901. 03/08/2025 18:04
+   Intensidade: Alta (3/4)
+
+902. 03/08/2025 15:48
+   Intensidade: Alta (3/4)
+
+903. 03/08/2025 15:48
+   Intensidade: Alta (3/4)
+
+904. 03/08/2025 11:20
+   Intensidade: Alta (3/4)
+
+905. 03/08/2025 10:54
+   Intensidade: Alta (3/4)
+
+906. 03/08/2025 09:35
+   Intensidade: Alta (3/4)
+
+907. 03/08/2025 08:29
+   Intensidade: Alta (3/4)
+
+908. 03/08/2025 08:29
+   Intensidade: Alta (3/4)
+
+909. 03/08/2025 08:29
+   Intensidade: Alta (3/4)
+
+910. 02/08/2025 22:40
+   Intensidade: Alta (3/4)
+
+911. 02/08/2025 22:40
+   Intensidade: Alta (3/4)
+
+912. 02/08/2025 22:40
+   Intensidade: Alta (3/4)
+
+913. 02/08/2025 18:44
+   Intensidade: Alta (3/4)
+
+914. 02/08/2025 18:24
+   Intensidade: Alta (3/4)
+   Comentário: média:189EVs:13dias=14,5385
+
+915. 02/08/2025 16:35
+   Intensidade: Alta (3/4)
+   Comentário: méd=188:13=14,4615EVs/dia
+
+916. 02/08/2025 16:06
+   Intensidade: Alta (3/4)
+   Comentário: Desde 21/07/2025 = 13dias
+
+média = 187:13 = 14,3846 Ev's/dia
+
+
+917. 02/08/2025 15:45
+   Intensidade: Alta (3/4)
+
+918. 02/08/2025 15:16
+   Intensidade: Alta (3/4)
+
+919. 02/08/2025 15:13
+   Intensidade: Alta (3/4)
+
+920. 02/08/2025 15:12
+   Intensidade: Alta (3/4)
+
+921. 02/08/2025 13:15
+   Intensidade: Alta (3/4)
+
+922. 02/08/2025 13:15
+   Intensidade: Alta (3/4)
+
+923. 02/08/2025 11:43
+   Intensidade: Alta (3/4)
+
+924. 02/08/2025 11:43
+   Intensidade: Alta (3/4)
+
+925. 02/08/2025 06:05
+   Intensidade: Alta (3/4)
+
+926. 02/08/2025 06:05
+   Intensidade: Alta (3/4)
+
+927. 02/08/2025 06:05
+   Intensidade: Alta (3/4)
+
+928. 02/08/2025 06:05
+   Intensidade: Alta (3/4)
+
+929. 02/08/2025 06:05
+   Intensidade: Alta (3/4)
+
+930. 02/08/2025 06:04
+   Intensidade: Alta (3/4)
+
+931. 02/08/2025 00:13
+   Intensidade: Alta (3/4)
+
+932. 01/08/2025 23:56
+   Intensidade: Alta (3/4)
+
+933. 01/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+934. 01/08/2025 23:51
+   Intensidade: Alta (3/4)
+
+935. 01/08/2025 16:52
+   Intensidade: Alta (3/4)
+
+936. 01/08/2025 15:49
+   Intensidade: Alta (3/4)
+
+937. 01/08/2025 15:48
+   Intensidade: Alta (3/4)
+
+938. 01/08/2025 15:06
+   Intensidade: Alta (3/4)
+
+939. 01/08/2025 15:04
+   Intensidade: Alta (3/4)
+
+940. 01/08/2025 12:46
+   Intensidade: Alta (3/4)
+
+941. 01/08/2025 12:46
+   Intensidade: Alta (3/4)
+
+942. 01/08/2025 11:13
+   Intensidade: Alta (3/4)
+
+943. 01/08/2025 11:07
+   Intensidade: Alta (3/4)
+
+944. 01/08/2025 11:07
+   Intensidade: Alta (3/4)
+
+945. 01/08/2025 10:29
+   Intensidade: Alta (3/4)
+
+946. 01/08/2025 10:29
+   Intensidade: Alta (3/4)
+
+947. 01/08/2025 10:29
+   Intensidade: Alta (3/4)
+
+948. 31/07/2025 19:30
+   Intensidade: Alta (3/4)
+
+949. 31/07/2025 19:30
+   Intensidade: Alta (3/4)
+
+950. 31/07/2025 18:31
+   Intensidade: Alta (3/4)
+
+951. 31/07/2025 18:31
+   Intensidade: Alta (3/4)
+
+952. 31/07/2025 12:14
+   Intensidade: Alta (3/4)
+
+953. 31/07/2025 12:13
+   Intensidade: Alta (3/4)
+
+954. 31/07/2025 10:48
+   Intensidade: Alta (3/4)
+
+955. 31/07/2025 10:42
+   Intensidade: Alta (3/4)
+
+956. 31/07/2025 10:42
+   Intensidade: Alta (3/4)
+
+957. 31/07/2025 10:42
+   Intensidade: Alta (3/4)
+
+958. 30/07/2025 22:36
+   Intensidade: Alta (3/4)
+
+959. 30/07/2025 22:36
+   Intensidade: Alta (3/4)
+
+960. 30/07/2025 22:36
+   Intensidade: Alta (3/4)
+
+961. 30/07/2025 22:36
+   Intensidade: Alta (3/4)
+
+962. 30/07/2025 22:36
+   Intensidade: Alta (3/4)
+
+963. 30/07/2025 21:20
+   Intensidade: Alta (3/4)
+
+964. 30/07/2025 20:08
+   Intensidade: Alta (3/4)
+
+965. 30/07/2025 20:00
+   Intensidade: Alta (3/4)
+
+966. 30/07/2025 19:59
+   Intensidade: Alta (3/4)
+
+967. 30/07/2025 19:58
+   Intensidade: Alta (3/4)
+
+968. 30/07/2025 18:41
+   Intensidade: Alta (3/4)
+
+969. 30/07/2025 17:47
+   Intensidade: Alta (3/4)
+
+970. 30/07/2025 17:47
+   Intensidade: Alta (3/4)
+
+971. 30/07/2025 17:46
+   Intensidade: Alta (3/4)
+
+972. 30/07/2025 16:35
+   Intensidade: Alta (3/4)
+
+973. 30/07/2025 16:35
+   Intensidade: Alta (3/4)
+
+974. 30/07/2025 12:34
+   Intensidade: Alta (3/4)
+
+975. 30/07/2025 12:34
+   Intensidade: Alta (3/4)
+
+976. 30/07/2025 09:32
+   Intensidade: Alta (3/4)
+
+977. 30/07/2025 09:32
+   Intensidade: Alta (3/4)
+
+978. 29/07/2025 22:44
+   Intensidade: Alta (3/4)
+
+979. 29/07/2025 22:44
+   Intensidade: Alta (3/4)
+
+980. 29/07/2025 22:44
+   Intensidade: Alta (3/4)
+
+981. 29/07/2025 22:44
+   Intensidade: Alta (3/4)
+
+982. 28/07/2025 23:20
+   Intensidade: Alta (3/4)
+
+983. 28/07/2025 23:19
+   Intensidade: Alta (3/4)
+
+984. 28/07/2025 23:19
+   Intensidade: Alta (3/4)
+
+985. 28/07/2025 20:04
+   Intensidade: Alta (3/4)
+
+986. 28/07/2025 19:44
+   Intensidade: Alta (3/4)
+
+987. 28/07/2025 19:43
+   Intensidade: Alta (3/4)
+
+988. 28/07/2025 19:43
+   Intensidade: Alta (3/4)
+
+989. 28/07/2025 17:27
+   Intensidade: Alta (3/4)
+
+990. 28/07/2025 17:27
+   Intensidade: Alta (3/4)
+
+991. 28/07/2025 17:27
+   Intensidade: Alta (3/4)
+
+992. 28/07/2025 14:30
+   Intensidade: Alta (3/4)
+
+993. 28/07/2025 14:30
+   Intensidade: Alta (3/4)
+
+994. 28/07/2025 14:30
+   Intensidade: Alta (3/4)
+
+995. 28/07/2025 14:30
+   Intensidade: Alta (3/4)
+
+996. 28/07/2025 14:30
+   Intensidade: Alta (3/4)
+
+997. 28/07/2025 14:30
+   Intensidade: Alta (3/4)
+
+998. 28/07/2025 14:30
+   Intensidade: Alta (3/4)
+
+999. 28/07/2025 14:30
+   Intensidade: Alta (3/4)
+
+1000. 28/07/2025 14:30
+   Intensidade: Alta (3/4)
+

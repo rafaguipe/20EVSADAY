@@ -289,22 +289,58 @@ const Estatisticas = () => {
     setError(null);
     
     try {
-      // Carregar EVs do usuário
+      // Primeiro, obter o total real de EVs do usuário usando count
+      const { count: totalEVsCount, error: countError } = await supabase
+        .from('evs')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+
+      if (countError) throw countError;
+
+      // Carregar todos os scores do usuário para cálculos (usando paginação se necessário)
+      let allScores = [];
+      const pageSize = 1000;
+      let from = 0;
+      let hasMore = true;
+
+      while (hasMore) {
+        const { data: scoresPage, error: scoresError } = await supabase
+          .from('evs')
+          .select('score')
+          .eq('user_id', user.id)
+          .order('id', { ascending: true })
+          .range(from, from + pageSize - 1);
+
+        if (scoresError) throw scoresError;
+
+        if (scoresPage && scoresPage.length > 0) {
+          allScores = allScores.concat(scoresPage);
+          from += pageSize;
+          hasMore = scoresPage.length === pageSize;
+        } else {
+          hasMore = false;
+        }
+      }
+
+      // Carregar EVs recentes para exibição e gráficos (últimos 1000)
       const { data: userEVs, error: evsError } = await supabase
         .from('evs')
         .select('score, created_at, notes')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(1000); // Apenas para exibição e gráficos
 
       if (evsError) throw evsError;
       
       setEvData(userEVs || []);
 
-      // Calcular estatísticas
-      const total_evs = userEVs?.length || 0;
-      const total_points = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
+      // Calcular estatísticas usando o count real para total_evs
+      const total_evs = totalEVsCount || 0;
+      
+      // Calcular total_points e average_score usando todos os scores
+      const total_points = allScores.reduce((sum, ev) => sum + ev.score, 0);
       const average_score = total_evs > 0 ? (total_points / total_evs).toFixed(1) : 0;
-      const max_score = total_evs > 0 ? Math.max(...userEVs.map(ev => ev.score)) : 0;
+      const max_score = allScores.length > 0 ? Math.max(...allScores.map(ev => ev.score)) : 0;
       
       // Calcular dias consecutivos
       const consecutiveDays = calculateConsecutiveDays(userEVs);

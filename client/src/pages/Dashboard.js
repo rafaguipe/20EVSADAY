@@ -348,16 +348,41 @@ const Dashboard = () => {
 
   const loadStats = async () => {
     try {
-      // Buscar todos os EVs do usuário
-      const { data: allEVs, error } = await supabase
+      // Obter o total real de EVs usando count
+      const { count: totalEVsCount, error: countError } = await supabase
         .from('evs')
-        .select('*')
+        .select('*', { count: 'exact', head: true })
         .eq('user_id', user.id);
 
-      if (error) throw error;
+      if (countError) throw countError;
+
+      // Carregar todos os EVs do usuário para cálculos (usando paginação se necessário)
+      let allEVs = [];
+      const pageSize = 1000;
+      let from = 0;
+      let hasMore = true;
+
+      while (hasMore) {
+        const { data: evsPage, error: pageError } = await supabase
+          .from('evs')
+          .select('score, created_at')
+          .eq('user_id', user.id)
+          .order('id', { ascending: true })
+          .range(from, from + pageSize - 1);
+
+        if (pageError) throw pageError;
+
+        if (evsPage && evsPage.length > 0) {
+          allEVs = allEVs.concat(evsPage);
+          from += pageSize;
+          hasMore = evsPage.length === pageSize;
+        } else {
+          hasMore = false;
+        }
+      }
 
       if (allEVs && allEVs.length > 0) {
-        const total_evs = allEVs.length;
+        const total_evs = totalEVsCount || allEVs.length;
         const scores = allEVs.map(ev => ev.score);
         const average_score = (scores.reduce((a, b) => a + b, 0) / total_evs).toFixed(1);
         const max_score = Math.max(...scores);
