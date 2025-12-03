@@ -138,74 +138,108 @@ const ResetPassword = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Processar a sessão do Supabase quando a página carregar
-    const processRecoveryLink = async () => {
-      try {
-        // Verificar se há hash na URL (o Supabase usa hash fragments)
-        const hashParams = new URLSearchParams(window.location.hash.substring(1));
-        const accessToken = hashParams.get('access_token');
-        const type = hashParams.get('type');
+    let timeoutId;
+    let subscription;
 
-        if (type === 'recovery' && accessToken) {
-          // O Supabase precisa processar o hash primeiro
-          // Aguardar um pouco para o Supabase processar o hash
-          await new Promise(resolve => setTimeout(resolve, 500));
-          
-          // Verificar se a sessão foi estabelecida
-          const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-          
-          if (sessionError) {
-            console.error('Erro ao processar sessão:', sessionError);
-            toast.error('Link inválido ou expirado: ' + sessionError.message);
-            setIsValidLink(false);
-            setTimeout(() => navigate('/forgot-password'), 3000);
-            return;
-          }
+    // Verificar se há hash na URL (o Supabase usa hash fragments)
+    const hash = window.location.hash.substring(1);
+    const hashParams = new URLSearchParams(hash);
+    const accessToken = hashParams.get('access_token');
+    const type = hashParams.get('type');
 
-          if (session && session.user) {
-            // Sessão estabelecida com sucesso, link é válido
-            setIsValidLink(true);
-            // Limpar o hash da URL para segurança
-            window.history.replaceState(null, '', window.location.pathname);
-            toast.success('Link válido! Defina sua nova senha.');
-          } else {
-            // Não há sessão, tentar processar o hash manualmente
-            console.log('Tentando processar hash manualmente...');
-            
-            // Tentar obter a sessão novamente após um delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            const { data: { session: retrySession }, error: retryError } = await supabase.auth.getSession();
-            
-            if (retrySession && retrySession.user) {
-              setIsValidLink(true);
-              window.history.replaceState(null, '', window.location.pathname);
-              toast.success('Link válido! Defina sua nova senha.');
-            } else {
-              console.error('Erro ao processar sessão (tentativa 2):', retryError);
-              toast.error('Link inválido ou expirado. Solicite um novo link.');
-              setIsValidLink(false);
-              setTimeout(() => navigate('/forgot-password'), 3000);
-            }
-          }
+    console.log('URL completa:', window.location.href);
+    console.log('Hash:', hash);
+    console.log('Type:', type);
+    console.log('Access Token presente:', !!accessToken);
+
+    if (!type || type !== 'recovery' || !accessToken) {
+      // Não há token de recuperação na URL
+      console.log('Sem token de recuperação válido na URL');
+      console.log('Hash params:', Object.fromEntries(hashParams));
+      setValidating(false);
+      setIsValidLink(false);
+      toast.error('Link inválido ou expirado. Verifique se a URL de redirecionamento está configurada no Supabase.');
+      timeoutId = setTimeout(() => navigate('/forgot-password'), 3000);
+      return;
+    }
+
+    // Usar onAuthStateChange para detectar quando o Supabase processa o recovery link
+    subscription = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state change:', event, session?.user?.email);
+      
+      if (event === 'PASSWORD_RECOVERY') {
+        // O Supabase processou o link de recuperação
+        if (session && session.user) {
+          setIsValidLink(true);
+          setValidating(false);
+          // Limpar o hash da URL para segurança
+          window.history.replaceState(null, '', window.location.pathname);
+          toast.success('Link válido! Defina sua nova senha.');
         } else {
-          // Não há token de recuperação na URL
-          console.log('Sem token de recuperação na URL');
-          toast.error('Link inválido ou expirado');
           setIsValidLink(false);
-          setTimeout(() => navigate('/forgot-password'), 3000);
+          setValidating(false);
+          toast.error('Link inválido ou expirado');
+          timeoutId = setTimeout(() => navigate('/forgot-password'), 3000);
         }
-      } catch (err) {
-        console.error('Erro ao processar link de recuperação:', err);
-        toast.error('Erro ao processar link de recuperação: ' + err.message);
+      } else if (event === 'SIGNED_IN' && session) {
+        // Pode ser que o link já tenha sido processado
+        const currentHash = window.location.hash;
+        if (currentHash.includes('type=recovery')) {
+          setIsValidLink(true);
+          setValidating(false);
+          window.history.replaceState(null, '', window.location.pathname);
+          toast.success('Link válido! Defina sua nova senha.');
+        }
+      }
+    });
+
+    // Verificar sessão atual após um pequeno delay (para dar tempo do Supabase processar)
+    const checkSession = async () => {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const { data: { session }, error } = await supabase.auth.getSession();
+      
+      if (error) {
+        console.error('Erro ao verificar sessão:', error);
         setIsValidLink(false);
-        setTimeout(() => navigate('/forgot-password'), 3000);
-      } finally {
         setValidating(false);
+        toast.error('Erro ao processar link: ' + error.message);
+        timeoutId = setTimeout(() => navigate('/forgot-password'), 3000);
+        return;
+      }
+
+      if (session && session.user) {
+        // Já há uma sessão válida (o link foi processado)
+        setIsValidLink(true);
+        setValidating(false);
+        window.history.replaceState(null, '', window.location.pathname);
+        toast.success('Link válido! Defina sua nova senha.');
+      } else {
+        // Aguardar mais um pouco para o onAuthStateChange processar
+        timeoutId = setTimeout(() => {
+          if (!isValidLink) {
+            console.log('Timeout aguardando processamento do link');
+            setIsValidLink(false);
+            setValidating(false);
+            toast.error('Link inválido ou expirado. Solicite um novo link.');
+            setTimeout(() => navigate('/forgot-password'), 2000);
+          }
+        }, 5000);
       }
     };
 
-    processRecoveryLink();
-  }, [navigate]);
+    checkSession();
+
+    // Cleanup
+    return () => {
+      if (subscription) {
+        subscription.data.subscription.unsubscribe();
+      }
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [navigate, isValidLink]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -273,10 +307,16 @@ const ResetPassword = () => {
         <FormCard>
           <Title>Link Inválido</Title>
           <InfoBox>
-            <InfoText>
-              ❌ Link inválido ou expirado.<br/>
-              Redirecionando...
-            </InfoText>
+          <InfoText>
+            ❌ Link inválido ou expirado.<br/>
+            <br/>
+            💡 <strong>Possíveis causas:</strong><br/>
+            • URL de redirecionamento não configurada no Supabase<br/>
+            • Link expirado (válido por 1 hora)<br/>
+            • Link já foi usado<br/>
+            <br/>
+            Solicite um novo link de recuperação.
+          </InfoText>
           </InfoBox>
         </FormCard>
       </Container>

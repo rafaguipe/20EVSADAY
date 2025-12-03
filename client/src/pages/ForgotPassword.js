@@ -158,8 +158,13 @@ const ForgotPassword = () => {
     setSuccess(false);
 
     try {
+      // URL de redirecionamento - deve estar configurada no Supabase
+      const redirectUrl = `${window.location.origin}/reset-password`;
+      console.log('Enviando link de recuperação para:', email);
+      console.log('URL de redirecionamento:', redirectUrl);
+      
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`
+        redirectTo: redirectUrl
       });
 
       if (error) {
