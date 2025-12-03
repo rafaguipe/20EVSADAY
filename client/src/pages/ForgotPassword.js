@@ -190,7 +190,15 @@ const ForgotPassword = () => {
         <InfoBox>
           <InfoText>
             📧 Digite seu e-mail e tentaremos enviar um link para redefinir sua senha.<br/>
-            ⚠️ Se não receber o e-mail, entre em contato com o administrador.
+            <br/>
+            ⚠️ <strong>Usando Outlook/Hotmail?</strong><br/>
+            O Outlook pode proteger o link. Para extrair o link real:<br/>
+            1. Clique com botão direito no link do e-mail<br/>
+            2. Selecione "Copiar endereço do link"<br/>
+            3. Cole em um editor de texto<br/>
+            4. Procure por "url=" e copie tudo após esse parâmetro<br/>
+            5. Decodifique (substitua %3A por :, %2F por /, %3F por ?, %26 por &)<br/>
+            6. Acesse o link decodificado no navegador
           </InfoText>
         </InfoBox>
         

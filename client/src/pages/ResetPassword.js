@@ -4,6 +4,9 @@ import styled from 'styled-components';
 import { supabase } from '../supabaseClient';
 import toast from 'react-hot-toast';
 
+// Obter URL do Supabase
+const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL || 'https://mbxefiadqcrzqbrfkvxu.supabase.co';
+
 const Container = styled.div`
   min-height: 100vh;
   display: flex;
@@ -141,21 +144,62 @@ const ResetPassword = () => {
     let timeoutId;
     let subscription;
 
-    // Verificar se há hash na URL (o Supabase usa hash fragments)
+    // Verificar se estamos em um safelink do Outlook e extrair o link real
+    const currentUrl = window.location.href;
+    if (currentUrl.includes('safelinks.protection.outlook.com')) {
+      console.log('Detectado safelink do Outlook, extraindo link real...');
+      const urlParams = new URLSearchParams(window.location.search);
+      const realUrl = urlParams.get('url');
+      
+      if (realUrl) {
+        console.log('Link real encontrado:', realUrl);
+        // Decodificar o URL
+        const decodedUrl = decodeURIComponent(realUrl);
+        console.log('Link decodificado:', decodedUrl);
+        // Redirecionar para o link real
+        window.location.href = decodedUrl;
+        return; // Não continuar, aguardar o redirecionamento
+      }
+    }
+
+    // Verificar tanto hash fragments quanto query parameters
+    // O Supabase pode usar ambos dependendo de como o link é acessado
     const hash = window.location.hash.substring(1);
     const hashParams = new URLSearchParams(hash);
-    const accessToken = hashParams.get('access_token');
-    const type = hashParams.get('type');
+    const queryParams = new URLSearchParams(window.location.search);
+    
+    // Tentar obter do hash primeiro (formato padrão do Supabase)
+    let accessToken = hashParams.get('access_token');
+    let type = hashParams.get('type');
+    
+    // Se não estiver no hash, tentar query parameters (pode acontecer com safelinks do Outlook)
+    if (!accessToken) {
+      // O Supabase também pode usar ?token=... em vez de #access_token=...
+      const token = queryParams.get('token');
+      type = queryParams.get('type') || type;
+      
+      if (token && type === 'recovery') {
+        // Se temos um token como query param, precisamos processá-lo manualmente
+        console.log('Token encontrado como query parameter, processando...');
+        // O Supabase processará automaticamente quando chamarmos getSession
+      }
+    }
 
     console.log('URL completa:', window.location.href);
     console.log('Hash:', hash);
+    console.log('Query params:', window.location.search);
     console.log('Type:', type);
     console.log('Access Token presente:', !!accessToken);
 
-    if (!type || type !== 'recovery' || !accessToken) {
+    // Verificar se temos pelo menos um indicador de recovery
+    const hasRecoveryToken = accessToken || queryParams.get('token');
+    const isRecoveryType = type === 'recovery';
+
+    if (!isRecoveryType && !hasRecoveryToken) {
       // Não há token de recuperação na URL
       console.log('Sem token de recuperação válido na URL');
       console.log('Hash params:', Object.fromEntries(hashParams));
+      console.log('Query params:', Object.fromEntries(queryParams));
       setValidating(false);
       setIsValidLink(false);
       toast.error('Link inválido ou expirado. Verifique se a URL de redirecionamento está configurada no Supabase.');
@@ -167,12 +211,12 @@ const ResetPassword = () => {
     subscription = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state change:', event, session?.user?.email);
       
-      if (event === 'PASSWORD_RECOVERY') {
+      if (event === 'PASSWORD_RECOVERY' || event === 'TOKEN_REFRESHED') {
         // O Supabase processou o link de recuperação
         if (session && session.user) {
           setIsValidLink(true);
           setValidating(false);
-          // Limpar o hash da URL para segurança
+          // Limpar o hash e query params da URL para segurança
           window.history.replaceState(null, '', window.location.pathname);
           toast.success('Link válido! Defina sua nova senha.');
         } else {
@@ -182,9 +226,10 @@ const ResetPassword = () => {
           timeoutId = setTimeout(() => navigate('/forgot-password'), 3000);
         }
       } else if (event === 'SIGNED_IN' && session) {
-        // Pode ser que o link já tenha sido processado
+        // Verificar se estamos em um contexto de recovery
         const currentHash = window.location.hash;
-        if (currentHash.includes('type=recovery')) {
+        const currentSearch = window.location.search;
+        if (currentHash.includes('type=recovery') || currentSearch.includes('type=recovery') || currentSearch.includes('token=')) {
           setIsValidLink(true);
           setValidating(false);
           window.history.replaceState(null, '', window.location.pathname);
@@ -195,17 +240,31 @@ const ResetPassword = () => {
 
     // Verificar sessão atual após um pequeno delay (para dar tempo do Supabase processar)
     const checkSession = async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Aguardar um pouco mais para dar tempo do Supabase processar, especialmente com safelinks
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Se temos um token como query param, o Supabase precisa processá-lo primeiro
+      // O token precisa ser verificado pelo endpoint /auth/v1/verify do Supabase
+      const token = queryParams.get('token');
+      if (token && type === 'recovery' && !accessToken) {
+        console.log('Token encontrado como query parameter');
+        console.log('Token:', token.substring(0, 20) + '...');
+        
+        // O token precisa ser verificado pelo Supabase primeiro
+        // Vamos redirecionar para o endpoint de verificação do Supabase
+        const verifyUrl = `${SUPABASE_URL}/auth/v1/verify?token=${token}&type=recovery&redirect_to=${encodeURIComponent(window.location.origin + window.location.pathname)}`;
+        
+        console.log('Redirecionando para endpoint de verificação do Supabase:', verifyUrl);
+        window.location.href = verifyUrl;
+        return; // Não continuar, aguardar o redirecionamento
+      }
       
       const { data: { session }, error } = await supabase.auth.getSession();
       
       if (error) {
         console.error('Erro ao verificar sessão:', error);
-        setIsValidLink(false);
-        setValidating(false);
-        toast.error('Erro ao processar link: ' + error.message);
-        timeoutId = setTimeout(() => navigate('/forgot-password'), 3000);
-        return;
+        // Não falhar imediatamente - pode ser que o Supabase ainda esteja processando
+        console.log('Aguardando processamento do Supabase...');
       }
 
       if (session && session.user) {
@@ -216,6 +275,7 @@ const ResetPassword = () => {
         toast.success('Link válido! Defina sua nova senha.');
       } else {
         // Aguardar mais um pouco para o onAuthStateChange processar
+        // Aumentar o timeout para dar mais tempo, especialmente com safelinks do Outlook
         timeoutId = setTimeout(() => {
           if (!isValidLink) {
             console.log('Timeout aguardando processamento do link');
@@ -224,7 +284,7 @@ const ResetPassword = () => {
             toast.error('Link inválido ou expirado. Solicite um novo link.');
             setTimeout(() => navigate('/forgot-password'), 2000);
           }
-        }, 5000);
+        }, 8000); // Aumentado para 8 segundos para dar tempo ao safelink processar
       }
     };
 
@@ -314,8 +374,17 @@ const ResetPassword = () => {
             • URL de redirecionamento não configurada no Supabase<br/>
             • Link expirado (válido por 1 hora)<br/>
             • Link já foi usado<br/>
+            • Problema com safelink do Outlook<br/>
             <br/>
-            Solicite um novo link de recuperação.
+            <strong>Se estiver usando Outlook:</strong><br/>
+            1. No e-mail, clique com botão direito no link<br/>
+            2. Selecione "Copiar endereço do link"<br/>
+            3. Cole em um editor de texto<br/>
+            4. Procure por "url=" e copie o link após esse parâmetro<br/>
+            5. Decodifique o link (remova %3A, %2F, etc.)<br/>
+            6. Acesse o link decodificado diretamente<br/>
+            <br/>
+            Ou solicite um novo link de recuperação.
           </InfoText>
           </InfoBox>
         </FormCard>
