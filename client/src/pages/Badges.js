@@ -496,6 +496,19 @@ const Badges = () => {
             target = 1;
             earned = hasExperimentEV;
             break;
+          case 'Janeiro 2026':
+            // Verificar se fez pelo menos 1 EV em janeiro de 2026
+            const january2026Start = new Date('2026-01-01T00:00:00Z');
+            const january2026End = new Date('2026-02-01T00:00:00Z');
+            const january2026EVs = userEVs?.filter(ev => {
+              const evDate = new Date(ev.created_at);
+              return evDate >= january2026Start && evDate < january2026End;
+            }) || [];
+            earned = january2026EVs.length >= 1 || earnedBadges.includes(badge.id);
+            progress = earned ? 100 : 0;
+            current = january2026EVs.length >= 1 ? 1 : 0;
+            target = 1;
+            break;
           default:
             progress = 0;
             current = 0;
@@ -643,7 +656,7 @@ const Badges = () => {
             ))}
           </BadgesGrid>
 
-                     <RecentBadges>
+                     {/* <RecentBadges>
              <BadgeName style={{ marginBottom: '20px' }}>Selos Recentes</BadgeName>
             {userBadges.length === 0 ? (
                              <div style={{ textAlign: 'center', color: '#6a6a6a', padding: '20px' }}>
@@ -660,7 +673,7 @@ const Badges = () => {
                 </RecentBadgeItem>
               ))
             )}
-          </RecentBadges>
+          </RecentBadges> */}
         </>
       )}
     </Container>

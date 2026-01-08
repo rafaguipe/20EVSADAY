@@ -333,8 +333,80 @@ const Dashboard = () => {
     if (user) {
       loadStats();
       loadRecentEVs();
+      checkRecentBadges();
     }
   }, [user]);
+
+  // Verificar badges recém-conquistados ao carregar a página
+  const checkRecentBadges = async () => {
+    try {
+      // Verificar especificamente o badge de Janeiro 2026 (mesmo se foi conquistado há mais tempo)
+      const { data: janeiro2026Badge } = await supabase
+        .from('user_badges')
+        .select(`
+          awarded_at,
+          badges!inner(name, description, icon)
+        `)
+        .eq('user_id', user.id)
+        .eq('badges.name', 'Janeiro 2026')
+        .single();
+
+      if (janeiro2026Badge) {
+        const lastShownKey = 'badge_shown_janeiro_2026';
+        const lastShown = localStorage.getItem(lastShownKey);
+        
+        if (!lastShown) {
+          setEarnedBadge({
+            name: janeiro2026Badge.badges.name,
+            description: janeiro2026Badge.badges.description,
+            icon: janeiro2026Badge.badges.icon
+          });
+          setShowBadgeNotification(true);
+          setPlayVictorySound(true);
+          // Marcar como mostrado
+          localStorage.setItem(lastShownKey, 'true');
+          return;
+        }
+      }
+
+      // Buscar outros badges conquistados nas últimas 24 horas
+      const oneDayAgo = new Date();
+      oneDayAgo.setHours(oneDayAgo.getHours() - 24);
+      
+      const { data: recentBadges } = await supabase
+        .from('user_badges')
+        .select(`
+          awarded_at,
+          badges!inner(name, description, icon)
+        `)
+        .eq('user_id', user.id)
+        .gte('awarded_at', oneDayAgo.toISOString())
+        .neq('badges.name', 'Janeiro 2026') // Excluir janeiro 2026 pois já verificamos acima
+        .order('awarded_at', { ascending: false })
+        .limit(1);
+
+      if (recentBadges && recentBadges.length > 0) {
+        const mostRecentBadge = recentBadges[0];
+        // Verificar se já mostramos esta comemoração hoje usando localStorage
+        const lastShownKey = `badge_shown_${mostRecentBadge.badges.name}_${new Date(mostRecentBadge.awarded_at).toDateString()}`;
+        const lastShown = localStorage.getItem(lastShownKey);
+        
+        if (!lastShown) {
+          setEarnedBadge({
+            name: mostRecentBadge.badges.name,
+            description: mostRecentBadge.badges.description,
+            icon: mostRecentBadge.badges.icon
+          });
+          setShowBadgeNotification(true);
+          setPlayVictorySound(true);
+          // Marcar como mostrado
+          localStorage.setItem(lastShownKey, 'true');
+        }
+      }
+    } catch (error) {
+      console.log('Erro ao verificar badges recentes (não crítico):', error);
+    }
+  };
 
   // Reset do som de vitória após tocar
   useEffect(() => {
@@ -676,6 +748,18 @@ const Dashboard = () => {
       }
       if (consecutiveDays >= 360) {
         await awardBadge('Anual Consciencial', '360 dias consecutivos de EVs', '🗓️');
+      }
+
+      // 4. Verificar badge de Janeiro 2026
+      const january2026Start = new Date('2026-01-01T00:00:00Z');
+      const january2026End = new Date('2026-02-01T00:00:00Z');
+      const january2026EVs = userEVs.filter(ev => {
+        const evDate = new Date(ev.created_at);
+        return evDate >= january2026Start && evDate < january2026End;
+      });
+      
+      if (january2026EVs.length >= 1) {
+        await awardBadge('Janeiro 2026', 'Pelo menos 1 EV registrado em janeiro de 2026', '🎊');
       }
 
     } catch (error) {
