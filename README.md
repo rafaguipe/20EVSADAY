@@ -105,7 +105,8 @@ npm run server
 - Vinculação segura via código temporário
 - Registro de EVs com comando `/ev`
 - Consulta rápida de resumo com `/me`
-- Ranking diário/semanal/mensal com `/rank`
+- Ranking diário e de todos os tempos com `/rank day` e `/rank all`
+- Broadcast para todos os vinculados com `/broadcast` (somente admin)
 
 ### Estatísticas
 - Total de EVs registrados

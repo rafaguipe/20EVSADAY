@@ -13,7 +13,8 @@ Comandos disponíveis:
 /link CODIGO - Conectar sua conta
 /ev 0-4 [nota] - Registrar um EV
 /me - Ver seu resumo
-/rank [daily|weekly|monthly|all] - Ver ranking
+/rank [day|all] - Ver ranking
+/broadcast mensagem - Enviar para todos (admin)
 
 Exemplo:
 /ev 3 EV intenso após prática`
@@ -211,7 +212,7 @@ Média recente: ${average}
     }
 
     if (lowerText.startsWith('/rank')) {
-      const range = text.split(' ')[1]?.toLowerCase() ?? 'daily'
+      const range = text.split(' ')[1]?.toLowerCase() ?? 'day'
       const { label, startDate } = getRankingWindow(range)
 
       const { data: evs } = await supabaseClient
@@ -264,6 +265,84 @@ ${rankingLines.join('\n')}`
       return new Response('ok', { headers: corsHeaders })
     }
 
+
+    if (lowerText.startsWith('/broadcast')) {
+      const link = await getTelegramLink(supabaseClient, telegramUser.id)
+      if (!link?.user_id) {
+        await sendTelegramMessage(telegramToken, chatId, '⚠️ Telegram não vinculado. Use /link CODIGO antes.')
+        return new Response('ok', { headers: corsHeaders })
+      }
+
+      const { data: profile, error: profileError } = await supabaseClient
+        .from('profiles')
+        .select('is_admin')
+        .eq('user_id', link.user_id)
+        .maybeSingle()
+
+      if (profileError || !profile?.is_admin) {
+        await sendTelegramMessage(telegramToken, chatId, '⛔ Apenas administradores podem usar /broadcast.')
+        return new Response('ok', { headers: corsHeaders })
+      }
+
+      const messageText = text.replace(/^\/broadcast\s*/i, '').trim()
+      if (!messageText) {
+        await sendTelegramMessage(telegramToken, chatId, 'Use: /broadcast sua mensagem aqui')
+        return new Response('ok', { headers: corsHeaders })
+      }
+
+      const { data: links, error: linksError } = await supabaseClient
+        .from('telegram_links')
+        .select('chat_id')
+        .not('chat_id', 'is', null)
+
+      if (linksError || !links) {
+        await sendTelegramMessage(telegramToken, chatId, '❌ Não foi possível obter a lista de usuários vinculados.')
+        return new Response('ok', { headers: corsHeaders })
+      }
+
+      const uniqueChatIds = Array.from(new Set(links.map(item => item.chat_id).filter(Boolean)))
+
+      if (uniqueChatIds.length === 0) {
+        await sendTelegramMessage(telegramToken, chatId, 'Nenhum usuário vinculado para receber o broadcast.')
+        return new Response('ok', { headers: corsHeaders })
+      }
+
+      const BATCH_SIZE = 20
+      const BATCH_DELAY_MS = 1500
+      let successCount = 0
+      let errorCount = 0
+
+      await sendTelegramMessage(
+        telegramToken,
+        chatId,
+        `📣 Iniciando broadcast para ${uniqueChatIds.length} usuários em lotes de ${BATCH_SIZE}.`
+      )
+
+      for (let i = 0; i < uniqueChatIds.length; i += BATCH_SIZE) {
+        const batch = uniqueChatIds.slice(i, i + BATCH_SIZE)
+        await Promise.all(batch.map(async (targetChatId) => {
+          try {
+            await sendTelegramMessage(telegramToken, targetChatId, `📢 Mensagem da equipe #20EVSADAY\n\n${messageText}`)
+            successCount += 1
+          } catch (_error) {
+            errorCount += 1
+          }
+        }))
+
+        if (i + BATCH_SIZE < uniqueChatIds.length) {
+          await sleep(BATCH_DELAY_MS)
+        }
+      }
+
+      await sendTelegramMessage(
+        telegramToken,
+        chatId,
+        `✅ Broadcast concluído.\nSucessos: ${successCount}\nFalhas: ${errorCount}`
+      )
+
+      return new Response('ok', { headers: corsHeaders })
+    }
+
     await sendTelegramMessage(telegramToken, chatId, 'Comando não reconhecido. Use /help para ver as opções.')
     return new Response('ok', { headers: corsHeaders })
   } catch (error) {
@@ -274,7 +353,7 @@ ${rankingLines.join('\n')}`
 
 async function sendTelegramMessage(token: string, chatId: number, text: string) {
   const url = `https://api.telegram.org/bot${token}/sendMessage`
-  await fetch(url, {
+  const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -283,6 +362,15 @@ async function sendTelegramMessage(token: string, chatId: number, text: string) 
       disable_web_page_preview: true,
     }),
   })
+
+  if (!response.ok) {
+    throw new Error(`Telegram API error: ${response.status}`)
+  }
+}
+
+
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 async function getTelegramLink(supabaseClient, telegramUserId: number) {
@@ -297,16 +385,6 @@ async function getTelegramLink(supabaseClient, telegramUserId: number) {
 
 function getRankingWindow(range: string) {
   const now = new Date()
-  if (range === 'weekly') {
-    const start = new Date(now)
-    start.setDate(now.getDate() - now.getDay())
-    start.setHours(0, 0, 0, 0)
-    return { label: 'semanal', startDate: start }
-  }
-  if (range === 'monthly') {
-    const start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0)
-    return { label: 'mensal', startDate: start }
-  }
   if (range === 'all') {
     return { label: 'todos os tempos', startDate: new Date(2000, 0, 1) }
   }
