@@ -211,17 +211,7 @@ const EmptyText = styled.div`
 
 const tabs = [
   { key: 'daily', label: 'Diário' },
-  { key: 'weekly', label: 'Semanal' },
-  { key: 'monthly', label: 'Mensal' },
-  { key: 'yearly', label: 'Anual' },
-  { key: 'all-time', label: 'Todos os Tempos' },
-  { key: '2025', label: '2025' }
-];
-
-const sortOptions = [
-  { key: 'total_points', label: 'Pontos' },
-  { key: 'evs_count', label: 'Número' },
-  { key: 'average_score', label: 'Média' }
+  { key: 'all-time', label: 'Todos os Tempos' }
 ];
 
 const avatars = [
@@ -232,7 +222,6 @@ const avatars = [
 const Leaderboard = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('daily');
-  const [sortBy, setSortBy] = useState('total_points');
   const [leaderboardData, setLeaderboardData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -246,6 +235,65 @@ const Leaderboard = () => {
     try {
       let leaderboard = [];
       let info = '';
+
+      const fetchAllEvs = async (startDate) => {
+        const pageSize = 1000;
+        let from = 0;
+        let hasMore = true;
+        let allRows = [];
+
+        while (hasMore) {
+          let query = supabase
+            .from('evs')
+            .select('score, created_at, user_id')
+            .order('id', { ascending: true })
+            .range(from, from + pageSize - 1);
+
+          if (startDate) {
+            query = query.gte('created_at', startDate.toISOString());
+          }
+
+          const { data, error: queryError } = await query;
+          if (queryError) throw queryError;
+
+          if (data && data.length > 0) {
+            allRows = allRows.concat(data);
+            from += pageSize;
+            hasMore = data.length === pageSize;
+          } else {
+            hasMore = false;
+          }
+        }
+
+        return allRows;
+      };
+
+      const buildLeaderboard = (evsRows) => {
+        if (!evsRows || evsRows.length === 0) return [];
+
+        const stats = evsRows.reduce((acc, ev) => {
+          const userId = ev.user_id;
+          if (!acc[userId]) {
+            acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
+          }
+          acc[userId].total_points += ev.score;
+          acc[userId].evs_count += 1;
+          acc[userId].scores.push(ev.score);
+          return acc;
+        }, {});
+
+        return Object.entries(stats)
+          .map(([userId, statsRow]) => ({
+            user_id: userId,
+            nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
+            avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
+            total_points: statsRow.total_points,
+            evs_count: statsRow.evs_count,
+            average_score: (statsRow.total_points / statsRow.evs_count).toFixed(1),
+            max_score: Math.max(...statsRow.scores)
+          }))
+          .sort((a, b) => b.evs_count - a.evs_count || b.total_points - a.total_points);
+      };
 
       // Primeiro, buscar todos os perfis de usuários para ter os apelidos e avatars
       const { data: profiles } = await supabase
@@ -261,301 +309,18 @@ const Leaderboard = () => {
       });
 
       switch (activeTab) {
-        case 'daily':
-          const today = new Date();
-          const dayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0);
-          const { data: dailyData } = await supabase
-            .from('evs')
-            .select('score, created_at, user_id')
-            .gte('created_at', dayStart.toISOString());
-          
-          if (dailyData && dailyData.length > 0) {
-            const dailyStats = dailyData.reduce((acc, ev) => {
-              const userId = ev.user_id;
-              if (!acc[userId]) {
-                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
-              }
-              acc[userId].total_points += ev.score;
-              acc[userId].evs_count += 1;
-              acc[userId].scores.push(ev.score);
-              return acc;
-            }, {});
-
-            leaderboard = Object.entries(dailyStats)
-              .map(([userId, stats]) => ({
-                user_id: userId,
-                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
-                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
-                total_points: stats.total_points,
-                evs_count: stats.evs_count,
-                average_score: (stats.total_points / stats.evs_count).toFixed(1),
-                max_score: Math.max(...stats.scores)
-              }))
-              .sort((a, b) => b.total_points - a.total_points);
-          }
-          info = `Data: ${dayStart.toLocaleDateString('pt-BR')} • ${leaderboard.length} jogadores`;
-          break;
-
-        case 'weekly':
-          const weekCurrentDate = new Date();
-          const weekStart = new Date(weekCurrentDate);
-          weekStart.setDate(weekCurrentDate.getDate() - weekCurrentDate.getDay()); // Domingo da semana atual
-          weekStart.setHours(0, 0, 0, 0);
-          const { data: weeklyData } = await supabase
-            .from('evs')
-            .select('score, created_at, user_id')
-            .gte('created_at', weekStart.toISOString());
-          
-          if (weeklyData && weeklyData.length > 0) {
-            const weeklyStats = weeklyData.reduce((acc, ev) => {
-              const userId = ev.user_id;
-              if (!acc[userId]) {
-                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
-              }
-              acc[userId].total_points += ev.score;
-              acc[userId].evs_count += 1;
-              acc[userId].scores.push(ev.score);
-              return acc;
-            }, {});
-
-            leaderboard = Object.entries(weeklyStats)
-              .map(([userId, stats]) => ({
-                user_id: userId,
-                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
-                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
-                total_points: stats.total_points,
-                evs_count: stats.evs_count,
-                average_score: (stats.total_points / stats.evs_count).toFixed(1),
-                max_score: Math.max(...stats.scores)
-              }))
-              .sort((a, b) => b.total_points - a.total_points);
-          }
-          info = `${weekStart.toLocaleDateString('pt-BR')} a ${weekCurrentDate.toLocaleDateString('pt-BR')} • ${leaderboard.length} jogadores`;
-          break;
-
-        case 'monthly':
-          const monthCurrentDate = new Date();
-          const monthStart = new Date(monthCurrentDate.getFullYear(), monthCurrentDate.getMonth(), 1, 0, 0, 0, 0);
-          const { data: monthlyData } = await supabase
-            .from('evs')
-            .select('score, created_at, user_id')
-            .gte('created_at', monthStart.toISOString());
-          
-          if (monthlyData && monthlyData.length > 0) {
-            const monthlyStats = monthlyData.reduce((acc, ev) => {
-              const userId = ev.user_id;
-              if (!acc[userId]) {
-                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
-              }
-              acc[userId].total_points += ev.score;
-              acc[userId].evs_count += 1;
-              acc[userId].scores.push(ev.score);
-              return acc;
-            }, {});
-
-            leaderboard = Object.entries(monthlyStats)
-              .map(([userId, stats]) => ({
-                user_id: userId,
-                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
-                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
-                total_points: stats.total_points,
-                evs_count: stats.evs_count,
-                average_score: (stats.total_points / stats.evs_count).toFixed(1),
-                max_score: Math.max(...stats.scores)
-              }))
-              .sort((a, b) => b.total_points - a.total_points);
-          }
-          info = `${monthStart.toLocaleDateString('pt-BR')} a ${monthCurrentDate.toLocaleDateString('pt-BR')} • ${leaderboard.length} jogadores`;
-          break;
-
         case 'all-time':
-          const { data: allTimeData } = await supabase
-            .from('evs')
-            .select('score, created_at, user_id');
-          
-          if (allTimeData && allTimeData.length > 0) {
-            const allTimeStats = allTimeData.reduce((acc, ev) => {
-              const userId = ev.user_id;
-              if (!acc[userId]) {
-                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
-              }
-              acc[userId].total_points += ev.score;
-              acc[userId].evs_count += 1;
-              acc[userId].scores.push(ev.score);
-              return acc;
-            }, {});
-
-            leaderboard = Object.entries(allTimeStats)
-              .map(([userId, stats]) => ({
-                user_id: userId,
-                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
-                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
-                total_points: stats.total_points,
-                evs_count: stats.evs_count,
-                average_score: (stats.total_points / stats.evs_count).toFixed(1),
-                max_score: Math.max(...stats.scores)
-              }))
-              .sort((a, b) => b.total_points - a.total_points);
-          }
+          leaderboard = buildLeaderboard(await fetchAllEvs());
           info = `Todos os tempos • ${leaderboard.length} jogadores`;
           break;
 
-        case 'yearly':
-          const currentYear = new Date().getFullYear();
-          const yearStart = new Date(currentYear, 0, 1, 0, 0, 0, 0);
-          const { data: yearlyData } = await supabase
-            .from('evs')
-            .select('score, created_at, user_id')
-            .gte('created_at', yearStart.toISOString());
-          
-          if (yearlyData && yearlyData.length > 0) {
-            const yearlyStats = yearlyData.reduce((acc, ev) => {
-              const userId = ev.user_id;
-              if (!acc[userId]) {
-                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
-              }
-              acc[userId].total_points += ev.score;
-              acc[userId].evs_count += 1;
-              acc[userId].scores.push(ev.score);
-              return acc;
-            }, {});
-
-            leaderboard = Object.entries(yearlyStats)
-              .map(([userId, stats]) => ({
-                user_id: userId,
-                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
-                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
-                total_points: stats.total_points,
-                evs_count: stats.evs_count,
-                average_score: (stats.total_points / stats.evs_count).toFixed(1),
-                max_score: Math.max(...stats.scores)
-              }))
-              .sort((a, b) => b.total_points - a.total_points);
-          }
-          info = `${currentYear} • ${leaderboard.length} jogadores`;
+        case 'daily':
+        default:
+          const now = new Date();
+          const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+          leaderboard = buildLeaderboard(await fetchAllEvs(dayStart));
+          info = `Data: ${dayStart.toLocaleDateString('pt-BR')} • ${leaderboard.length} jogadores`;
           break;
-
-        case '2025':
-          const year2025Start = new Date(2025, 0, 1, 0, 0, 0, 0);
-          const { data: year2025Data } = await supabase
-            .from('evs')
-            .select('score, created_at, user_id')
-            .gte('created_at', year2025Start.toISOString());
-          
-          if (year2025Data && year2025Data.length > 0) {
-            const year2025Stats = year2025Data.reduce((acc, ev) => {
-              const userId = ev.user_id;
-              if (!acc[userId]) {
-                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
-              }
-              acc[userId].total_points += ev.score;
-              acc[userId].evs_count += 1;
-              acc[userId].scores.push(ev.score);
-              return acc;
-            }, {});
-
-            leaderboard = Object.entries(year2025Stats)
-              .map(([userId, stats]) => ({
-                user_id: userId,
-                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
-                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
-                total_points: stats.total_points,
-                evs_count: stats.evs_count,
-                average_score: (stats.total_points / stats.evs_count).toFixed(1),
-                max_score: Math.max(...stats.scores)
-              }))
-              .sort((a, b) => b.total_points - a.total_points);
-          }
-          info = `2025 • ${leaderboard.length} jogadores`;
-          break;
-
-        case 'consistency':
-          const { data: consistencyData } = await supabase
-            .from('evs')
-            .select('score, created_at, user_id');
-          
-          if (consistencyData && consistencyData.length > 0) {
-            const consistencyStats = consistencyData.reduce((acc, ev) => {
-              const userId = ev.user_id;
-              if (!acc[userId]) {
-                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
-              }
-              acc[userId].total_points += ev.score;
-              acc[userId].evs_count += 1;
-              acc[userId].scores.push(ev.score);
-              return acc;
-            }, {});
-
-            leaderboard = Object.entries(consistencyStats)
-              .filter(([_, stats]) => stats.evs_count >= 10) // Mínimo 10 EVs
-              .map(([userId, stats]) => ({
-                user_id: userId,
-                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
-                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
-                average_score: (stats.total_points / stats.evs_count).toFixed(1),
-                evs_count: stats.evs_count,
-                total_points: stats.total_points
-              }))
-              .sort((a, b) => parseFloat(b.average_score) - parseFloat(a.average_score));
-          }
-          info = `Mínimo 10 EVs • ${leaderboard.length} jogadores`;
-          break;
-
-        case 'dedication':
-          const { data: dedicationData } = await supabase
-            .from('evs')
-            .select('score, created_at, user_id');
-          
-          if (dedicationData && dedicationData.length > 0) {
-            const dedicationStats = dedicationData.reduce((acc, ev) => {
-              const userId = ev.user_id;
-              if (!acc[userId]) {
-                acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
-              }
-              acc[userId].total_points += ev.score;
-              acc[userId].evs_count += 1;
-              acc[userId].scores.push(ev.score);
-              return acc;
-            }, {});
-
-            leaderboard = Object.entries(dedicationStats)
-              .map(([userId, stats]) => ({
-                user_id: userId,
-                nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
-                avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
-                evs_count: stats.evs_count,
-                average_score: (stats.total_points / stats.evs_count).toFixed(1),
-                total_points: stats.total_points
-              }))
-              .sort((a, b) => b.evs_count - a.evs_count);
-          }
-          info = `Mais EVs registrados • ${leaderboard.length} jogadores`;
-          break;
-      }
-
-      // Aplicar ordenação
-      if (leaderboard.length > 0) {
-        leaderboard.sort((a, b) => {
-          let aValue, bValue;
-          
-          switch (sortBy) {
-            case 'evs_count':
-              aValue = a.evs_count;
-              bValue = b.evs_count;
-              break;
-            case 'average_score':
-              aValue = parseFloat(a.average_score);
-              bValue = parseFloat(b.average_score);
-              break;
-            case 'total_points':
-            default:
-              aValue = a.total_points;
-              bValue = b.total_points;
-              break;
-          }
-          
-          return bValue - aValue;
-        });
       }
 
       setLeaderboardData({ leaderboard, info });
@@ -569,31 +334,7 @@ const Leaderboard = () => {
 
   useEffect(() => {
     loadLeaderboard();
-  }, [loadLeaderboard, sortBy]);
-
-  const getScoreDisplay = (user) => {
-    switch (sortBy) {
-      case 'evs_count':
-        return `${user.evs_count} EVs`;
-      case 'average_score':
-        return `${user.average_score}`;
-      case 'total_points':
-      default:
-        return `${user.total_points} pts`;
-    }
-  };
-
-  const getScoreLabel = () => {
-    switch (sortBy) {
-      case 'evs_count':
-        return 'Número';
-      case 'average_score':
-        return 'Média';
-      case 'total_points':
-      default:
-        return 'Pontos';
-    }
-  };
+  }, [loadLeaderboard]);
 
   return (
     <Container>
@@ -610,18 +351,6 @@ const Leaderboard = () => {
           </Tab>
         ))}
       </TabContainer>
-
-      <FilterContainer>
-        {sortOptions.map(option => (
-          <FilterButton
-            key={option.key}
-            active={sortBy === option.key}
-            onClick={() => setSortBy(option.key)}
-          >
-            {option.label}
-          </FilterButton>
-        ))}
-      </FilterContainer>
 
       <LeaderboardCard>
         <LeaderboardHeader>
@@ -659,7 +388,7 @@ const Leaderboard = () => {
             }}>
               <span>Rank</span>
               <span>Jogador</span>
-              <span>{getScoreLabel()}</span>
+              <span>EVs</span>
             </div>
             
             {leaderboardData.leaderboard.map((user, index) => (
@@ -681,7 +410,7 @@ const Leaderboard = () => {
                     {user.max_score && ` • Máx: ${user.max_score}`}
                   </UserStats>
                 </UserInfo>
-                <Score>{getScoreDisplay(user)}</Score>
+                <Score>{user.evs_count} EVs</Score>
               </RankingItem>
             ))}
           </>
