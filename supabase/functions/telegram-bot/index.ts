@@ -241,7 +241,11 @@ Média recente: ${average}
           evs_count: data.evs_count,
           average_score: data.total_points / data.evs_count,
         }))
+<<<<<<< codex/add-telegram-integration-for-ev-tracking-iytt47
+        .sort((a, b) => b.evs_count - a.evs_count || b.total_points - a.total_points)
+=======
         .sort((a, b) => b.total_points - a.total_points)
+>>>>>>> main
         .slice(0, 5)
 
       const { data: profiles } = await supabaseClient
