@@ -346,6 +346,62 @@ const ExportInfo = styled.p`
   line-height: 1.4;
 `;
 
+const TelegramSection = styled.div`
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(74, 106, 138, 0.1);
+  border: 2px solid #4a6a8a;
+  border-radius: 8px;
+`;
+
+const TelegramText = styled.p`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #6a6a6a;
+  line-height: 1.5;
+  margin: 0 0 12px;
+`;
+
+const TelegramCode = styled.div`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: #ffffff;
+  background: rgba(26, 26, 26, 0.9);
+  border: 2px dashed #4a6a8a;
+  padding: 12px;
+  border-radius: 6px;
+  text-align: center;
+  margin-bottom: 12px;
+`;
+
+const TelegramButtonRow = styled.div`
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+`;
+
+const TelegramButton = styled.button`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: 2px solid #4a6a8a;
+  background: rgba(74, 106, 138, 0.15);
+  color: #4a6a8a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #4a6a8a;
+    color: #ffffff;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
 const Profile = () => {
   const { user, updateAvatar } = useAuth();
   const { themeName, toggleTheme } = useTheme();
@@ -369,12 +425,18 @@ const Profile = () => {
   const [exportLoading, setExportLoading] = useState(false);
   const [editingUsername, setEditingUsername] = useState(false);
   const [newUsername, setNewUsername] = useState('');
+  const [telegramLink, setTelegramLink] = useState(null);
+  const [telegramCode, setTelegramCode] = useState('');
+  const [telegramCodeExpiresAt, setTelegramCodeExpiresAt] = useState('');
+  const [telegramLoading, setTelegramLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
       loadProfile();
       loadStats();
       loadHistory();
+      loadTelegramStatus();
+      loadTelegramCode();
     }
   }, [user]);
 
@@ -535,6 +597,111 @@ const Profile = () => {
       setHistory(historyData);
     } catch (error) {
       console.error('Erro ao carregar histórico:', error);
+    }
+  };
+
+  const loadTelegramStatus = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('telegram_links')
+        .select('telegram_username, telegram_user_id, linked_at')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Erro ao carregar Telegram:', error);
+        return;
+      }
+
+      setTelegramLink(data || null);
+    } catch (error) {
+      console.error('Erro ao carregar Telegram:', error);
+    }
+  };
+
+  const loadTelegramCode = async () => {
+    try {
+      const now = new Date().toISOString();
+      const { data, error } = await supabase
+        .from('telegram_link_codes')
+        .select('code, expires_at')
+        .eq('user_id', user.id)
+        .is('used_at', null)
+        .gt('expires_at', now)
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Erro ao carregar código Telegram:', error);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        setTelegramCode(data[0].code);
+        setTelegramCodeExpiresAt(data[0].expires_at);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar código Telegram:', error);
+    }
+  };
+
+  const generateTelegramCode = () => {
+    const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const values = new Uint32Array(8);
+    window.crypto.getRandomValues(values);
+    return Array.from(values)
+      .map((value) => alphabet[value % alphabet.length])
+      .join('');
+  };
+
+  const handleGenerateTelegramCode = async () => {
+    setTelegramLoading(true);
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+    let code = '';
+
+    try {
+      let attempt = 0;
+      let created = false;
+      while (!created && attempt < 3) {
+        attempt += 1;
+        code = generateTelegramCode();
+        const { error } = await supabase
+          .from('telegram_link_codes')
+          .insert({
+            user_id: user.id,
+            code,
+            expires_at: expiresAt
+          });
+
+        if (!error) {
+          created = true;
+        } else if (error.code !== '23505') {
+          throw error;
+        }
+      }
+
+      if (!code) {
+        throw new Error('Não foi possível gerar o código');
+      }
+
+      setTelegramCode(code);
+      setTelegramCodeExpiresAt(expiresAt);
+      toast.success('Código gerado! Use no Telegram.');
+    } catch (error) {
+      console.error('Erro ao gerar código Telegram:', error);
+      toast.error('Erro ao gerar código Telegram');
+    } finally {
+      setTelegramLoading(false);
+    }
+  };
+
+  const handleCopyTelegramCode = async () => {
+    if (!telegramCode) return;
+    try {
+      await navigator.clipboard.writeText(telegramCode);
+      toast.success('Código copiado!');
+    } catch (error) {
+      toast.error('Não foi possível copiar o código');
     }
   };
 
@@ -1099,6 +1266,46 @@ const Profile = () => {
 
         </Card>
       </Grid>
+
+      <Card>
+        <CardTitle>Integração Telegram</CardTitle>
+        <TelegramSection>
+          <TelegramText>
+            Conecte sua conta para registrar EVs e consultar rankings direto no Telegram.
+          </TelegramText>
+          <TelegramText>
+            Status:{' '}
+            {telegramLink?.telegram_username
+              ? `Conectado como @${telegramLink.telegram_username}`
+              : telegramLink?.telegram_user_id
+                ? 'Conectado (usuário sem @)'
+                : 'Não conectado'}
+          </TelegramText>
+
+          {telegramCode ? (
+            <>
+              <TelegramCode>{telegramCode}</TelegramCode>
+              <TelegramText>
+                Expira em {new Date(telegramCodeExpiresAt).toLocaleString('pt-BR')}. Use o comando
+                /link {telegramCode} no bot.
+              </TelegramText>
+            </>
+          ) : (
+            <TelegramText>
+              Gere um código para vincular sua conta. Depois, no Telegram, envie /link CODIGO.
+            </TelegramText>
+          )}
+
+          <TelegramButtonRow>
+            <TelegramButton onClick={handleGenerateTelegramCode} disabled={telegramLoading}>
+              {telegramLoading ? 'Gerando...' : 'Gerar código'}
+            </TelegramButton>
+            <TelegramButton onClick={handleCopyTelegramCode} disabled={!telegramCode}>
+              Copiar código
+            </TelegramButton>
+          </TelegramButtonRow>
+        </TelegramSection>
+      </Card>
     </Container>
   );
 };

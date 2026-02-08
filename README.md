@@ -11,6 +11,7 @@ O EVSADAY é uma plataforma que permite aos praticantes de Conscienciologia regi
 - Participar de rankings competitivos
 - Conquistar badges conscienciológicas
 - Manter anonimato usando apelidos e avatars
+- Usar comandos no Telegram para registrar e consultar EVs
 
 ## 🚀 Tecnologias Utilizadas
 
@@ -66,6 +67,17 @@ Isso irá iniciar:
 - Backend na porta 5000
 - Frontend na porta 3000
 
+### Configuração do Bot do Telegram
+1. Crie um bot com o [BotFather](https://t.me/botfather) e copie o token.
+2. Configure as variáveis de ambiente no Supabase Edge Function:
+   - `TELEGRAM_BOT_TOKEN`
+   - `TELEGRAM_WEBHOOK_SECRET` (opcional, recomendado)
+3. Aplique o script `sql/setup-telegram-bot.sql` no banco Supabase.
+4. Faça o deploy da função `supabase/functions/telegram-bot`.
+5. No painel do Telegram, registre o webhook apontando para a função.
+
+Depois disso, gere o código no perfil do usuário e use `/link CODIGO` no bot.
+
 ### Produção
 ```bash
 # Build do frontend
@@ -88,6 +100,13 @@ npm run server
 - Campo para observações
 - Validação de dados
 - Histórico completo
+
+### Integração Telegram
+- Vinculação segura via código temporário
+- Registro de EVs com comando `/ev`
+- Consulta rápida de resumo com `/me`
+- Ranking das últimas 24h e de todos os tempos com `/rank day` e `/rank all`
+- Broadcast para todos os vinculados com `/broadcast` (somente admin)
 
 ### Estatísticas
 - Total de EVs registrados
