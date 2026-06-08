@@ -368,7 +368,7 @@ const Home = () => {
     
     return () => {
       clearInterval(interval);
-      subscription.unsubscribe();
+      supabase.removeChannel(subscription);
     };
   }, []);
 

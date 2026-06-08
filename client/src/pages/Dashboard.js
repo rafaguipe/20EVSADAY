@@ -564,7 +564,7 @@ const Dashboard = () => {
           .eq('user_id', user.id);
         
         // Verificar se é o primeiro EV e atribuir badge de Iniciante Consciencial
-        if (evCount && evCount.length === 1) {
+        if (evCount === 1) {
           const { data: badge } = await supabase
             .from('badges')
             .select('id')
