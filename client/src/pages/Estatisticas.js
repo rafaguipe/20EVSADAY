@@ -7,7 +7,17 @@ import toast from 'react-hot-toast';
 const Container = styled.div`
   padding: 20px;
   max-width: 1200px;
-  margin: 0 auto;
+  margin:0 auto;
+  
+  /* Responsivo para tablets */
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+  
+  /* Responsivo para celulares */
+  @media (max-width: 480px) {
+    padding: 10px;
+  }
 `;
 
 const Title = styled.h1`
@@ -17,6 +27,18 @@ const Title = styled.h1`
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
+  
+  /* Responsivo para tablets */
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+  
+  /* Responsivo para celulares */
+  @media (max-width: 480px) {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
 `;
 
 const StatsGrid = styled.div`
@@ -197,6 +219,18 @@ const ChartTitle = styled.h3`
   margin-bottom: 20px;
   text-transform: uppercase;
   text-align: center;
+  
+  /* Responsivo para tablets */
+  @media (max-width: 768px) {
+    font-size: 12px;
+    margin-bottom: 15px;
+  }
+  
+  /* Responsivo para celulares */
+  @media (max-width: 480px) {
+    font-size: 10px;
+    margin-bottom: 12px;
+  }
 `;
 
 const ChartContainer = styled.div`
@@ -209,12 +243,26 @@ const ChartContainer = styled.div`
   border-bottom: 2px solid #4a4a4a;
   border-left: 2px solid #4a4a4a;
   position: relative;
+  
+  /* Responsivo para tablets */
+  @media (max-width: 768px) {
+    height: 250px;
+    gap: 3px;
+    padding: 15px 0;
+  }
+  
+  /* Responsivo para celulares */
+  @media (max-width: 480px) {
+    height: 200px;
+    gap: 2px;
+    padding: 10px 0;
+  }
 `;
 
 const Bar = styled.div`
   background: linear-gradient(180deg, #4CAF50 0%, #45a049 100%);
-  border: 1px solid #2a2a2a;
-  border-radius: 4px 4px 0 0;
+  border:1px solid #2a2a2a;
+  border-radius:4px 4px 00;
   min-width: 20px;
   position: relative;
   transition: all 0.3s ease;
@@ -222,6 +270,17 @@ const Bar = styled.div`
   &:hover {
     background: linear-gradient(180deg, #6aaa6a 0%, #4CAF50 100%);
     transform: scaleY(1.05);
+  }
+  
+  /* Ajustes para tablets */
+  @media (max-width: 768px) {
+    min-width: 16px;
+  }
+  
+  /* Ajustes para celulares - barras mais finas */
+  @media (max-width: 480px) {
+    min-width: 12px;
+    border-radius: 3px 3px 0 0;
   }
 `;
 
@@ -233,6 +292,22 @@ const BarLabel = styled.div`
   margin-top: 8px;
   transform: rotate(-45deg);
   white-space: nowrap;
+  
+  /* Em telas médias, reduzir rotação */
+  @media (max-width: 768px) {
+    font-size: 7px;
+    transform: rotate(-30deg);
+  }
+  
+  /* Em telas pequenas, remover rotação e mostrar na horizontal */
+  @media (max-width: 480px) {
+    font-size: 6px;
+    transform: rotate(0deg);
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 1.2;
+    margin-top: 4px;
+  }
 `;
 
 const BarValue = styled.div`
@@ -249,6 +324,14 @@ const BarValue = styled.div`
   border-radius: 2px;
   opacity: 0;
   transition: opacity 0.3s ease;
+  
+  /* Em telas pequenas, mostrar o valor sempre (sem hover) */
+  @media (max-width: 480px) {
+    opacity: 1;
+    font-size: 7px;
+    top: -15px;
+    padding: 1px 3px;
+  }
   
   ${Bar}:hover & {
     opacity: 1;
