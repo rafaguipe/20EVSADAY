@@ -81,7 +81,6 @@ const CloseButton = styled.button`
     background: rgba(74, 106, 138, 0.1);
   }
 `;
-`;
 
 const PopupContent = styled.div`
   font-family: 'Press Start 2P', monospace;
