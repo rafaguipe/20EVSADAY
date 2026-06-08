@@ -89,6 +89,16 @@ const TextArea = styled.textarea`
     border-color: #6a6a6a;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
   }
+  
+  /* Ensure minimum touch target height */
+  min-height: 48px;
+  
+  /* Responsive adjustments */
+  @media (max-width: 400px) {
+    padding: 10px;
+    font-size: 13px;
+    min-height: 60px;
+  }
 `;
 
 const ScoreButtons = styled.div`
@@ -96,6 +106,16 @@ const ScoreButtons = styled.div`
   grid-template-columns: repeat(5, 1fr);
   gap: 10px;
   margin-top: 10px;
+  
+  /* Responsive: Stack vertically on very small screens */
+  @media (max-width: 400px) {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Alternative: 3 columns on medium small screens */
+  @media (max-width: 480px) and (min-width: 401px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `;
 
 const ScoreButton = styled.button`
@@ -106,11 +126,27 @@ const ScoreButton = styled.button`
   background: ${props => props.selected ? '#4a6a8a' : '#1a1a1a'};
   color: #ffffff;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease; /* Faster transition for better tactile feedback */
   
   &:hover {
     background: ${props => props.selected ? '#6a8aaa' : '#4a4a4a'};
     border-color: #6a6a6a;
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+    background: ${props => props.selected ? '#3a5a7a' : '#0a0a0a'};
+  }
+  
+  /* Ensure minimum touch target size */
+  min-height: 48px;
+  min-width: 48px;
+  
+  /* Responsive padding adjustment */
+  @media (max-width: 400px) {
+    padding: 12px 8px;
+    font-size: 16px;
   }
 `;
 
@@ -123,7 +159,7 @@ const SubmitButton = styled.button`
   color: #ffffff;
   cursor: pointer;
   text-transform: uppercase;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   margin-top: 10px;
   
   &:hover {
@@ -132,11 +168,27 @@ const SubmitButton = styled.button`
     transform: translateY(-2px);
   }
   
+  &:active {
+    transform: translateY(0);
+    background: #1a5a1a;
+  }
+  
   &:disabled {
     background: #4a4a4a;
     border-color: #6a6a6a;
     cursor: not-allowed;
     transform: none;
+    opacity: 0.7;
+  }
+  
+  /* Ensure minimum touch target size */
+  min-height: 48px;
+  min-width: 48px;
+  
+  /* Responsive adjustments */
+  @media (max-width: 400px) {
+    padding: 12px;
+    font-size: 12px;
   }
 `;
 

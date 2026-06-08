@@ -66,16 +66,21 @@ const CloseButton = styled.button`
   background: none;
   border: none;
   color: #666;
-  font-size: 24px;
+  font-size: 28px;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
+  padding: 12px;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s;
-  
   &:hover {
     color: #4a6a8a;
     background: rgba(74, 106, 138, 0.1);
   }
+`;
 `;
 
 const PopupContent = styled.div`

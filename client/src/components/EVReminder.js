@@ -41,13 +41,17 @@ const OkButton = styled.button`
   font-family: 'Press Start 2P', monospace;
   border: none;
   border-radius: 8px;
-  padding: 12px 32px;
+  padding: 16px 32px;
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s;
   &:hover {
     background: #357a35;
   }
+  
+  /* Ensure minimum touch target size */
+  min-height: 48px;
+  min-width: 48px;
 `;
 
 const EVReminder = () => {
