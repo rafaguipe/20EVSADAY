@@ -72,4 +72,10 @@ Thumbs.db
 
 # Temporary files
 *.tmp
-*.temp 
+*.temp
+temporario.txt
+
+# Internal cleanup
+_trash/
+_debug/
+_archive/
