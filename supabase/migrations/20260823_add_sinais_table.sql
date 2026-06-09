@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS sinais (
   
   -- Energossoma (percepções energéticas)
   energossoma_detalhes TEXT,
-  energossoma_intensidade INTEGER CHECK (enerossoma_intensidade >= 0 AND energossoma_intensidade <= 5),
+  energossoma_intensidade INTEGER CHECK (energossoma_intensidade >= 0 AND energossoma_intensidade <= 5),
   
   -- Psicossoma (emoções, pensamentos, parapsiquismo)
   psicossoma_detalhes TEXT,
