@@ -496,6 +496,19 @@ const Badges = () => {
             target = 1;
             earned = hasExperimentEV;
             break;
+          case 'Virada Conscienciológica 2026':
+            // Verificar se fez EV entre 22 e 24 de agosto de 2026 (horário de Brasília, UTC-3)
+            const viradaStart = new Date('2026-08-22T00:00:00-03:00');
+            const viradaEnd = new Date('2026-08-24T23:59:59-03:00');
+            const hasViradaEV = userEVs?.some(ev => {
+              const evDate = new Date(ev.created_at);
+              return evDate >= viradaStart && evDate <= viradaEnd;
+            }) || false;
+            progress = hasViradaEV ? 100 : 0;
+            current = hasViradaEV ? 1 : 0;
+            target = 1;
+            earned = hasViradaEV;
+            break;
           case 'Janeiro 2026':
             // Verificar se fez pelo menos 1 EV em janeiro de 2026
             const january2026Start = new Date('2026-01-01T00:00:00Z');

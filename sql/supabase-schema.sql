@@ -88,7 +88,8 @@ INSERT INTO badges (name, description, icon) VALUES
   ('Alto Vibracional', 'EV com pontuação 4', '⭐'),
   ('Consistente', 'Média de 3+ por 10 dias', '📈'),
   ('Pesquisador Consciencial', '500 EVs registrados', '🔬'),
-  ('Líder Vibracional', 'Top 1 mensal', '🏆')
+  ('Líder Vibracional', 'Top 1 mensal', '🏆'),
+  ('Virada Conscienciológica 2026', 'Participou da Virada Conscienciológica 2026 (22 a 24 de agosto)', '🌀')
 ON CONFLICT (name) DO NOTHING;
 
 -- Criar índices para performance

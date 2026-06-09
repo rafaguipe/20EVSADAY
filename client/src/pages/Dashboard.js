@@ -392,6 +392,34 @@ const Dashboard = () => {
   // Verificar badges recém-conquistados ao carregar a página
   const checkRecentBadges = async () => {
     try {
+      // Verificar especificamente o badge Virada Conscienciológica 2026
+      const { data: virada2026Badge } = await supabase
+        .from('user_badges')
+        .select(`
+          awarded_at,
+          badges!inner(name, description, icon)
+        `)
+        .eq('user_id', user.id)
+        .eq('badges.name', 'Virada Conscienciológica 2026')
+        .single();
+
+      if (virada2026Badge) {
+        const lastShownKey = 'badge_shown_virada_2026';
+        const lastShown = localStorage.getItem(lastShownKey);
+        
+        if (!lastShown) {
+          setEarnedBadge({
+            name: virada2026Badge.badges.name,
+            description: virada2026Badge.badges.description,
+            icon: virada2026Badge.badges.icon
+          });
+          setShowBadgeNotification(true);
+          setPlayVictorySound(true);
+          localStorage.setItem(lastShownKey, 'true');
+          return;
+        }
+      }
+
       // Verificar especificamente o badge de Janeiro 2026 (mesmo se foi conquistado há mais tempo)
       const { data: janeiro2026Badge } = await supabase
         .from('user_badges')
@@ -434,6 +462,7 @@ const Dashboard = () => {
         .eq('user_id', user.id)
         .gte('awarded_at', oneDayAgo.toISOString())
         .neq('badges.name', 'Janeiro 2026') // Excluir janeiro 2026 pois já verificamos acima
+        .neq('badges.name', 'Virada Conscienciológica 2026') // Excluir virada 2026 pois já verificamos acima
         .order('awarded_at', { ascending: false })
         .limit(1);
 
@@ -651,6 +680,49 @@ const Dashboard = () => {
           }
         } else {
           toast.success('EV registrado com sucesso!');
+        }
+
+        // Verificar se o EV foi registrado durante a Virada Conscienciológica 2026 (22 a 24 de agosto, horário de Brasília)
+        const viradaStart = new Date('2026-08-22T00:00:00-03:00');
+        const viradaEnd = new Date('2026-08-24T23:59:59-03:00');
+        const evCreatedAt = new Date();
+        if (evCreatedAt >= viradaStart && evCreatedAt <= viradaEnd) {
+          // Buscar o badge
+          const { data: viradaBadge } = await supabase
+            .from('badges')
+            .select('id, name, description, icon')
+            .eq('name', 'Virada Conscienciológica 2026')
+            .single();
+
+          if (viradaBadge) {
+            // Verificar se o usuário já tem o badge
+            const { data: existing } = await supabase
+              .from('user_badges')
+              .select('id')
+              .eq('user_id', user.id)
+              .eq('badge_id', viradaBadge.id)
+              .single();
+
+            if (!existing) {
+              await supabase
+                .from('user_badges')
+                .insert([
+                  {
+                    user_id: user.id,
+                    badge_id: viradaBadge.id,
+                    awarded_at: new Date().toISOString()
+                  }
+                ]);
+
+              setEarnedBadge({
+                name: viradaBadge.name,
+                description: viradaBadge.description,
+                icon: viradaBadge.icon
+              });
+              setShowBadgeNotification(true);
+              setPlayVictorySound(true);
+            }
+          }
         }
         
         // Verificar se atingiu marcos especiais de EVs no dia para tocar som de vitória
