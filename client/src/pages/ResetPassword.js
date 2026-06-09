@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { supabase } from '../supabaseClient';
 import toast from 'react-hot-toast';
-
-// Obter URL do Supabase
-const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL || 'https://mbxefiadqcrzqbrfkvxu.supabase.co';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -24,6 +21,7 @@ const FormCard = styled.div`
   width: 100%;
   max-width: 400px;
   backdrop-filter: blur(10px);
+  @media (max-width: 480px) { padding: 24px; }
 `;
 
 const Title = styled.h1`
@@ -33,6 +31,7 @@ const Title = styled.h1`
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
+  @media (max-width: 480px) { font-size: 18px; }
 `;
 
 const Form = styled.form`
@@ -62,7 +61,6 @@ const Input = styled.input`
   color: #ffffff;
   font-size: 14px;
   border-radius: 4px;
-  
   &:focus {
     outline: none;
     border-color: #6a6a6a;
@@ -81,13 +79,11 @@ const SubmitButton = styled.button`
   text-transform: uppercase;
   transition: all 0.3s ease;
   margin-top: 10px;
-  
-  &:hover {
+  &:hover:not(:disabled) {
     background: #4a6a8a;
     border-color: #6a8aaa;
     transform: translateY(-2px);
   }
-  
   &:disabled {
     background: #4a4a4a;
     border-color: #6a6a6a;
@@ -96,21 +92,13 @@ const SubmitButton = styled.button`
   }
 `;
 
-const SuccessMessage = styled.div`
+const Message = styled.div`
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
-  color: #4CAF50;
+  color: ${props => props.$error ? '#ff6b6b' : '#4CAF50'};
   text-align: center;
   margin-top: 10px;
   line-height: 1.6;
-`;
-
-const ErrorMessage = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #ff6b6b;
-  text-align: center;
-  margin-top: 10px;
 `;
 
 const InfoBox = styled.div`
@@ -130,6 +118,21 @@ const InfoText = styled.p`
   line-height: 1.4;
 `;
 
+const LinkText = styled.div`
+  text-align: center;
+  margin-top: 20px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #6a6a6a;
+`;
+
+const StyledLink = styled(Link)`
+  color: #ffffff;
+  text-decoration: none;
+  margin-left: 5px;
+  &:hover { color: #6a6a6a; }
+`;
+
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -139,202 +142,107 @@ const ResetPassword = () => {
   const [validating, setValidating] = useState(true);
   const [isValidLink, setIsValidLink] = useState(false);
   const navigate = useNavigate();
+  const processedRef = useRef(false);
 
   useEffect(() => {
-    let timeoutId;
-    let subscription;
+    let sub;
+    let timeout;
 
-    // Verificar se estamos em um safelink do Outlook e extrair o link real
-    const currentUrl = window.location.href;
-    if (currentUrl.includes('safelinks.protection.outlook.com')) {
-      console.log('Detectado safelink do Outlook, extraindo link real...');
-      const urlParams = new URLSearchParams(window.location.search);
-      const realUrl = urlParams.get('url');
-      
-      if (realUrl) {
-        console.log('Link real encontrado:', realUrl);
-        // Decodificar o URL
-        const decodedUrl = decodeURIComponent(realUrl);
-        console.log('Link decodificado:', decodedUrl);
-        // Redirecionar para o link real
-        window.location.href = decodedUrl;
-        return; // Não continuar, aguardar o redirecionamento
-      }
-    }
+    const handleRecovery = async () => {
+      // Extrair type e access_token (podem vir via hash ou query params)
+      const hash = window.location.hash.substring(1);
+      const hashParams = new URLSearchParams(hash);
+      const queryParams = new URLSearchParams(window.location.search);
 
-    // Verificar tanto hash fragments quanto query parameters
-    // O Supabase pode usar ambos dependendo de como o link é acessado
-    const hash = window.location.hash.substring(1);
-    const hashParams = new URLSearchParams(hash);
-    const queryParams = new URLSearchParams(window.location.search);
-    
-    // Tentar obter do hash primeiro (formato padrão do Supabase)
-    let accessToken = hashParams.get('access_token');
-    let type = hashParams.get('type');
-    
-    // Se não estiver no hash, tentar query parameters (pode acontecer com safelinks do Outlook)
-    if (!accessToken) {
-      // O Supabase também pode usar ?token=... em vez de #access_token=...
-      const token = queryParams.get('token');
-      type = queryParams.get('type') || type;
-      
-      if (token && type === 'recovery') {
-        // Se temos um token como query param, precisamos processá-lo manualmente
-        console.log('Token encontrado como query parameter, processando...');
-        // O Supabase processará automaticamente quando chamarmos getSession
-      }
-    }
+      const type = hashParams.get('type') || queryParams.get('type');
+      const accessToken = hashParams.get('access_token') || queryParams.get('token');
 
-    console.log('URL completa:', window.location.href);
-    console.log('Hash:', hash);
-    console.log('Query params:', window.location.search);
-    console.log('Type:', type);
-    console.log('Access Token presente:', !!accessToken);
+      console.log('[ResetPassword] type:', type, 'hasToken:', !!accessToken);
+      console.log('[ResetPassword] full URL:', window.location.href);
 
-    // Verificar se temos pelo menos um indicador de recovery
-    const hasRecoveryToken = accessToken || queryParams.get('token');
-    const isRecoveryType = type === 'recovery';
-
-    if (!isRecoveryType && !hasRecoveryToken) {
-      // Não há token de recuperação na URL
-      console.log('Sem token de recuperação válido na URL');
-      console.log('Hash params:', Object.fromEntries(hashParams));
-      console.log('Query params:', Object.fromEntries(queryParams));
-      setValidating(false);
-      setIsValidLink(false);
-      toast.error('Link inválido ou expirado. Verifique se a URL de redirecionamento está configurada no Supabase.');
-      timeoutId = setTimeout(() => navigate('/forgot-password'), 3000);
-      return;
-    }
-
-    // Usar onAuthStateChange para detectar quando o Supabase processa o recovery link
-    subscription = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state change:', event, session?.user?.email);
-      
-      if (event === 'PASSWORD_RECOVERY' || event === 'TOKEN_REFRESHED') {
-        // O Supabase processou o link de recuperação
-        if (session && session.user) {
-          setIsValidLink(true);
-          setValidating(false);
-          // Limpar o hash e query params da URL para segurança
-          window.history.replaceState(null, '', window.location.pathname);
-          toast.success('Link válido! Defina sua nova senha.');
-        } else {
-          setIsValidLink(false);
-          setValidating(false);
-          toast.error('Link inválido ou expirado');
-          timeoutId = setTimeout(() => navigate('/forgot-password'), 3000);
-        }
-      } else if (event === 'SIGNED_IN' && session) {
-        // Verificar se estamos em um contexto de recovery
-        const currentHash = window.location.hash;
-        const currentSearch = window.location.search;
-        if (currentHash.includes('type=recovery') || currentSearch.includes('type=recovery') || currentSearch.includes('token=')) {
-          setIsValidLink(true);
-          setValidating(false);
-          window.history.replaceState(null, '', window.location.pathname);
-          toast.success('Link válido! Defina sua nova senha.');
-        }
-      }
-    });
-
-    // Verificar sessão atual após um pequeno delay (para dar tempo do Supabase processar)
-    const checkSession = async () => {
-      // Aguardar um pouco mais para dar tempo do Supabase processar, especialmente com safelinks
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Se temos um token como query param, o Supabase precisa processá-lo primeiro
-      // O token precisa ser verificado pelo endpoint /auth/v1/verify do Supabase
-      const token = queryParams.get('token');
-      if (token && type === 'recovery' && !accessToken) {
-        console.log('Token encontrado como query parameter');
-        console.log('Token:', token.substring(0, 20) + '...');
-        
-        // O token precisa ser verificado pelo Supabase primeiro
-        // Vamos redirecionar para o endpoint de verificação do Supabase
-        const verifyUrl = `${SUPABASE_URL}/auth/v1/verify?token=${token}&type=recovery&redirect_to=${encodeURIComponent(window.location.origin + window.location.pathname)}`;
-        
-        console.log('Redirecionando para endpoint de verificação do Supabase:', verifyUrl);
-        window.location.href = verifyUrl;
-        return; // Não continuar, aguardar o redirecionamento
-      }
-      
-      const { data: { session }, error } = await supabase.auth.getSession();
-      
-      if (error) {
-        console.error('Erro ao verificar sessão:', error);
-        // Não falhar imediatamente - pode ser que o Supabase ainda esteja processando
-        console.log('Aguardando processamento do Supabase...');
+      if (type !== 'recovery' && !accessToken) {
+        console.log('[ResetPassword] Sem token de recuperacao');
+        setValidating(false);
+        setIsValidLink(false);
+        toast.error('Link invalido ou expirado.');
+        timeout = setTimeout(() => navigate('/forgot-password'), 4000);
+        return;
       }
 
-      if (session && session.user) {
-        // Já há uma sessão válida (o link foi processado)
+      // Tentar obter sessao atual (apos Supabase processar o link)
+      const { data: { session }, error: sessError } = await supabase.auth.getSession();
+
+      if (sessError) {
+        console.error('[ResetPassword] Erro ao obter sessao:', sessError);
+      }
+
+      if (session?.user) {
+        console.log('[ResetPassword] Sessao valida encontrada:', session.user.email);
         setIsValidLink(true);
         setValidating(false);
+        // Limpar URL
         window.history.replaceState(null, '', window.location.pathname);
-        toast.success('Link válido! Defina sua nova senha.');
-      } else {
-        // Aguardar mais um pouco para o onAuthStateChange processar
-        // Aumentar o timeout para dar mais tempo, especialmente com safelinks do Outlook
-        timeoutId = setTimeout(() => {
-          if (!isValidLink) {
-            console.log('Timeout aguardando processamento do link');
-            setIsValidLink(false);
-            setValidating(false);
-            toast.error('Link inválido ou expirado. Solicite um novo link.');
-            setTimeout(() => navigate('/forgot-password'), 2000);
-          }
-        }, 8000); // Aumentado para 8 segundos para dar tempo ao safelink processar
+        toast.success('Link valido! Defina sua nova senha.');
+        return;
       }
+
+      // Se nao tem sessao ainda, escutar onAuthStateChange
+      console.log('[ResetPassword] Aguardando processamento do link...');
+      sub = supabase.auth.onAuthStateChange((event, session) => {
+        console.log('[ResetPassword] Auth state change:', event, session?.user?.email);
+        if ((event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') && session?.user) {
+          processedRef.current = true;
+          setIsValidLink(true);
+          setValidating(false);
+          window.history.replaceState(null, '', window.location.pathname);
+          toast.success('Link valido! Defina sua nova senha.');
+        }
+      });
+
+      // Timeout de seguranca
+      timeout = setTimeout(async () => {
+        if (processedRef.current) return;
+        console.log('[ResetPassword] Timeout - sem resposta do Supabase');
+        setValidating(false);
+        setIsValidLink(false);
+        toast.error('Link invalido ou expirado. Solicite um novo.');
+        setTimeout(() => navigate('/forgot-password'), 4000);
+      }, 10000);
     };
 
-    checkSession();
+    handleRecovery();
 
-    // Cleanup
     return () => {
-      if (subscription) {
-        subscription.data.subscription.unsubscribe();
-      }
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+      if (sub) sub.data?.subscription?.unsubscribe();
+      if (timeout) clearTimeout(timeout);
     };
-  }, [navigate, isValidLink]);
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    // Validações
     if (password.length < 6) {
       setError('A senha deve ter pelo menos 6 caracteres');
       setLoading(false);
       return;
     }
-
     if (password !== confirmPassword) {
-      setError('As senhas não coincidem');
+      setError('As senhas nao coincidem');
       setLoading(false);
       return;
     }
 
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: password
-      });
-
+      const { error } = await supabase.auth.updateUser({ password });
       if (error) {
         setError(error.message);
         toast.error('Erro ao atualizar senha: ' + error.message);
       } else {
         setSuccess(true);
-        toast.success('✅ Senha atualizada com sucesso!');
-        
-        // Redirecionar para login após 2 segundos
-        setTimeout(() => {
-          navigate('/login');
-        }, 2000);
+        toast.success('Senha atualizada com sucesso!');
+        setTimeout(() => navigate('/login'), 3000);
       }
     } catch (err) {
       setError('Erro inesperado ao atualizar senha');
@@ -344,49 +252,31 @@ const ResetPassword = () => {
     }
   };
 
-  // Mostrar loading enquanto valida o link
   if (validating) {
     return (
       <Container>
         <FormCard>
           <Title>Validando Link...</Title>
-          <InfoBox>
-            <InfoText>
-              ⏳ Processando link de recuperação...
-            </InfoText>
-          </InfoBox>
+          <InfoBox><InfoText>Processando link de recuperacao...</InfoText></InfoBox>
         </FormCard>
       </Container>
     );
   }
 
-  // Se o link não é válido, não mostrar o formulário
   if (!isValidLink) {
     return (
       <Container>
         <FormCard>
-          <Title>Link Inválido</Title>
+          <Title>Link Invalido</Title>
           <InfoBox>
-          <InfoText>
-            ❌ Link inválido ou expirado.<br/>
-            <br/>
-            💡 <strong>Possíveis causas:</strong><br/>
-            • URL de redirecionamento não configurada no Supabase<br/>
-            • Link expirado (válido por 1 hora)<br/>
-            • Link já foi usado<br/>
-            • Problema com safelink do Outlook<br/>
-            <br/>
-            <strong>Se estiver usando Outlook:</strong><br/>
-            1. No e-mail, clique com botão direito no link<br/>
-            2. Selecione "Copiar endereço do link"<br/>
-            3. Cole em um editor de texto<br/>
-            4. Procure por "url=" e copie o link após esse parâmetro<br/>
-            5. Decodifique o link (remova %3A, %2F, etc.)<br/>
-            6. Acesse o link decodificado diretamente<br/>
-            <br/>
-            Ou solicite um novo link de recuperação.
-          </InfoText>
+            <InfoText>
+              Link invalido ou expirado.<br/><br/>
+              Solicite um novo link de recuperacao.
+            </InfoText>
           </InfoBox>
+          <LinkText>
+            <StyledLink to="/forgot-password">Voltar</StyledLink>
+          </LinkText>
         </FormCard>
       </Container>
     );
@@ -396,59 +286,37 @@ const ResetPassword = () => {
     <Container>
       <FormCard>
         <Title>Nova Senha</Title>
-        
-        <InfoBox>
-          <InfoText>
-            🔒 Digite sua nova senha abaixo.
-          </InfoText>
-        </InfoBox>
-        
+        <InfoBox><InfoText>Digite sua nova senha abaixo.</InfoText></InfoBox>
+
         {success ? (
-          <SuccessMessage>
-            ✅ Senha atualizada com sucesso!<br/>
-            Redirecionando para o login...
-          </SuccessMessage>
+          <Message>Senha atualizada com sucesso!<br/>Redirecionando para o login...</Message>
         ) : (
           <Form onSubmit={handleSubmit}>
             <FormGroup>
               <Label htmlFor="password">Nova Senha</Label>
-              <Input
-                type="password"
-                id="password"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="Mínimo 6 caracteres"
-                minLength={6}
-              />
+              <Input type="password" id="password" value={password}
+                onChange={(e) => setPassword(e.target.value)} required
+                placeholder="Minimo 6 caracteres" minLength={6} />
             </FormGroup>
-            
             <FormGroup>
               <Label htmlFor="confirmPassword">Confirmar Senha</Label>
-              <Input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                placeholder="Digite novamente"
-                minLength={6}
-              />
+              <Input type="password" id="confirmPassword" value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)} required
+                placeholder="Digite novamente" minLength={6} />
             </FormGroup>
-            
             <SubmitButton type="submit" disabled={loading}>
               {loading ? 'Atualizando...' : 'Atualizar Senha'}
             </SubmitButton>
-            
-            {error && <ErrorMessage>{error}</ErrorMessage>}
+            {error && <Message $error>{error}</Message>}
           </Form>
         )}
+
+        <LinkText>
+          <StyledLink to="/login">Fazer login</StyledLink>
+        </LinkText>
       </FormCard>
     </Container>
   );
 };
 
 export default ResetPassword;
-
