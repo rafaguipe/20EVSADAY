@@ -264,6 +264,78 @@ const ClearBtn = styled(Btn)`
   }
 `;
 
+// ─── Export ───────────────────────────────────────────────────────────
+
+const ExportSection = styled.div`
+  margin: 25px 0;
+  padding: 18px;
+  background: rgba(74, 106, 138, 0.08);
+  border: 1px solid #3a4a6a;
+  border-radius: 8px;
+`;
+
+const ExportTitle = styled.h3`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: #7abaff;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  text-align: center;
+`;
+
+const ExportButtons = styled.div`
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+`;
+
+const ExportBtn = styled.button`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid ${({ $variant }) =>
+    $variant === 'csv' ? '#28a745' : '#ffc107'};
+  background: ${({ $variant }) =>
+    $variant === 'csv' ? 'rgba(40, 167, 69, 0.1)' : 'rgba(255, 193, 7, 0.1)'};
+  color: ${({ $variant }) =>
+    $variant === 'csv' ? '#28a745' : '#ffc107'};
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover:not(:disabled) {
+    background: ${({ $variant }) =>
+      $variant === 'csv' ? '#28a745' : '#ffc107'};
+    color: #1a1a1a;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  @media (max-width: 480px) {
+    flex: 1;
+    min-width: 130px;
+    justify-content: center;
+  }
+`;
+
+const ExportInfo = styled.p`
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #5a5a7a;
+  text-align: center;
+  margin-top: 12px;
+  line-height: 1.5;
+`;
+
 // ─── Timeline ─────────────────────────────────────────────────────────
 
 const TimelineTitle = styled.h2`
@@ -459,6 +531,7 @@ function intensityDots(value, color) {
 const Sinaletica = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
   const [sinais, setSinais] = useState([]);
   const [filter, setFilter] = useState('all'); // all | 7d | 30d | 90d
   const [editId, setEditId] = useState(null);
@@ -480,6 +553,113 @@ const Sinaletica = () => {
   useEffect(() => {
     if (user) loadSinais();
   }, [user, filter]);
+
+  // ─── Export helpers ──────────────────────────────────────────────────
+
+  const formatDateBr = (dateString) => {
+    const d = new Date(dateString);
+    return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', {
+      hour: '2-digit', minute: '2-digit',
+    });
+  };
+
+  const downloadFile = (content, filename, mimeType) => {
+    const blob = new Blob(['\ufeff' + content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const fetchAllSinais = async () => {
+    const { data, error } = await supabase
+      .from('sinais')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('registered_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  };
+
+  const exportSinaisCSV = async () => {
+    setExportLoading(true);
+    try {
+      const all = await fetchAllSinais();
+      if (all.length === 0) {
+        toast.error('Nenhum registro sinalético para exportar');
+        return;
+      }
+      const headers = [
+        'Data/Hora', 'Soma', 'Soma_Int', 'Energossoma', 'Energossoma_Int',
+        'Psicossoma', 'Psicossoma_Int', 'Holossoma', 'Holossoma_Int',
+        'Contexto', 'Notas',
+      ];
+      const rows = [headers.join(',')];
+      all.forEach(s => {
+        rows.push([
+          `"${formatDateBr(s.registered_at)}"`,
+          `"${(s.soma_detalhes || '').replace(/"/g, '""')}"`,
+          s.soma_intensidade || 0,
+          `"${(s.energossoma_detalhes || '').replace(/"/g, '""')}"`,
+          s.energossoma_intensidade || 0,
+          `"${(s.psicossoma_detalhes || '').replace(/"/g, '""')}"`,
+          s.psicossoma_intensidade || 0,
+          `"${(s.holossoma_detalhes || '').replace(/"/g, '""')}"`,
+          s.holossoma_intensidade || 0,
+          `"${(s.contexto || '').replace(/"/g, '""')}"`,
+          `"${(s.notas || '').replace(/"/g, '""')}"`,
+        ].join(','));
+      });
+      const filename = `Sinaletica_${new Date().toISOString().split('T')[0]}.csv`;
+      downloadFile(rows.join('\n'), filename, 'text/csv;charset=utf-8;');
+      toast.success('📊 CSV exportado com sucesso!');
+    } catch (err) {
+      console.error('Erro ao exportar CSV:', err);
+      toast.error('Erro ao exportar CSV');
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
+  const exportSinaisTXT = async () => {
+    setExportLoading(true);
+    try {
+      const all = await fetchAllSinais();
+      if (all.length === 0) {
+        toast.error('Nenhum registro sinalético para exportar');
+        return;
+      }
+      let txt = 'AGENDA SINALÉTICOLÓGICA — RELATÓRIO\n';
+      txt += '=====================================\n\n';
+      txt += `Total de registros: ${all.length}\n`;
+      txt += `Exportado em: ${formatDateBr(new Date().toISOString())}\n\n`;
+
+      all.forEach((s, i) => {
+        txt += `--- Registro #${i + 1} ---\n`;
+        txt += `Data/Hora: ${formatDateBr(s.registered_at)}\n`;
+        if (s.contexto) txt += `Contexto: ${s.contexto}\n`;
+        if (s.soma_detalhes) txt += `Soma: ${s.soma_detalhes} (intensidade: ${s.soma_intensidade || 0}/5)\n`;
+        if (s.energossoma_detalhes) txt += `Energossoma: ${s.energossoma_detalhes} (intensidade: ${s.energossoma_intensidade || 0}/5)\n`;
+        if (s.psicossoma_detalhes) txt += `Psicossoma: ${s.psicossoma_detalhes} (intensidade: ${s.psicossoma_intensidade || 0}/5)\n`;
+        if (s.holossoma_detalhes) txt += `Holossoma: ${s.holossoma_detalhes} (intensidade: ${s.holossoma_intensidade || 0}/5)\n`;
+        if (s.notas) txt += `Notas: ${s.notas}\n`;
+        txt += '\n';
+      });
+
+      const filename = `Sinaletica_${new Date().toISOString().split('T')[0]}.txt`;
+      downloadFile(txt, filename, 'text/plain;charset=utf-8;');
+      toast.success('📄 TXT exportado com sucesso!');
+    } catch (err) {
+      console.error('Erro ao exportar TXT:', err);
+      toast.error('Erro ao exportar TXT');
+    } finally {
+      setExportLoading(false);
+    }
+  };
 
   const loadSinais = async () => {
     try {
@@ -730,6 +910,22 @@ const Sinaletica = () => {
           )}
         </ButtonRow>
       </Section>
+
+      {/* ── Export ── */}
+      <ExportSection>
+        <ExportTitle>📤 Exportar Sinalética</ExportTitle>
+        <ExportButtons>
+          <ExportBtn onClick={exportSinaisCSV} disabled={exportLoading} $variant="csv">
+            📊 CSV
+          </ExportBtn>
+          <ExportBtn onClick={exportSinaisTXT} disabled={exportLoading} $variant="txt">
+            📄 TXT
+          </ExportBtn>
+        </ExportButtons>
+        <ExportInfo>
+          Exporta todos os registros sinaléticos. CSV para planilhas, TXT para leitura.
+        </ExportInfo>
+      </ExportSection>
 
       {/* ── Timeline ── */}
       <TimelineTitle>📜 Histórico</TimelineTitle>
