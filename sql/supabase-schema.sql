@@ -92,8 +92,43 @@ INSERT INTO badges (name, description, icon) VALUES
   ('Virada Conscienciológica 2026', 'Participou da Virada Conscienciológica 2026 (22 a 24 de agosto)', '🌀')
 ON CONFLICT (name) DO NOTHING;
 
+-- 5. Tabela sinais (Agenda Sinaleticológica)
+CREATE TABLE IF NOT EXISTS sinais (
+  id BIGSERIAL PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  registered_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  soma_detalhes TEXT,
+  soma_intensidade INTEGER CHECK (soma_intensidade >= 0 AND soma_intensidade <= 5),
+  energossoma_detalhes TEXT,
+  energossoma_intensidade INTEGER CHECK (energossoma_intensidade >= 0 AND energossoma_intensidade <= 5),
+  psicossoma_detalhes TEXT,
+  psicossoma_intensidade INTEGER CHECK (psicossoma_intensidade >= 0 AND psicossoma_intensidade <= 5),
+  holossoma_detalhes TEXT,
+  holossoma_intensidade INTEGER CHECK (holossoma_intensidade >= 0 AND holossoma_intensidade <= 5),
+  contexto TEXT,
+  notas TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- RLS para sinais
+ALTER TABLE sinais ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own sinais" ON sinais
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own sinais" ON sinais
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own sinais" ON sinais
+  FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own sinais" ON sinais
+  FOR DELETE USING (auth.uid() = user_id);
+
 -- Criar índices para performance
 CREATE INDEX IF NOT EXISTS idx_evs_user_id ON evs(user_id);
 CREATE INDEX IF NOT EXISTS idx_evs_created_at ON evs(created_at);
 CREATE INDEX IF NOT EXISTS idx_user_badges_user_id ON user_badges(user_id);
-CREATE INDEX IF NOT EXISTS idx_profiles_user_id ON profiles(user_id); 
+CREATE INDEX IF NOT EXISTS idx_profiles_user_id ON profiles(user_id);
+CREATE INDEX IF NOT EXISTS idx_sinais_user_id ON sinais(user_id);
+CREATE INDEX IF NOT EXISTS idx_sinais_registered_at ON sinais(user_id, registered_at DESC); 

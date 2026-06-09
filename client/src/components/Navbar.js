@@ -452,6 +452,9 @@ const Navbar = () => {
             <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
               Estatísticas
             </NavLink>
+            <NavLink to="/sinaletica" active={isActive('/sinaletica')}>
+              🌀 Sinalética
+            </NavLink>
             {(isAdmin || votacaoVisible) && (
               <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')}>
                 🗳️ Votação
@@ -529,6 +532,9 @@ const Navbar = () => {
               )}
               <NavLink to="/estatisticas" active={isActive('/estatisticas')} onClick={closeMobileMenu}>
                 Estatísticas
+              </NavLink>
+              <NavLink to="/sinaletica" active={isActive('/sinaletica')} onClick={closeMobileMenu}>
+                🌀 Sinalética
               </NavLink>
               {(isAdmin || votacaoVisible) && (
                 <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')} onClick={closeMobileMenu}>
