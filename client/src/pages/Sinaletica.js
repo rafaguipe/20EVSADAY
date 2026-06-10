@@ -489,7 +489,7 @@ const VEICULOS = [
   { key: 'soma', label: 'Soma', icon: '🫀', color: '#e06c75' },
   { key: 'energossoma', label: 'Energossoma', icon: '⚡', color: '#e5c07b' },
   { key: 'psicossoma', label: 'Psicossoma', icon: '🧠', color: '#61afef' },
-  { key: 'holossoma', label: 'Holossoma', icon: '🌟', color: '#c678dd' },
+  { key: 'mentalssoma', label: 'Mentalssoma', icon: '🌟', color: '#c678dd' },
 ];
 
 function formatDateBR(dateStr) {
@@ -546,8 +546,8 @@ const Sinaletica = () => {
     energossoma_intensidade: 0,
     psicossoma_detalhes: '',
     psicossoma_intensidade: 0,
-    holossoma_detalhes: '',
-    holossoma_intensidade: 0,
+    mentalssoma_detalhes: '',
+    mentalssoma_intensidade: 0,
   });
 
   useEffect(() => {
@@ -595,7 +595,7 @@ const Sinaletica = () => {
       }
       const headers = [
         'Data/Hora', 'Soma', 'Soma_Int', 'Energossoma', 'Energossoma_Int',
-        'Psicossoma', 'Psicossoma_Int', 'Holossoma', 'Holossoma_Int',
+        'Psicossoma', 'Psicossoma_Int', 'Mentalssoma', 'Mentalssoma_Int',
         'Contexto', 'Notas',
       ];
       const rows = [headers.join(',')];
@@ -608,8 +608,8 @@ const Sinaletica = () => {
           s.energossoma_intensidade || 0,
           `"${(s.psicossoma_detalhes || '').replace(/"/g, '""')}"`,
           s.psicossoma_intensidade || 0,
-          `"${(s.holossoma_detalhes || '').replace(/"/g, '""')}"`,
-          s.holossoma_intensidade || 0,
+          `"${(s.mentalssoma_detalhes || '').replace(/"/g, '""')}"`,
+          s.mentalssoma_intensidade || 0,
           `"${(s.contexto || '').replace(/"/g, '""')}"`,
           `"${(s.notas || '').replace(/"/g, '""')}"`,
         ].join(','));
@@ -645,7 +645,7 @@ const Sinaletica = () => {
         if (s.soma_detalhes) txt += `Soma: ${s.soma_detalhes} (intensidade: ${s.soma_intensidade || 0}/5)\n`;
         if (s.energossoma_detalhes) txt += `Energossoma: ${s.energossoma_detalhes} (intensidade: ${s.energossoma_intensidade || 0}/5)\n`;
         if (s.psicossoma_detalhes) txt += `Psicossoma: ${s.psicossoma_detalhes} (intensidade: ${s.psicossoma_intensidade || 0}/5)\n`;
-        if (s.holossoma_detalhes) txt += `Holossoma: ${s.holossoma_detalhes} (intensidade: ${s.holossoma_intensidade || 0}/5)\n`;
+        if (s.mentalssoma_detalhes) txt += `Mentalssoma: ${s.mentalssoma_detalhes} (intensidade: ${s.mentalssoma_intensidade || 0}/5)\n`;
         if (s.notas) txt += `Notas: ${s.notas}\n`;
         txt += '\n';
       });
@@ -704,8 +704,8 @@ const Sinaletica = () => {
       energossoma_intensidade: 0,
       psicossoma_detalhes: '',
       psicossoma_intensidade: 0,
-      holossoma_detalhes: '',
-      holossoma_intensidade: 0,
+      mentalssoma_detalhes: '',
+      mentalssoma_intensidade: 0,
     });
     setEditId(null);
   };
@@ -718,7 +718,7 @@ const Sinaletica = () => {
       form.soma_detalhes || form.soma_intensidade > 0 ||
       form.energossoma_detalhes || form.energossoma_intensidade > 0 ||
       form.psicossoma_detalhes || form.psicossoma_intensidade > 0 ||
-      form.holossoma_detalhes || form.holossoma_intensidade > 0;
+      form.mentalssoma_detalhes || form.mentalssoma_intensidade > 0;
 
     if (!hasContent) {
       toast.error('Preencha pelo menos um campo');
@@ -790,8 +790,8 @@ const Sinaletica = () => {
       energossoma_intensidade: sinal.energossoma_intensidade || 0,
       psicossoma_detalhes: sinal.psicossoma_detalhes || '',
       psicossoma_intensidade: sinal.psicossoma_intensidade || 0,
-      holossoma_detalhes: sinal.holossoma_detalhes || '',
-      holossoma_intensidade: sinal.holossoma_intensidade || 0,
+      mentalssoma_detalhes: sinal.mentalssoma_detalhes || '',
+      mentalssoma_intensidade: sinal.mentalssoma_intensidade || 0,
     });
     setEditId(sinal.id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
