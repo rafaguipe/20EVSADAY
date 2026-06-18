@@ -24,10 +24,20 @@ const Container = styled.div`
 const Title = styled.h1`
   font-family: 'Press Start 2P', monospace;
   font-size: 24px;
-  color: ${({ theme }) => theme.text};
+  color: ${props => props.theme.text};
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
 `;
 
 const Grid = styled.div`
@@ -38,15 +48,30 @@ const Grid = styled.div`
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 15px;
+    margin-bottom: 20px;
   }
 `;
 
 const Card = styled.div`
-  background: ${({ theme }) => theme.card};
-  border: 2px solid ${({ theme }) => theme.secondary};
+  background: ${props => props.theme.card};
+  border: 2px solid ${props => props.theme.secondary};
   border-radius: 8px;
   padding: 25px;
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
 `;
 
 const CardTitle = styled.h2`
@@ -55,6 +80,16 @@ const CardTitle = styled.h2`
   color: #ffffff;
   margin-bottom: 20px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
 `;
 
 const ProfileInfo = styled.div`
@@ -62,6 +97,18 @@ const ProfileInfo = styled.div`
   align-items: center;
   gap: 20px;
   margin-bottom: 30px;
+  
+  @media (max-width: 768px) {
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
 `;
 
 const Avatar = styled.div`
@@ -74,6 +121,18 @@ const Avatar = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 40px;
+  
+  @media (max-width: 768px) {
+    width: 70px;
+    height: 70px;
+    font-size: 35px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+  }
 `;
 
 const UserInfo = styled.div`
@@ -85,12 +144,30 @@ const Username = styled.div`
   font-size: 18px;
   color: #ffffff;
   margin-bottom: 8px;
+  
+  @media (max-width: 768px) {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
 `;
 
 const Email = styled.div`
   font-family: 'Press Start 2P', monospace;
   font-size: 12px;
   color: #6a6a6a;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+  }
 `;
 
 const AvatarSection = styled.div`
