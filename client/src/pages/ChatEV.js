@@ -12,6 +12,15 @@
     padding: 20px;
     background: #1a1a1a;
     min-height: calc(100vh - 100px);
+    
+    @media (max-width: 768px) {
+      padding: 10px;
+      min-height: calc(100vh - 80px);
+    }
+    
+    @media (max-width: 480px) {
+      padding: 5px;
+    }
   `;
 
   const ChatHeader = styled.div`
@@ -29,6 +38,16 @@
     color: #4a6a8a;
     margin-bottom: 15px;
     text-transform: uppercase;
+    
+    @media (max-width: 768px) {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
   `;
 
   const ChatDescription = styled.p`
@@ -37,6 +56,17 @@
     color: #ffffff;
     line-height: 1.6;
     margin-bottom: 15px;
+    
+    @media (max-width: 768px) {
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 10px;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
   `;
 
   const ChatRules = styled.div`
@@ -73,6 +103,17 @@
     overflow-y: auto;
     margin-bottom: 20px;
     scroll-behavior: smooth;
+    
+    @media (max-width: 768px) {
+      height: 400px;
+      padding: 15px;
+    }
+    
+    @media (max-width: 480px) {
+      height: 300px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
   `;
 
   const MessageItem = styled.div`
@@ -108,6 +149,14 @@
     font-size: 12px;
     color: #4a6a8a;
     font-weight: bold;
+    
+    @media (max-width: 768px) {
+      font-size: 11px;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 10px;
+    }
   `;
 
   const MessageTime = styled.span`
@@ -115,6 +164,14 @@
     font-size: 10px;
     color: #666;
     margin-left: auto;
+    
+    @media (max-width: 768px) {
+      font-size: 9px;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 8px;
+    }
   `;
 
   const MessageType = styled.span`
@@ -142,6 +199,16 @@
     line-height: 1.5;
     margin: 0;
     word-wrap: break-word;
+    
+    @media (max-width: 768px) {
+      font-size: 11px;
+      line-height: 1.4;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 10px;
+      line-height: 1.3;
+    }
   `;
 
   const MessageForm = styled.form`
@@ -152,6 +219,16 @@
     border: 2px solid #4a4a4a;
     border-radius: 12px;
     padding: 20px;
+    
+    @media (max-width: 768px) {
+      padding: 15px;
+      gap: 12px;
+    }
+    
+    @media (max-width: 480px) {
+      padding: 10px;
+      gap: 10px;
+    }
   `;
 
   const MessageTypeSelect = styled.select`
@@ -159,10 +236,22 @@
     font-size: 12px;
     background: #1a1a1a;
     color: #ffffff;
-    border: 2px solid #4a6a8a;
+    border:2px solid #4a6a8a;
     border-radius: 6px;
     padding: 10px;
     outline: none;
+    min-height: 48px;
+    
+    @media (max-width: 768px) {
+      font-size: 11px;
+      padding: 8px;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 10px;
+      padding: 8px;
+      width: 100%;
+    }
     
     &:focus {
       border-color: #357a6a;
@@ -180,6 +269,18 @@
     min-height: 100px;
     resize: vertical;
     outline: none;
+    
+    @media (max-width: 768px) {
+      font-size: 11px;
+      padding: 12px;
+      min-height: 80px;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 10px;
+      padding: 10px;
+      min-height: 60px;
+    }
     
     &:focus {
       border-color: #357a6a;
@@ -200,6 +301,19 @@
     padding: 15px 30px;
     cursor: pointer;
     transition: background 0.2s;
+    min-height: 48px;
+    min-width: 48px;
+    
+    @media (max-width: 768px) {
+      font-size: 12px;
+      padding: 12px 20px;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 11px;
+      padding: 10px 15px;
+      width: 100%;
+    }
     
     &:hover {
       background: #357a6a;
@@ -225,6 +339,89 @@
     color: #666;
     font-family: 'Press Start 2P', monospace;
     font-size: 12px;
+  `;
+
+  // Componentes para modais DM responsivos
+  const ModalOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    
+    @media (max-width: 768px) {
+      padding: 10px;
+    }
+    
+    @media (max-width: 480px) {
+      padding: 5px;
+      align-items: flex-start;
+      padding-top: 20px;
+    }
+  `;
+
+  const ModalContent = styled.div`
+    background: #2a2a2a;
+    border: 2px solid #9C27B0;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow: auto;
+    
+    @media (max-width: 768px) {
+      padding: 15px;
+      width: 95%;
+    }
+    
+    @media (max-width: 480px) {
+      padding: 10px;
+      width: 100%;
+      max-height: 90vh;
+      border-radius: 8px;
+    }
+  `;
+
+  const DMTitle = styled.h3`
+    color: #9C27B0;
+    margin: 0;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 11px;
+    }
+  `;
+
+  const CloseButton = styled.button`
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+    min-height: 48px;
+    min-width: 48px;
+    
+    @media (max-width: 768px) {
+      font-size: 18px;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 16px;
+      min-height: 40px;
+      min-width: 40px;
+    }
   `;
 
   const ChatEV = () => {
@@ -664,54 +861,20 @@
 
         {/* Formulário de DM */}
         {showDMForm && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000
-          }}>
-            <div style={{
-              background: '#2a2a2a',
-              border: '2px solid #9C27B0',
-              borderRadius: '12px',
-              padding: '20px',
-              maxWidth: '500px',
-              width: '90%',
-              maxHeight: '80vh',
-              overflow: 'auto'
-            }}>
+          <ModalOverlay>
+            <ModalContent>
               <div style={{ 
                 display: 'flex', 
                 justifyContent: 'space-between', 
                 alignItems: 'center',
                 marginBottom: '20px'
               }}>
-                <h3 style={{ 
-                  color: '#9C27B0', 
-                  margin: 0,
-                  fontFamily: 'Press Start 2P, monospace',
-                  fontSize: '14px'
-                }}>
+                <DMTitle>
                   💬 Mensagem Privada para {dmReceiver?.username}
-                </h3>
-                <button
-                  onClick={closeDMForm}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#666',
-                    fontSize: '20px',
-                    cursor: 'pointer'
-                  }}
-                >
+                </DMTitle>
+                <CloseButton onClick={closeDMForm}>
                   ✕
-                </button>
+                </CloseButton>
               </div>
 
               <form onSubmit={sendDM}>
@@ -743,60 +906,26 @@
                   {sendingDM ? 'Enviando...' : '📤 Enviar DM'}
                 </SubmitButton>
               </form>
-            </div>
-          </div>
+            </ModalContent>
+          </ModalOverlay>
         )}
 
         {/* Lista de conversas DM */}
         {showDMList && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000
-          }}>
-            <div style={{
-              background: '#2a2a2a',
-              border: '2px solid #9C27B0',
-              borderRadius: '12px',
-              padding: '20px',
-              maxWidth: '600px',
-              width: '90%',
-              maxHeight: '80vh',
-              overflow: 'auto'
-            }}>
+          <ModalOverlay>
+            <ModalContent>
               <div style={{ 
                 display: 'flex', 
                 justifyContent: 'space-between', 
                 alignItems: 'center',
                 marginBottom: '20px'
               }}>
-                <h3 style={{ 
-                  color: '#9C27B0', 
-                  margin: 0,
-                  fontFamily: 'Press Start 2P, monospace',
-                  fontSize: '14px'
-                }}>
+                <DMTitle>
                   💬 Minhas Conversas Privadas
-                </h3>
-                <button
-                  onClick={closeDMList}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#666',
-                    fontSize: '20px',
-                    cursor: 'pointer'
-                  }}
-                >
+                </DMTitle>
+                <CloseButton onClick={closeDMList}>
                   ✕
-                </button>
+                </CloseButton>
               </div>
 
               {dmConversations.length === 0 ? (
@@ -857,60 +986,26 @@
                   ))}
                 </div>
               )}
-            </div>
-          </div>
+            </ModalContent>
+          </ModalOverlay>
         )}
 
         {/* Visualização de conversa DM */}
         {selectedConversation && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000
-          }}>
-            <div style={{
-              background: '#2a2a2a',
-              border: '2px solid #9C27B0',
-              borderRadius: '12px',
-              padding: '20px',
-              maxWidth: '600px',
-              width: '90%',
-              maxHeight: '80vh',
-              overflow: 'auto'
-            }}>
+          <ModalOverlay>
+            <ModalContent>
               <div style={{ 
                 display: 'flex', 
                 justifyContent: 'space-between', 
                 alignItems: 'center',
                 marginBottom: '20px'
               }}>
-                <h3 style={{ 
-                  color: '#9C27B0', 
-                  margin: 0,
-                  fontFamily: 'Press Start 2P, monospace',
-                  fontSize: '14px'
-                }}>
+                <DMTitle>
                   💬 Conversa com {dmConversations.find(c => c.other_user_id === selectedConversation)?.other_username || 'Usuário'}
-                </h3>
-                <button
-                  onClick={closeDMList}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#666',
-                    fontSize: '20px',
-                    cursor: 'pointer'
-                  }}
-                >
+                </DMTitle>
+                <CloseButton onClick={() => setSelectedConversation(null)}>
                   ✕
-                </button>
+                </CloseButton>
               </div>
 
               {loadingDM ? (
@@ -956,8 +1051,8 @@
                   )}
                 </div>
               )}
-            </div>
-          </div>
+            </ModalContent>
+          </ModalOverlay>
         )}
       </ChatContainer>
     );

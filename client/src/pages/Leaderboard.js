@@ -7,6 +7,14 @@ const Container = styled.div`
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 10px;
+  }
 `;
 
 const Title = styled.h1`
@@ -16,6 +24,16 @@ const Title = styled.h1`
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
 `;
 
 const TabContainer = styled.div`
@@ -24,6 +42,17 @@ const TabContainer = styled.div`
   margin-bottom: 20px;
   flex-wrap: wrap;
   gap: 10px;
+  
+  @media (max-width: 768px) {
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
 `;
 
 const FilterContainer = styled.div`
@@ -32,6 +61,17 @@ const FilterContainer = styled.div`
   margin-bottom: 20px;
   gap: 10px;
   flex-wrap: wrap;
+  
+  @media (max-width: 768px) {
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
 `;
 
 const FilterButton = styled.button`
@@ -44,6 +84,8 @@ const FilterButton = styled.button`
   cursor: pointer;
   text-transform: uppercase;
   transition: all 0.3s ease;
+  min-height: 48px;
+  min-width: 48px;
   
   &:hover {
     background: ${props => props.active ? '#6a8aaa' : '#4a4a4a'};
@@ -53,6 +95,12 @@ const FilterButton = styled.button`
   @media (max-width: 768px) {
     font-size: 8px;
     padding: 6px 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+    padding: 10px 15px;
+    width: 100%;
   }
 `;
 
@@ -66,6 +114,8 @@ const Tab = styled.button`
   cursor: pointer;
   text-transform: uppercase;
   transition: all 0.3s ease;
+  min-height: 48px;
+  min-width: 48px;
   
   &:hover {
     background: ${props => props.active ? '#6a8aaa' : '#4a4a4a'};
@@ -76,6 +126,12 @@ const Tab = styled.button`
     font-size: 10px;
     padding: 10px 15px;
   }
+  
+  @media (max-width: 480px) {
+    font-size: 9px;
+    padding: 12px 15px;
+    width: 100%;
+  }
 `;
 
 const LeaderboardCard = styled.div`
@@ -84,6 +140,14 @@ const LeaderboardCard = styled.div`
   border-radius: 8px;
   padding: 25px;
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
 `;
 
 const LeaderboardHeader = styled.div`
@@ -93,6 +157,14 @@ const LeaderboardHeader = styled.div`
   margin-bottom: 20px;
   padding-bottom: 15px;
   border-bottom: 2px solid #4a4a4a;
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+  }
 `;
 
 const LeaderboardTitle = styled.h2`
@@ -100,6 +172,14 @@ const LeaderboardTitle = styled.h2`
   font-size: 16px;
   color: #ffffff;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
 `;
 
 const LeaderboardInfo = styled.div`
@@ -107,6 +187,15 @@ const LeaderboardInfo = styled.div`
   font-size: 10px;
   color: #6a6a6a;
   text-align: right;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+    text-align: left;
+  }
 `;
 
 const RankingItem = styled.div`
@@ -128,6 +217,12 @@ const RankingItem = styled.div`
     background: rgba(74, 106, 138, 0.2);
     border-left: 4px solid #4a6a8a;
   `}
+  
+  @media (max-width: 480px) {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px;
+  }
 `;
 
 const Rank = styled.div`
@@ -141,6 +236,16 @@ const Rank = styled.div`
   ${props => props.isTop3 && `
     color: #ffd700;
   `}
+  
+  @media (max-width: 768px) {
+    font-size: 16px;
+    width: 40px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 14px;
+    width: 35px;
+  }
 `;
 
 const Avatar = styled.div`
@@ -154,6 +259,20 @@ const Avatar = styled.div`
   justify-content: center;
   font-size: 20px;
   margin: 0 15px;
+  
+  @media (max-width: 768px) {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+    margin: 0 12px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    margin: 0 8px;
+  }
 `;
 
 const UserInfo = styled.div`
@@ -161,6 +280,11 @@ const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
+  min-width: 0; /* Permite que o texto quebre */
+  
+  @media (max-width: 480px) {
+    gap: 3px;
+  }
 `;
 
 const Username = styled.div`
@@ -168,12 +292,31 @@ const Username = styled.div`
   font-size: 14px;
   color: #ffffff;
   font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 11px;
+  }
 `;
 
 const UserStats = styled.div`
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
   color: #6a6a6a;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+  }
 `;
 
 const Score = styled.div`
@@ -183,6 +326,16 @@ const Score = styled.div`
   font-weight: bold;
   text-align: right;
   min-width: 80px;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+    min-width: 70px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 12px;
+    min-width: 60px;
+  }
 `;
 
 const LoadingText = styled.div`
@@ -191,6 +344,16 @@ const LoadingText = styled.div`
   color: #6a6a6a;
   text-align: center;
   padding: 40px;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    padding: 30px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    padding: 20px;
+  }
 `;
 
 const ErrorText = styled.div`
@@ -199,6 +362,16 @@ const ErrorText = styled.div`
   color: #ff6b6b;
   text-align: center;
   padding: 40px;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+    padding: 30px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    padding: 20px;
+  }
 `;
 
 const EmptyText = styled.div`
@@ -207,6 +380,16 @@ const EmptyText = styled.div`
   color: #6a6a6a;
   text-align: center;
   padding: 40px;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+    padding: 30px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    padding: 20px;
+  }
 `;
 
 const tabs = [

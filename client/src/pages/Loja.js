@@ -146,6 +146,10 @@ const ExternalLink = styled.a`
   font-size: 0.7rem;
   display: inline-block;
   margin-top: 8px;
+  min-height: 48px;
+  min-width: 48px;
+  display: flex;
+  align-items: center;
   
   &:hover {
     color: #357a6a;
@@ -173,6 +177,16 @@ const EmptyState = styled.div`
   color: #666;
   font-family: 'Press Start 2P', monospace;
   font-size: 14px;
+  
+  @media (max-width: 768px) {
+    padding: 40px 15px;
+    font-size: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 30px 10px;
+    font-size: 10px;
+  }
 `;
 
 const Loja = () => {

@@ -22,6 +22,17 @@ const FormCard = styled.div`
   width: 100%;
   max-width: 400px;
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    padding: 30px 20px;
+    max-width: 90%;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 20px 15px;
+    max-width: 95%;
+    border-radius: 6px;
+  }
 `;
 
 const Title = styled.h1`
@@ -31,6 +42,16 @@ const Title = styled.h1`
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
 `;
 
 const Form = styled.form`
@@ -60,6 +81,17 @@ const Input = styled.input`
   color: #ffffff;
   font-size: 14px;
   border-radius: 4px;
+  min-height: 48px;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    padding: 10px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 11px;
+    padding: 8px;
+  }
   
   &:focus {
     outline: none;
@@ -79,6 +111,19 @@ const SubmitButton = styled.button`
   text-transform: uppercase;
   transition: all 0.3s ease;
   margin-top: 10px;
+  min-height: 48px;
+  min-width: 48px;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    padding: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 11px;
+    padding: 10px;
+    width: 100%;
+  }
   
   &:hover {
     background: #4a6a8a;
@@ -100,6 +145,14 @@ const LinkText = styled.div`
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
   color: #6a6a6a;
+  
+  @media (max-width: 768px) {
+    font-size: 10px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 9px;
+  }
 `;
 
 const StyledLink = styled(Link)`
@@ -118,6 +171,39 @@ const ErrorMessage = styled.div`
   color: #ff6b6b;
   text-align: center;
   margin-top: 10px;
+`;
+
+const ResendButton = styled.button`
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 2px solid #4a6a8a;
+  background: transparent;
+  color: #4a6a8a;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 48px;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+    padding: 8px 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+    padding: 6px 10px;
+    width: 100%;
+  }
+  
+  &:hover {
+    background: rgba(74, 106, 138, 0.1);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
 
 const EmailInfo = styled.div`
@@ -243,23 +329,12 @@ const Login = () => {
           
           {showResendButton && (
             <div style={{ textAlign: 'center', marginTop: '10px' }}>
-              <button
+              <ResendButton
                 onClick={handleResendConfirmation}
                 disabled={loading}
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: 6,
-                  border: '2px solid #4a6a8a',
-                  background: 'transparent',
-                  color: '#4a6a8a',
-                  fontFamily: 'Press Start 2P, monospace',
-                  fontSize: 10,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
               >
                 📧 Reenviar Confirmação
-              </button>
+              </ResendButton>
             </div>
           )}
         </Form>

@@ -16,10 +16,20 @@ const Container = styled.div`
 const Title = styled.h1`
   font-family: 'Press Start 2P', monospace;
   font-size: 24px;
-  color: ${({ theme }) => theme.text};
+  color: ${props => props.theme.text};
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
 `;
 
 const Grid = styled.div`
@@ -34,11 +44,19 @@ const Grid = styled.div`
 `;
 
 const Card = styled.div`
-  background: ${({ theme }) => theme.card};
-  border: 2px solid ${({ theme }) => theme.secondary};
+  background: ${props => props.theme.card};
+  border: 2px solid ${props => props.theme.secondary};
   border-radius: 8px;
   padding: 25px;
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
 `;
 
 const CardTitle = styled.h2`
@@ -47,6 +65,16 @@ const CardTitle = styled.h2`
   color: #ffffff;
   margin-bottom: 20px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
 `;
 
 const ProfileInfo = styled.div`
@@ -54,6 +82,18 @@ const ProfileInfo = styled.div`
   align-items: center;
   gap: 20px;
   margin-bottom: 30px;
+  
+  @media (max-width: 768px) {
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
 `;
 
 const Avatar = styled.div`
@@ -66,6 +106,18 @@ const Avatar = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 40px;
+  
+  @media (max-width: 768px) {
+    width: 70px;
+    height: 70px;
+    font-size: 35px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+  }
 `;
 
 const UserInfo = styled.div`
@@ -77,12 +129,30 @@ const Username = styled.div`
   font-size: 18px;
   color: #ffffff;
   margin-bottom: 8px;
+  
+  @media (max-width: 768px) {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
 `;
 
 const Email = styled.div`
   font-family: 'Press Start 2P', monospace;
   font-size: 12px;
   color: #6a6a6a;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+  }
 `;
 
 const AvatarSection = styled.div`
@@ -94,6 +164,16 @@ const AvatarGrid = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
   margin-top: 15px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
 `;
 
 const AvatarOption = styled.div`
@@ -108,6 +188,20 @@ const AvatarOption = styled.div`
   font-size: 32px;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-height: 48px;
+  min-width: 48px;
+  
+  @media (max-width: 768px) {
+    width: 55px;
+    height: 55px;
+    font-size: 28px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
   
   &:hover {
     border-color: #6a6a6a;
@@ -120,6 +214,16 @@ const StatsGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 15px;
   margin-bottom: 20px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+  }
 `;
 
 const StatCard = styled.div`
@@ -129,6 +233,14 @@ const StatCard = styled.div`
   padding: 15px;
   text-align: center;
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    padding: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 10px;
+  }
 `;
 
 const StatValue = styled.div`
@@ -136,6 +248,14 @@ const StatValue = styled.div`
   font-size: 20px;
   color: #ffffff;
   margin-bottom: 5px;
+  
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 16px;
+  }
 `;
 
 const StatLabel = styled.div`
@@ -143,6 +263,14 @@ const StatLabel = styled.div`
   font-size: 8px;
   color: #6a6a6a;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 7px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 6px;
+  }
 `;
 
 const HistoryChart = styled.div`
@@ -152,6 +280,15 @@ const HistoryChart = styled.div`
   padding: 20px;
   backdrop-filter: blur(10px);
   margin-top: 20px;
+  overflow-x: auto;
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
 `;
 
 const ChartTitle = styled.h3`
@@ -160,12 +297,33 @@ const ChartTitle = styled.h3`
   color: #ffffff;
   margin-bottom: 15px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    margin-bottom: 10px;
+  }
 `;
 
 const ChartBar = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 8px;
+  }
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    margin-bottom: 12px;
+  }
 `;
 
 const ChartLabel = styled.div`
@@ -174,6 +332,18 @@ const ChartLabel = styled.div`
   color: #ffffff;
   width: 80px;
   min-width: 80px;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+    width: 70px;
+    min-width: 70px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+    width: auto;
+    min-width: auto;
+  }
 `;
 
 const ChartBarFill = styled.div`
@@ -183,6 +353,17 @@ const ChartBarFill = styled.div`
   margin: 0 10px;
   min-width: 20px;
   transition: width 0.3s ease;
+  
+  @media (max-width: 768px) {
+    height: 18px;
+    margin: 0 8px;
+  }
+  
+  @media (max-width: 480px) {
+    height: 16px;
+    margin: 5px 0;
+    width: 100% !important;
+  }
 `;
 
 const ChartValue = styled.div`
@@ -191,6 +372,17 @@ const ChartValue = styled.div`
   color: #6a6a6a;
   min-width: 60px;
   text-align: right;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+    min-width: 50px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+    min-width: auto;
+    text-align: left;
+  }
 `;
 
 const LoadingText = styled.div`
@@ -199,6 +391,16 @@ const LoadingText = styled.div`
   color: #6a6a6a;
   text-align: center;
   padding: 40px;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    padding: 30px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    padding: 20px;
+  }
 `;
 
 const ToggleContainer = styled.div`
@@ -206,13 +408,32 @@ const ToggleContainer = styled.div`
   align-items: center;
   gap: 12px;
   margin-bottom: 16px;
+  
+  @media (max-width: 768px) {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
 `;
 
 const ToggleLabel = styled.span`
   font-family: 'Press Start 2P', monospace;
   font-size: 12px;
-  color: ${({ theme }) => theme.text};
+  color: ${props => props.theme.text};
   font-weight: bold;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+  }
 `;
 
 const ToggleSwitch = styled.label`
@@ -221,6 +442,16 @@ const ToggleSwitch = styled.label`
   width: 60px;
   height: 34px;
   cursor: pointer;
+  
+  @media (max-width: 768px) {
+    width: 54px;
+    height: 30px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 48px;
+    height: 27px;
+  }
 `;
 
 const ToggleSlider = styled.span`
@@ -279,6 +510,16 @@ const ExportSection = styled.div`
   background: rgba(74, 106, 138, 0.1);
   border: 2px solid #4a6a8a;
   border-radius: 8px;
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+    margin-top: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+    margin-top: 12px;
+  }
 `;
 
 const ExportTitle = styled.h3`
@@ -287,30 +528,49 @@ const ExportTitle = styled.h3`
   color: #4a6a8a;
   margin-bottom: 15px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    margin-bottom: 10px;
+  }
 `;
 
 const ExportButtons = styled.div`
   display: flex;
   gap: 15px;
   flex-wrap: wrap;
+  
+  @media (max-width: 768px) {
+    gap: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 10px;
+  }
 `;
 
 const ExportButton = styled.button`
   font-family: 'Press Start 2P', monospace;
   padding: 12px 20px;
-  border: 2px solid ${({ variant }) => {
-    if (variant === 'txt') return '#ffc107';
-    if (variant === 'csv') return '#28a745';
+  border: 2px solid ${props => {
+    if (props.variant === 'txt') return '#ffc107';
+    if (props.variant === 'csv') return '#28a745';
     return '#4a6a8a';
   }};
-  background: ${({ variant }) => {
-    if (variant === 'txt') return 'rgba(255, 193, 7, 0.1)';
-    if (variant === 'csv') return 'rgba(40, 167, 69, 0.1)';
+  background: ${props => {
+    if (props.variant === 'txt') return 'rgba(255, 193, 7, 0.1)';
+    if (props.variant === 'csv') return 'rgba(40, 167, 69, 0.1)';
     return 'rgba(74, 106, 138, 0.1)';
   }};
-  color: ${({ variant }) => {
-    if (variant === 'txt') return '#ffc107';
-    if (variant === 'csv') return '#28a745';
+  color: ${props => {
+    if (props.variant === 'txt') return '#ffc107';
+    if (props.variant === 'csv') return '#28a745';
     return '#4a6a8a';
   }};
   border-radius: 6px;
@@ -320,11 +580,25 @@ const ExportButton = styled.button`
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 48px;
+  min-width: 48px;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+    padding: 10px 16px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    padding: 12px 20px;
+    width: 100%;
+    justify-content: center;
+  }
   
   &:hover {
-    background: ${({ variant }) => {
-      if (variant === 'txt') return '#ffc107';
-      if (variant === 'csv') return '#28a745';
+    background: ${props => {
+      if (props.variant === 'txt') return '#ffc107';
+      if (props.variant === 'csv') return '#28a745';
       return '#4a6a8a';
     }};
     color: white;
@@ -344,22 +618,54 @@ const ExportInfo = styled.p`
   color: #6a6a6a;
   margin-top: 15px;
   line-height: 1.4;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+    margin-top: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
 `;
 
 const TelegramSection = styled.div`
   margin-top: 20px;
   padding: 20px;
-  background: rgba(74, 106, 138, 0.1);
-  border: 2px solid #4a6a8a;
+  background: rgba(0, 136, 204, 0.1);
+  border: 2px solid #0088cc;
   border-radius: 8px;
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+    margin-top: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+    margin-top: 12px;
+  }
 `;
 
 const TelegramText = styled.p`
   font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
-  line-height: 1.5;
-  margin: 0 0 12px;
+  font-size: 12px;
+  color: #ffffff;
+  margin-bottom: 15px;
+  line-height: 1.6;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+    margin-bottom: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    margin-bottom: 10px;
+    line-height: 1.8;
+  }
 `;
 
 const TelegramCode = styled.div`
@@ -372,12 +678,32 @@ const TelegramCode = styled.div`
   border-radius: 6px;
   text-align: center;
   margin-bottom: 12px;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    padding: 10px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    padding: 8px;
+    word-break: break-all;
+  }
 `;
 
 const TelegramButtonRow = styled.div`
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  
+  @media (max-width: 768px) {
+    gap: 10px;
+  }
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 8px;
+  }
 `;
 
 const TelegramButton = styled.button`
@@ -390,19 +716,32 @@ const TelegramButton = styled.button`
   color: #4a6a8a;
   cursor: pointer;
   transition: all 0.2s ease;
-
+  min-height: 48px;
+  min-width: 48px;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+    padding: 8px 14px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+    padding: 12px 20px;
+    width: 100%;
+  }
+  
   &:hover {
     background: #4a6a8a;
-    color: #ffffff;
+    color: white;
+    transform: translateY(-2px);
   }
-
+  
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
   }
 `;
-
-const Profile = () => {
   const { user, updateAvatar } = useAuth();
   const { themeName, toggleTheme } = useTheme();
   const [profile, setProfile] = useState(null);

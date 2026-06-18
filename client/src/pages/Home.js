@@ -46,6 +46,11 @@ const Title = styled.h1`
   @media (max-width: 768px) {
     font-size: 24px;
   }
+  
+  @media (max-width: 480px) {
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
 `;
 
 const Subtitle = styled.p`
@@ -58,6 +63,12 @@ const Subtitle = styled.p`
   
   @media (max-width: 768px) {
     font-size: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    line-height: 1.6;
+    margin-bottom: 30px;
   }
 `;
 
@@ -79,6 +90,14 @@ const FeatureCard = styled.div`
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   
+  @media (max-width: 768px) {
+    padding: 25px 20px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 20px 15px;
+  }
+  
   &:hover {
     border-color: #6a6a6a;
     transform: translateY(-5px);
@@ -88,6 +107,16 @@ const FeatureCard = styled.div`
 const FeatureIcon = styled.div`
   font-size: 48px;
   margin-bottom: 20px;
+  
+  @media (max-width: 768px) {
+    font-size: 40px;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
 `;
 
 const FeatureTitle = styled.h3`
@@ -96,6 +125,16 @@ const FeatureTitle = styled.h3`
   color: #ffffff;
   margin-bottom: 15px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
 `;
 
 const FeatureText = styled.p`
@@ -103,6 +142,16 @@ const FeatureText = styled.p`
   font-size: 12px;
   color: #6a6a6a;
   line-height: 1.6;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    line-height: 1.4;
+  }
 `;
 
 const CTAButtons = styled.div`
@@ -126,6 +175,22 @@ const CTAButton = styled(Link)`
   text-decoration: none;
   text-transform: uppercase;
   transition: all 0.3s ease;
+  min-height: 48px;
+  min-width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    padding: 12px 20px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 11px;
+    padding: 10px 15px;
+    width: 100%;
+  }
   
   &:hover {
     background: #4a4a4a;
@@ -160,6 +225,14 @@ const StatCard = styled.div`
   padding: 20px;
   text-align: center;
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
 `;
 
 const StatNumber = styled.div`
@@ -167,6 +240,16 @@ const StatNumber = styled.div`
   font-size: 24px;
   color: #ffffff;
   margin-bottom: 10px;
+  
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
 `;
 
 const StatLabel = styled.div`
@@ -174,6 +257,14 @@ const StatLabel = styled.div`
   font-size: 10px;
   color: #6a6a6a;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+  }
 `;
 
 const AboutSection = styled.div`
@@ -194,6 +285,16 @@ const AboutTitle = styled.h2`
   text-align: center;
   margin-bottom: 40px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 30px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 16px;
+    margin-bottom: 25px;
+  }
 `;
 
 const AboutCard = styled.div`
@@ -203,6 +304,16 @@ const AboutCard = styled.div`
   padding: 30px;
   margin-bottom: 30px;
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    padding: 25px 20px;
+    margin-bottom: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 20px 15px;
+    margin-bottom: 20px;
+  }
 `;
 
 const AboutCardHeader = styled.div`
@@ -210,11 +321,31 @@ const AboutCardHeader = styled.div`
   align-items: center;
   gap: 15px;
   margin-bottom: 20px;
+  
+  @media (max-width: 768px) {
+    gap: 12px;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
 `;
 
 const AboutCardLogo = styled.img`
   height: 60px;
   width: auto;
+  
+  @media (max-width: 768px) {
+    height: 50px;
+  }
+  
+  @media (max-width: 480px) {
+    height: 40px;
+  }
 `;
 
 const AboutCardTitle = styled.h3`
@@ -222,6 +353,14 @@ const AboutCardTitle = styled.h3`
   font-size: 16px;
   color: #ffffff;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
 `;
 
 const AboutCardText = styled.div`
@@ -230,6 +369,16 @@ const AboutCardText = styled.div`
   color: #6a6a6a;
   line-height: 1.6;
   white-space: pre-wrap;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    line-height: 1.4;
+  }
 `;
 
 // Estilos para o componente de progresso do próximo marco na Home
@@ -247,6 +396,11 @@ const MilestoneContainer = styled.div`
     max-width: 100%;
     padding: 15px;
   }
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+    border-radius: 8px;
+  }
 `;
 
 const MilestoneTitle = styled.div`
@@ -258,6 +412,11 @@ const MilestoneTitle = styled.div`
   
   @media (max-width: 768px) {
     font-size: 10px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 9px;
+    margin-bottom: 10px;
   }
 `;
 
@@ -308,6 +467,11 @@ const MilestoneProgressText = styled.div`
   @media (max-width: 768px) {
     font-size: 8px;
   }
+  
+  @media (max-width: 480px) {
+    font-size: 7px;
+    margin-top: 4px;
+  }
 `;
 
 const MilestoneCurrentTotal = styled.div`
@@ -316,10 +480,15 @@ const MilestoneCurrentTotal = styled.div`
   color: #4CAF50;
   text-align: center;
   font-weight: bold;
-  margin-bottom: 6px;
+  margin-bottom:6px;
   
   @media (max-width: 768px) {
     font-size: 14px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 12px;
+    margin-bottom: 4px;
   }
 `;
 
@@ -331,6 +500,10 @@ const MilestoneNext = styled.div`
   
   @media (max-width: 768px) {
     font-size: 8px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 7px;
   }
 `;
 

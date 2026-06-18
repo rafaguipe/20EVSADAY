@@ -15,12 +15,23 @@ const Container = styled.div`
 
 const FormCard = styled.div`
   background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
+  border:2px solid #4a4a4a;
   border-radius: 8px;
   padding: 40px;
   width: 100%;
   max-width: 500px;
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    padding: 30px 20px;
+    max-width: 90%;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 20px 15px;
+    max-width: 95%;
+    border-radius: 6px;
+  }
 `;
 
 const Title = styled.h1`
@@ -30,6 +41,16 @@ const Title = styled.h1`
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
 `;
 
 const Form = styled.form`
@@ -59,6 +80,17 @@ const Input = styled.input`
   color: #ffffff;
   font-size: 14px;
   border-radius: 4px;
+  min-height: 48px;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    padding: 10px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 11px;
+    padding: 8px;
+  }
   
   &:focus {
     outline: none;
@@ -78,6 +110,16 @@ const AvatarGrid = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
   margin-top: 10px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
 `;
 
 const AvatarOption = styled.div`
@@ -92,6 +134,18 @@ const AvatarOption = styled.div`
   font-size: 32px;
   cursor: pointer;
   transition: all 0.3s ease;
+  
+  @media (max-width: 768px) {
+    width: 50px;
+    height: 50px;
+    font-size: 28px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 45px;
+    height: 45px;
+    font-size: 24px;
+  }
   
   &:hover {
     border-color: #6a6a6a;
@@ -110,6 +164,19 @@ const SubmitButton = styled.button`
   text-transform: uppercase;
   transition: all 0.3s ease;
   margin-top: 10px;
+  min-height: 48px;
+  min-width: 48px;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    padding: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 11px;
+    padding: 10px;
+    width: 100%;
+  }
   
   &:hover {
     background: #4a8a4a;
@@ -131,6 +198,14 @@ const LinkText = styled.div`
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
   color: #6a6a6a;
+  
+  @media (max-width: 768px) {
+    font-size: 10px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 9px;
+  }
 `;
 
 const StyledLink = styled(Link)`
@@ -167,13 +242,24 @@ const ModalOverlay = styled.div`
 
 const ModalBox = styled.div`
   background: #1a1a1a;
-  border: 3px solid #4a6a8a;
+  border:3px solid #4a6a8a;
   border-radius: 12px;
   padding: 30px;
   max-width: 500px;
   width: 90%;
   text-align: center;
   box-shadow: 0 0 30px rgba(74, 106, 138, 0.3);
+  
+  @media (max-width: 768px) {
+    padding: 25px 20px;
+    max-width: 85%;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 20px 15px;
+    max-width: 95%;
+    border-radius: 8px;
+  }
 `;
 
 const ModalTitle = styled.h2`
@@ -182,6 +268,16 @@ const ModalTitle = styled.h2`
   color: #4a6a8a;
   margin-bottom: 20px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
 `;
 
 const ModalMessage = styled.p`
@@ -190,11 +286,33 @@ const ModalMessage = styled.p`
   color: #ffffff;
   line-height: 1.6;
   margin-bottom: 25px;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    line-height: 1.4;
+    margin-bottom: 15px;
+  }
 `;
 
 const ModalIcon = styled.div`
   font-size: 48px;
   margin-bottom: 20px;
+  
+  @media (max-width: 768px) {
+    font-size: 40px;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
 `;
 
 const ModalButton = styled.button`
@@ -207,6 +325,19 @@ const ModalButton = styled.button`
   cursor: pointer;
   font-size: 12px;
   transition: background 0.2s;
+  min-height: 48px;
+  min-width: 48px;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+    padding: 10px 20px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    padding: 8px 16px;
+    width: 100%;
+  }
   
   &:hover {
     background: #357a6a;
@@ -247,10 +378,21 @@ const CheckboxLabel = styled.label`
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
   color: #ffffff;
-  line-height: 1.4;
+  line-height:1.4;
   cursor: pointer;
-  flex: 1;
+  flex:1;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+    line-height:1.3;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+    line-height:1.2;
+  }
 `;
+
 
 const avatars = ['😀', '😎', '🤖', '👾', '🐱', '🦊', '🐼', '🦁', '🐯', '🐸', '🐙', '🦄'];
 

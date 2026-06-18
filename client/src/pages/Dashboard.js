@@ -21,10 +21,20 @@ const Container = styled.div`
 const Title = styled.h1`
   font-family: 'Press Start 2P', monospace;
   font-size: 24px;
-  color: ${({ theme }) => theme.text};
+  color: ${props => props.theme.text};
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
 `;
 
 const Grid = styled.div`
@@ -39,11 +49,19 @@ const Grid = styled.div`
 `;
 
 const Card = styled.div`
-  background: ${({ theme }) => theme.card};
-  border: 2px solid ${({ theme }) => theme.secondary};
+  background: ${props => props.theme.card};
+  border: 2px solid ${props => props.theme.secondary};
   border-radius: 8px;
   padding: 25px;
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
 `;
 
 const CardTitle = styled.h2`
@@ -52,6 +70,16 @@ const CardTitle = styled.h2`
   color: #ffffff;
   margin-bottom: 20px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
 `;
 
 const Form = styled.form`
@@ -71,6 +99,14 @@ const Label = styled.label`
   font-size: 12px;
   color: #ffffff;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+  }
 `;
 
 const TextArea = styled.textarea`
@@ -94,9 +130,14 @@ const TextArea = styled.textarea`
   min-height: 48px;
   
   /* Responsive adjustments */
-  @media (max-width: 400px) {
-    padding: 10px;
+  @media (max-width: 768px) {
+    padding: 11px;
     font-size: 13px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 10px;
+    font-size: 12px;
     min-height: 60px;
   }
 `;
@@ -107,14 +148,14 @@ const ScoreButtons = styled.div`
   gap: 10px;
   margin-top: 10px;
   
-  /* Responsive: Stack vertically on very small screens */
-  @media (max-width: 400px) {
-    grid-template-columns: 1fr;
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
   }
   
-  /* Alternative: 3 columns on medium small screens */
-  @media (max-width: 480px) and (min-width: 401px) {
-    grid-template-columns: repeat(3, 1fr);
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
   }
 `;
 
@@ -126,7 +167,19 @@ const ScoreButton = styled.button`
   background: ${props => props.selected ? '#4a6a8a' : '#1a1a1a'};
   color: #ffffff;
   cursor: pointer;
-  transition: all 0.1s ease; /* Faster transition for better tactile feedback */
+  transition: all 0.1s ease;
+  min-height: 48px;
+  min-width: 48px;
+  
+  @media (max-width: 768px) {
+    font-size: 16px;
+    padding: 12px 8px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 14px;
+    padding: 10px 6px;
+  }
   
   &:hover {
     background: ${props => props.selected ? '#6a8aaa' : '#4a4a4a'};
@@ -137,16 +190,6 @@ const ScoreButton = styled.button`
   &:active {
     transform: translateY(0);
     background: ${props => props.selected ? '#3a5a7a' : '#0a0a0a'};
-  }
-  
-  /* Ensure minimum touch target size */
-  min-height: 48px;
-  min-width: 48px;
-  
-  /* Responsive padding adjustment */
-  @media (max-width: 400px) {
-    padding: 12px 8px;
-    font-size: 16px;
   }
 `;
 
@@ -161,6 +204,19 @@ const SubmitButton = styled.button`
   text-transform: uppercase;
   transition: all 0.1s ease;
   margin-top: 10px;
+  min-height: 48px;
+  min-width: 48px;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    padding: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 11px;
+    padding: 12px;
+    width: 100%;
+  }
   
   &:hover {
     background: #4a8a4a;
@@ -180,16 +236,6 @@ const SubmitButton = styled.button`
     transform: none;
     opacity: 0.7;
   }
-  
-  /* Ensure minimum touch target size */
-  min-height: 48px;
-  min-width: 48px;
-  
-  /* Responsive adjustments */
-  @media (max-width: 400px) {
-    padding: 12px;
-    font-size: 12px;
-  }
 `;
 
 const EscalaSection = styled.div`
@@ -199,6 +245,16 @@ const EscalaSection = styled.div`
   border: 2px solid #4a4a4a;
   border-radius: 8px;
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+    margin-top: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+    margin-top: 12px;
+  }
 `;
 
 const EscalaTitle = styled.h3`
@@ -208,12 +264,32 @@ const EscalaTitle = styled.h3`
   margin-bottom: 15px;
   text-transform: uppercase;
   text-align: center;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+    margin-bottom: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    margin-bottom: 10px;
+  }
 `;
 
 const EscalaGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 10px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 8px;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
 `;
 
 const EscalaCard = styled.div`
@@ -222,6 +298,14 @@ const EscalaCard = styled.div`
   border-radius: 6px;
   padding: 12px;
   transition: transform 0.2s;
+  
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 8px;
+  }
   
   &:hover {
     transform: translateY(-1px);
@@ -246,6 +330,17 @@ const NotaBadge = styled.span`
   margin-right: 10px;
   min-width: 30px;
   text-align: center;
+  
+  @media (max-width: 768px) {
+    font-size: 0.55rem;
+    padding: 3px 6px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.5rem;
+    padding: 3px 5px;
+    margin-right: 6px;
+  }
 `;
 
 const EscalaDescricao = styled.p`
@@ -254,6 +349,16 @@ const EscalaDescricao = styled.p`
   color: #ffffff;
   line-height: 1.3;
   margin: 0;
+  
+  @media (max-width: 768px) {
+    font-size: 0.45rem;
+    line-height: 1.4;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.4rem;
+    line-height: 1.5;
+  }
 `;
 
 const escalaAutoqualificacao = [
@@ -284,6 +389,18 @@ const StatsGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 15px;
   margin-bottom: 30px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
 `;
 
 const StatCard = styled.div`
@@ -293,6 +410,14 @@ const StatCard = styled.div`
   padding: 20px;
   text-align: center;
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
 `;
 
 const StatValue = styled.div`
@@ -300,6 +425,16 @@ const StatValue = styled.div`
   font-size: 24px;
   color: #ffffff;
   margin-bottom: 8px;
+  
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
 `;
 
 const StatLabel = styled.div`
@@ -307,6 +442,14 @@ const StatLabel = styled.div`
   font-size: 10px;
   color: #6a6a6a;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+  }
 `;
 
 const RecentEVs = styled.div`
@@ -315,6 +458,14 @@ const RecentEVs = styled.div`
   border-radius: 8px;
   padding: 25px;
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
 `;
 
 const EVItem = styled.div`
@@ -326,6 +477,13 @@ const EVItem = styled.div`
   
   &:last-child {
     border-bottom: none;
+  }
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
   }
 `;
 
@@ -340,12 +498,28 @@ const EVScore = styled.div`
   font-size: 18px;
   color: #ffffff;
   font-weight: bold;
+  
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `;
 
 const EVDate = styled.div`
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
   color: #6a6a6a;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+  }
 `;
 
 const EVNotes = styled.div`
@@ -356,6 +530,18 @@ const EVNotes = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+    max-width: 200px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    max-width: 100%;
+    white-space: normal;
+    word-break: break-word;
+  }
 `;
 
 const Dashboard = () => {

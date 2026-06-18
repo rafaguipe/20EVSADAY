@@ -7,6 +7,14 @@ const Container = styled.div`
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 10px;
+  }
 `;
 
 const Title = styled.h1`
@@ -16,6 +24,16 @@ const Title = styled.h1`
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
 `;
 
 const StatsGrid = styled.div`
@@ -23,6 +41,18 @@ const StatsGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 15px;
   margin-bottom: 30px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
 `;
 
 const StatCard = styled.div`
@@ -32,6 +62,14 @@ const StatCard = styled.div`
   padding: 20px;
   text-align: center;
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
 `;
 
 const StatValue = styled.div`
@@ -39,6 +77,16 @@ const StatValue = styled.div`
   font-size: 24px;
   color: #ffffff;
   margin-bottom: 8px;
+  
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
 `;
 
 const StatLabel = styled.div`
@@ -46,6 +94,14 @@ const StatLabel = styled.div`
   font-size: 10px;
   color: #6a6a6a;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+  }
 `;
 
 const BadgesGrid = styled.div`
@@ -53,6 +109,18 @@ const BadgesGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   margin-bottom: 30px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
 `;
 
 const BadgeCard = styled.div`
@@ -63,6 +131,14 @@ const BadgeCard = styled.div`
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   position: relative;
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
   
   ${props => props.earned && `
     box-shadow: 0 0 20px rgba(74, 138, 74, 0.3);
@@ -79,11 +155,29 @@ const BadgeHeader = styled.div`
   align-items: center;
   gap: 15px;
   margin-bottom: 15px;
+  
+  @media (max-width: 768px) {
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
 `;
 
 const BadgeIcon = styled.div`
   font-size: 48px;
   opacity: ${props => props.earned ? 1 : 0.3};
+  
+  @media (max-width: 768px) {
+    font-size: 40px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 32px;
+  }
 `;
 
 const BadgeInfo = styled.div`
@@ -96,6 +190,16 @@ const BadgeName = styled.div`
   color: #ffffff;
   margin-bottom: 5px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 11px;
+    margin-bottom: 3px;
+  }
 `;
 
 const BadgeDescription = styled.div`
@@ -103,10 +207,28 @@ const BadgeDescription = styled.div`
   font-size: 10px;
   color: #6a6a6a;
   line-height: 1.4;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+    line-height: 1.5;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+    line-height: 1.6;
+  }
 `;
 
 const BadgeProgress = styled.div`
   margin-top: 15px;
+  
+  @media (max-width: 768px) {
+    margin-top: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    margin-top: 10px;
+  }
 `;
 
 const ProgressBar = styled.div`
@@ -117,6 +239,16 @@ const ProgressBar = styled.div`
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 8px;
+  
+  @media (max-width: 768px) {
+    height: 6px;
+    margin-bottom: 6px;
+  }
+  
+  @media (max-width: 480px) {
+    height: 5px;
+    margin-bottom: 5px;
+  }
 `;
 
 const ProgressFill = styled.div`
@@ -131,6 +263,14 @@ const ProgressText = styled.div`
   font-size: 10px;
   color: #6a6a6a;
   text-align: center;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+  }
 `;
 
 const EarnedBadge = styled.div`
@@ -144,6 +284,20 @@ const EarnedBadge = styled.div`
   padding: 5px 10px;
   border-radius: 4px;
   text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+    padding: 4px 8px;
+    top: -8px;
+    right: -8px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+    padding: 3px 6px;
+    top: -6px;
+    right: -6px;
+  }
 `;
 
 const RecentBadges = styled.div`
@@ -152,6 +306,14 @@ const RecentBadges = styled.div`
   border-radius: 8px;
   padding: 25px;
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
 `;
 
 const RecentBadgeItem = styled.div`
@@ -164,10 +326,25 @@ const RecentBadgeItem = styled.div`
   &:last-child {
     border-bottom: none;
   }
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+  }
 `;
 
 const RecentBadgeIcon = styled.div`
   font-size: 32px;
+  
+  @media (max-width: 768px) {
+    font-size: 28px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 24px;
+  }
 `;
 
 const RecentBadgeInfo = styled.div`
@@ -179,12 +356,30 @@ const RecentBadgeName = styled.div`
   font-size: 12px;
   color: #ffffff;
   margin-bottom: 5px;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    margin-bottom: 3px;
+  }
 `;
 
 const RecentBadgeDate = styled.div`
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
   color: #6a6a6a;
+  
+  @media (max-width: 768px) {
+    font-size: 9px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 8px;
+  }
 `;
 
 const LoadingText = styled.div`
@@ -193,6 +388,16 @@ const LoadingText = styled.div`
   color: #6a6a6a;
   text-align: center;
   padding: 40px;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    padding: 30px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    padding: 20px;
+  }
 `;
 
 const ErrorText = styled.div`
@@ -201,6 +406,16 @@ const ErrorText = styled.div`
   color: #ff6b6b;
   text-align: center;
   padding: 40px;
+  
+  @media (max-width: 768px) {
+    font-size: 11px;
+    padding: 30px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 10px;
+    padding: 20px;
+  }
 `;
 
 const Badges = () => {
