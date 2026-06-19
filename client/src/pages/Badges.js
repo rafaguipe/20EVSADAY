@@ -433,6 +433,29 @@ const Badges = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Garantir que o badge "5 Anos LIDERARE" exista no banco
+  useEffect(() => {
+    const ensureLiderareBadge = async () => {
+      try {
+        const { data: existing } = await supabase
+          .from('badges')
+          .select('id')
+          .eq('name', '5 Anos LIDERARE')
+          .maybeSingle();
+        if (!existing) {
+          await supabase.from('badges').insert({
+            name: '5 Anos LIDERARE',
+            description: 'Comemorativo de 5 anos da LIDERARE. Registre um EV de 1 a 31 de julho de 2026.',
+            icon: '🎂'
+          });
+        }
+      } catch (e) {
+        // silencioso — badge pode já existir
+      }
+    };
+    ensureLiderareBadge();
+  }, []);
+
   const getBadgeDisplayName = (name) => {
     const nameMap = {
       'milestone_1000_points': 'Marco de 1000 Pontos',
@@ -749,6 +772,19 @@ const Badges = () => {
             current = hasExperimentEV ? 1 : 0;
             target = 1;
             earned = hasExperimentEV;
+            break;
+          case '5 Anos LIDERARE':
+            // Verificar se fez EV entre 1 e 31 de julho de 2026 (horário de Brasília, UTC-3)
+            const liderareStart = new Date('2026-07-01T00:00:00-03:00');
+            const liderareEnd = new Date('2026-07-31T23:59:59-03:00');
+            const hasLiderareEV = userEVs?.some(ev => {
+              const evDate = new Date(ev.created_at);
+              return evDate >= liderareStart && evDate <= liderareEnd;
+            }) || false;
+            progress = hasLiderareEV ? 100 : 0;
+            current = hasLiderareEV ? 1 : 0;
+            target = 1;
+            earned = hasLiderareEV;
             break;
           case 'Virada Conscienciológica 2026':
             // Verificar se fez EV entre 22 e 24 de agosto de 2026 (horário de Brasília, UTC-3)
