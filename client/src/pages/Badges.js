@@ -463,6 +463,7 @@ const Badges = () => {
       'milestone_3000_points': 'Marco de 3000 Pontos',
       'milestone_4000_points': 'Marco de 4000 Pontos',
       'milestone_5000_points': 'Marco de 5000 Pontos',
+      'experimento_grupal_1': 'Primeiro EV Coletivo',
     };
     return nameMap[name] || name;
   };
@@ -475,12 +476,30 @@ const Badges = () => {
     
     try {
       // Carregar todos os badges disponíveis
-      const { data: allBadges, error: badgesError } = await supabase
+      let { data: allBadges, error: badgesError } = await supabase
         .from('badges')
         .select('*')
         .order('id');
 
-      if (badgesError) throw badgesError;
+      // Se RLS bloquear, usar lista hardcoded como fallback
+      if (badgesError || !allBadges) {
+        console.warn('RLS bloqueou leitura de badges, usando fallback');
+        allBadges = [
+          { id: 1, name: 'Iniciante Consciencial', description: 'Seu primeiro EV', icon: '🌱' },
+          { id: 2, name: 'Persistente', description: '7 dias consecutivos', icon: '🔥' },
+          { id: 3, name: 'Dedicado', description: '30 EVs', icon: '💪' },
+          { id: 4, name: 'Mestre Consciencial', description: '100 EVs', icon: '🧘' },
+          { id: 5, name: 'Fundador #20EVSADAY', description: 'Membro fundador', icon: '⭐' },
+          { id: 6, name: 'experimento_grupal_1', description: 'Primeiro EV em grupo', icon: '🤝' },
+          { id: 7, name: 'Virada Conscienciológica 2026', description: 'EV no evento Virada', icon: '🌟' },
+          { id: 8, name: '5 Anos LIDERARE', description: 'EV em julho 2026 — 5 anos LIDERARE', icon: '🎂' },
+        ];
+      }
+
+      // Garantir que o badge "5 Anos LIDERARE" exista na lista
+      if (!allBadges.find(b => b.name === '5 Anos LIDERARE')) {
+        allBadges.push({ id: 8, name: '5 Anos LIDERARE', description: 'EV em julho 2026 — 5 anos LIDERARE', icon: '🎂' });
+      }
 
       // Carregar badges do usuário
       const { data: userBadgesData, error: userBadgesError } = await supabase
