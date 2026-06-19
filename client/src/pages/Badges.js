@@ -501,7 +501,6 @@ const Badges = () => {
           const createdDate = new Date(userProfileData.created_at);
           const founderCutoff = new Date('2025-07-31T23:59:59Z');
           isFounder = createdDate <= founderCutoff;
-          console.log('DEBUG Fundador:', { created: userProfileData.created_at, createdDate: createdDate.toISOString(), cutoff: founderCutoff.toISOString(), isFounder });
         }
       } catch (e) {
         console.warn('Erro ao verificar perfil do usuário:', e);
