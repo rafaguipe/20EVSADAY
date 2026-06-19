@@ -527,6 +527,9 @@ const Badges = () => {
         let earned = earnedBadges.includes(badge.id);
         let totalPoints = 0;
 
+        if (badge.name === 'Fundador') {
+          console.log('DEBUG badge Fundador:', { name: badge.name, earned, isFounder, earnedBadges });
+        }
         switch (badge.name) {
           case 'Iniciante Consciencial':
             progress = total_evs > 0 ? 100 : 0;
