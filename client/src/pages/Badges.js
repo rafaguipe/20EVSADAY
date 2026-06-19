@@ -524,6 +524,7 @@ const Badges = () => {
         let current = 0;
         let target = 0;
         let earned = earnedBadges.includes(badge.id);
+        let totalPoints = 0;
 
         switch (badge.name) {
           case 'Iniciante Consciencial':
