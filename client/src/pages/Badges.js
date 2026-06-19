@@ -499,8 +499,9 @@ const Badges = () => {
         
         if (userProfileData?.created_at) {
           const createdDate = new Date(userProfileData.created_at);
-          const founderCutoff = new Date('2025-07-31T23:59:59');
+          const founderCutoff = new Date('2025-07-31T23:59:59Z');
           isFounder = createdDate <= founderCutoff;
+          console.log('DEBUG Fundador:', { created: userProfileData.created_at, createdDate: createdDate.toISOString(), cutoff: founderCutoff.toISOString(), isFounder });
         }
       } catch (e) {
         console.warn('Erro ao verificar perfil do usuário:', e);
@@ -607,6 +608,11 @@ const Badges = () => {
             progress = isFounder ? 100 : 0;
             current = isFounder ? 1 : 0;
             target = 1;
+            // Se earned está true mas current é 0, forçar current = 1
+            if (earned && current === 0) {
+              current = 1;
+              progress = 100;
+            }
             break;
           case 'Líder 4 Anos de Fundação':
             // Verificar se registrou EVs no período de fundação (1/7/2025 a 31/7/2025)
