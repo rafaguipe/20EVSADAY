@@ -509,7 +509,7 @@ const Badges = () => {
       
       // Se é fundador, garantir que o badge exista no user_badges
       if (isFounder) {
-        const founderBadge = allBadges?.find(b => b.name === 'Fundador');
+        const founderBadge = allBadges?.find(b => b.name === 'Fundador #20EVSADAY');
         if (founderBadge && !earnedBadges.includes(founderBadge.id)) {
           // Inserir badge do fundador no banco
           await supabase
@@ -527,9 +527,6 @@ const Badges = () => {
         let earned = earnedBadges.includes(badge.id);
         let totalPoints = 0;
 
-        if (badge.name === 'Fundador') {
-          console.log('DEBUG badge Fundador:', { name: badge.name, earned, isFounder, earnedBadges });
-        }
         switch (badge.name) {
           case 'Iniciante Consciencial':
             progress = total_evs > 0 ? 100 : 0;
@@ -605,7 +602,7 @@ const Badges = () => {
             current = maxDailyEVs;
             target = 20;
             break;
-          case 'Fundador':
+          case 'Fundador #20EVSADAY':
             // Verificar se o usuário se inscreveu até 31/7/2025
             earned = isFounder;
             progress = isFounder ? 100 : 0;
