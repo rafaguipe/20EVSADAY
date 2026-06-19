@@ -190,6 +190,8 @@ const BadgeName = styled.div`
   color: #ffffff;
   margin-bottom: 5px;
   text-transform: uppercase;
+  word-break: break-word;
+  line-height: 1.3;
   
   @media (max-width: 768px) {
     font-size: 12px;
@@ -431,6 +433,17 @@ const Badges = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const getBadgeDisplayName = (name) => {
+    const nameMap = {
+      'milestone_1000_points': 'Marco de 1000 Pontos',
+      'milestone_2000_points': 'Marco de 2000 Pontos',
+      'milestone_3000_points': 'Marco de 3000 Pontos',
+      'milestone_4000_points': 'Marco de 4000 Pontos',
+      'milestone_5000_points': 'Marco de 5000 Pontos',
+    };
+    return nameMap[name] || name;
+  };
+
   const loadBadges = async () => {
     if (!user) return;
     
@@ -476,15 +489,35 @@ const Badges = () => {
        
       
       // Verificar se o usuário é fundador (inscrito até 31/7/2025)
-      const userProfile = await supabase
-        .from('profiles')
-        .select('created_at')
-        .eq('user_id', user.id)
-        .single();
+      let isFounder = false;
+      try {
+        const { data: userProfileData } = await supabase
+          .from('profiles')
+          .select('created_at')
+          .eq('user_id', user.id)
+          .single();
+        
+        if (userProfileData?.created_at) {
+          const createdDate = new Date(userProfileData.created_at);
+          const founderCutoff = new Date('2025-07-31T23:59:59');
+          isFounder = createdDate <= founderCutoff;
+        }
+      } catch (e) {
+        console.warn('Erro ao verificar perfil do usuário:', e);
+      }
       
-      const isFounder = userProfile?.data?.created_at ? 
-        new Date(userProfile.data.created_at) <= new Date('2025-07-31 23:59:59') : 
-        false;
+      // Se é fundador, garantir que o badge exista no user_badges
+      if (isFounder) {
+        const founderBadge = allBadges?.find(b => b.name === 'Fundador');
+        if (founderBadge && !earnedBadges.includes(founderBadge.id)) {
+          // Inserir badge do fundador no banco
+          await supabase
+            .from('user_badges')
+            .upsert({ user_id: user.id, badge_id: founderBadge.id, awarded_at: new Date().toISOString() })
+            .eq('user_id', user.id);
+          earnedBadges.push(founderBadge.id);
+        }
+      }
       
       const badgesWithProgress = allBadges?.map(badge => {
         let progress = 0;
@@ -663,40 +696,40 @@ const Badges = () => {
              earned = consecutiveDays360 >= 360;
              break;
            // Novos badges - Milestones de pontos
-           case 'milestone_1000_points':
-             const totalPoints = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
-             progress = Math.min((totalPoints / 1000) * 100, 100);
-             current = totalPoints;
-             target = 1000;
-             earned = totalPoints >= 1000;
-             break;
-           case 'milestone_2000_points':
-             const totalPoints2k = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
-             progress = Math.min((totalPoints2k / 2000) * 100, 100);
-             current = totalPoints2k;
-             target = 2000;
-             earned = totalPoints2k >= 2000;
-             break;
-           case 'milestone_3000_points':
-             const totalPoints3k = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
-             progress = Math.min((totalPoints3k / 3000) * 100, 100);
-             current = totalPoints3k;
-             target = 3000;
-             earned = totalPoints3k >= 3000;
-             break;
-           case 'milestone_4000_points':
-             const totalPoints4k = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
-             progress = Math.min((totalPoints4k / 4000) * 100, 100);
-             current = totalPoints4k;
-             target = 4000;
-             earned = totalPoints4k >= 4000;
-             break;
-                     case 'milestone_5000_points':
-            const totalPoints5k = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
-            progress = Math.min((totalPoints5k / 5000) * 100, 100);
-            current = totalPoints5k;
+          case 'milestone_1000_points':
+            totalPoints = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
+            progress = Math.min((totalPoints / 1000) * 100, 100);
+            current = totalPoints;
+            target = 1000;
+            earned = totalPoints >= 1000;
+            break;
+          case 'milestone_2000_points':
+            totalPoints = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
+            progress = Math.min((totalPoints / 2000) * 100, 100);
+            current = totalPoints;
+            target = 2000;
+            earned = totalPoints >= 2000;
+            break;
+          case 'milestone_3000_points':
+            totalPoints = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
+            progress = Math.min((totalPoints / 3000) * 100, 100);
+            current = totalPoints;
+            target = 3000;
+            earned = totalPoints >= 3000;
+            break;
+          case 'milestone_4000_points':
+            totalPoints = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
+            progress = Math.min((totalPoints / 4000) * 100, 100);
+            current = totalPoints;
+            target = 4000;
+            earned = totalPoints >= 4000;
+            break;
+          case 'milestone_5000_points':
+            totalPoints = userEVs?.reduce((sum, ev) => sum + ev.score, 0) || 0;
+            progress = Math.min((totalPoints / 5000) * 100, 100);
+            current = totalPoints;
             target = 5000;
-            earned = totalPoints5k >= 5000;
+            earned = totalPoints >= 5000;
             break;
           case 'experimento_grupal_1':
             // Verificar se fez EV entre 11h e 12h do dia 6/8/2025 (horário de Brasília)
@@ -865,7 +898,7 @@ const Badges = () => {
                 <BadgeHeader>
                   <BadgeIcon earned={badge.earned}>{badge.icon}</BadgeIcon>
                   <BadgeInfo>
-                    <BadgeName>{badge.name}</BadgeName>
+                    <BadgeName>{getBadgeDisplayName(badge.name)}</BadgeName>
                     <BadgeDescription>{badge.description}</BadgeDescription>
                   </BadgeInfo>
                 </BadgeHeader>
