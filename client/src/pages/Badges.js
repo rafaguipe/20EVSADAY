@@ -463,7 +463,6 @@ const Badges = () => {
       'milestone_3000_points': 'Marco de 3000 Pontos',
       'milestone_4000_points': 'Marco de 4000 Pontos',
       'milestone_5000_points': 'Marco de 5000 Pontos',
-      'experimento_grupal_1': 'Primeiro EV Coletivo',
     };
     return nameMap[name] || name;
   };
@@ -490,7 +489,7 @@ const Badges = () => {
           { id: 3, name: 'Dedicado', description: '30 EVs', icon: '💪' },
           { id: 4, name: 'Mestre Consciencial', description: '100 EVs', icon: '🧘' },
           { id: 5, name: 'Fundador #20EVSADAY', description: 'Membro fundador', icon: '⭐' },
-          { id: 6, name: 'experimento_grupal_1', description: 'Primeiro EV em grupo', icon: '🤝' },
+          { id: 6, name: 'Primeiro EV Coletivo', description: 'Primeiro EV em grupo', icon: '🤝' },
           { id: 7, name: 'Virada Conscienciológica 2026', description: 'EV no evento Virada', icon: '🌟' },
           { id: 8, name: '5 Anos LIDERARE', description: 'EV em julho 2026 — 5 anos LIDERARE', icon: '🎂' },
         ];
@@ -779,7 +778,7 @@ const Badges = () => {
             target = 5000;
             earned = totalPoints >= 5000;
             break;
-          case 'experimento_grupal_1':
+          case 'Primeiro EV Coletivo':
             // Verificar se fez EV entre 11h e 12h do dia 6/8/2025 (horário de Brasília)
             const experimentDate = new Date('2025-08-06T11:00:00-03:00');
             const experimentEndDate = new Date('2025-08-06T12:00:00-03:00');
