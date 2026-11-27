@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
       .eq('user_id', user.id)
       .single();
     if (!profile) {
-      const nickname = user.user_metadata?.nickname || `Jogador ${user.id.slice(0, 8)}`;
+      const nickname = user.user_metadata?.nickname || `Participante ${user.id.slice(0, 8)}`;
       const avatar_id = user.user_metadata?.avatar_id || 1;
       await supabase
         .from('profiles')
