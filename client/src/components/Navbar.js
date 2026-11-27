@@ -7,188 +7,23 @@ import { useEVTimer } from '../contexts/EVTimerContext';
 import OfflineIndicator from './OfflineIndicator';
 
 const Nav = styled.nav`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 80px;
-  background: rgba(26, 26, 26, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 2px solid #4a4a4a;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
+ position:fixed; inset:0 0 auto; height:80px; z-index:1000; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 20px; background:#fff; color:#183c37; border-bottom:1px solid #dce8e3; font-family:system-ui,sans-serif;
 `;
-
-const LogoContainer = styled(Link)`
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  text-decoration: none;
-  
-  &:hover {
-    transform: scale(1.02);
-    transition: all 0.3s ease;
-  }
-`;
-
-const LogoImage = styled.img`
-  height: 50px;
-  width: auto;
-  
-  @media (max-width: 768px) {
-    height: 40px;
-  }
-`;
-
-
-
-const LogoText = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 18px;
-  color: #ffffff;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  
-  @media (max-width: 768px) {
-    font-size: 14px;
-  }
-`;
-
-const NavLinks = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const NavLink = styled(Link)`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 12px;
-  color: ${props => props.active ? '#ffffff' : '#6a6a6a'};
-  text-decoration: none;
-  text-transform: uppercase;
-  padding: 10px 15px;
-  border: 2px solid ${props => props.active ? '#4a4a4a' : 'transparent'};
-  background: ${props => props.active ? 'rgba(74, 74, 74, 0.3)' : 'transparent'};
-  transition: all 0.3s ease;
-  
-  &:hover {
-    color: #ffffff;
-    border-color: #4a4a4a;
-    background: rgba(74, 74, 74, 0.3);
-  }
-`;
-
-const UserSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 15px;
-`;
-
-const UserInfo = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const Avatar = styled.div`
-  width: 40px;
-  height: 40px;
-  background: #4a4a4a;
-  border: 2px solid #6a6a6a;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-`;
-
-const Username = styled.span`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 12px;
-  color: #ffffff;
-`;
-
-const LogoutBtn = styled.button`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  padding: 8px 16px;
-  border: 2px solid #6a2a2a;
-  background: #8a4a4a;
-  color: #ffffff;
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: #aa6a6a;
-    border-color: #8a4a4a;
-  }
-`;
-
-const AuthButtons = styled.div`
-  display: flex;
-  gap: 10px;
-`;
-
-const AuthBtn = styled(Link)`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  padding: 8px 16px;
-  border: 2px solid #4a4a4a;
-  background: #1a1a1a;
-  color: #ffffff;
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: #4a4a4a;
-    border-color: #6a6a6a;
-  }
-`;
-
-const MobileMenu = styled.div`
-  display: none;
-  
-  @media (max-width: 768px) {
-    display: block;
-  }
-`;
-
-const MobileMenuBtn = styled.button`
-  background: none;
-  border: none;
-  color: #ffffff;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 10px;
-`;
-
-const MobileMenuContent = styled.div`
-  position: absolute;
-  top: 80px;
-  left: 0;
-  right: 0;
-  background: rgba(26, 26, 26, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 2px solid #4a4a4a;
-  display: ${props => props.open ? 'flex' : 'none'};
-  flex-direction: column;
-  padding: 20px;
-  gap: 15px;
-`;
-
+const LogoContainer = styled(Link)`display:flex; align-items:center; gap:8px; text-decoration:none; color:#183c37; font-weight:750; white-space:nowrap;`;
+const LogoImage = styled.img`height:38px; width:auto;`;
+const NavLinks = styled.div`display:flex; align-items:center; gap:4px; @media(max-width:1000px){display:none;}`;
+const NavLink = styled(Link)`font:inherit; font-size:14px; font-weight:600; color:${p=>p.active?'#237e70':'#536b65'}; background:${p=>p.active?'#e5f2ed':'transparent'}; text-decoration:none; padding:10px; border-radius:10px; &:hover{background:#e5f2ed;}`;
+const UserSection = styled.div`display:flex; align-items:center; gap:12px;`;
+const UserInfo = styled.div`display:flex; align-items:center; gap:8px; @media(max-width:1000px){display:none;}`;
+const Avatar = styled.div`background:#e5f2ed; border-radius:50%; padding:8px;`;
+const Username = styled.span`font-size:14px; font-weight:600;`;
+const LogoutBtn = styled.button`font:inherit; border:1px solid #b8cdc5; border-radius:10px; background:white; color:#237e70; padding:9px 14px; cursor:pointer;`;
+const AuthButtons = styled.div`display:flex; gap:8px;`;
+const AuthBtn = styled(NavLink)`border:1px solid #b8cdc5;`;
+const MobileMenu = styled.div`display:none; @media(max-width:1000px){display:block;}`;
+const MobileMenuBtn = styled.button`font:inherit; background:white; color:#237e70; border:1px solid #b8cdc5; border-radius:10px; padding:9px; cursor:pointer;`;
+const MobileMenuContent = styled.div`position:absolute; top:80px; right:0; left:0; background:white; border-bottom:1px solid #dce8e3; display:${p=>p.open?'flex':'none'}; flex-direction:column; padding:16px; gap:6px;`;
+const BottomNav = styled.div`display:none; @media(max-width:1000px){display:grid; grid-template-columns:repeat(4,1fr); position:fixed; bottom:0; left:0; right:0; background:white; border-top:1px solid #dce8e3; padding:6px 4px calc(6px + env(safe-area-inset-bottom)); box-shadow:0 -4px 20px #183c3710; & a{text-align:center; font-size:12px; padding:8px 2px;}}`;
 const avatars = [
   '👤', '👨', '👩', '🧑', '👨‍🦰', '👩‍🦰', '👨‍🦱', '👩‍🦱',
   '👨‍🦲', '👩‍🦲', '👨‍🦳', '👩‍🦳', '👴', '👵', '🧓', '👶'
@@ -290,14 +125,14 @@ const Navbar = () => {
     <Nav>
               <LogoContainer to="/">
           <LogoImage src="/assets/boneco1.png" alt="Logo" />
-          {/* <LogoText>#20EVSADAY</LogoText> */}
+          <span>20 EVS a DAY</span>
         </LogoContainer>
       
       {isAuthenticated ? (
         <>
           <NavLinks>
             <NavLink to="/dashboard" active={isActive('/dashboard')}>
-              Registro
+              Hoje
             </NavLink>
             {(isAdmin || leaderboardVisible) && (
               <NavLink to="/leaderboard" active={isActive('/leaderboard')}>
@@ -312,7 +147,7 @@ const Navbar = () => {
             
             
             <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
-              Estatísticas
+              Progresso
             </NavLink>
             <NavLink to="/sinaletica" active={isActive('/sinaletica')}>
               🌀 Sinalética
@@ -320,7 +155,7 @@ const Navbar = () => {
             
             
             <NavLink to="/profile" active={isActive('/profile')}>
-              Configurações
+              Perfil
             </NavLink>
             {isAdmin && (
               <NavLink to="/dev" active={isActive('/dev')}>
@@ -335,7 +170,7 @@ const Navbar = () => {
               <Avatar>{getAvatarEmoji()}</Avatar>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                 <Username>{profile?.username || 'Carregando...'}</Username>
-                <span style={{ fontFamily: 'Press Start 2P, monospace', fontSize: 10, color: '#6a6a6a', marginTop: 2 }}>
+                <span style={{ fontFamily: 'system-ui, sans-serif', fontSize: 10, color: '#6a6a6a', marginTop: 2 }}>
                   Próximo EV: {formatTime(evTimer)}
                 </span>
               </div>
@@ -344,7 +179,7 @@ const Navbar = () => {
           </UserSection>
           
           <MobileMenu>
-            <MobileMenuBtn onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            <MobileMenuBtn aria-label="Mais opções" aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
               ☰
             </MobileMenuBtn>
             <MobileMenuContent open={mobileMenuOpen}>
@@ -382,6 +217,7 @@ const Navbar = () => {
               <LogoutBtn onClick={() => { closeMobileMenu(); handleLogout(); }}>Sair</LogoutBtn>
             </MobileMenuContent>
           </MobileMenu>
+          <BottomNav>{[['/dashboard','Hoje'],['/sinaletica','Sinalética'],['/estatisticas','Progresso'],['/profile','Perfil']].map(([path,label]) => <NavLink key={path} to={path} active={isActive(path)} onClick={closeMobileMenu}>{label}</NavLink>)}</BottomNav>
         </>
       ) : (
         <AuthButtons>
