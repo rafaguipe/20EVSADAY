@@ -9,7 +9,6 @@ import SoundEffect from '../components/SoundEffect';
 import BadgeNotification from '../components/BadgeNotification';
 import { Link } from 'react-router-dom';
 import EVReminder from '../components/EVReminder';
-import BluetoothEVController from '../components/experimental/BluetoothEVController';
 
 const Container = styled.div`
   max-width: 1000px; margin: auto; padding: 24px 16px 80px;
@@ -755,9 +754,6 @@ const Dashboard = () => {
           setPlayVictorySound(false);
         }}
       />
-
-      {/* Funcionalidade Experimental - Bluetooth EV Controller */}
-      <BluetoothEVController />
     </Container>
   );
 };
