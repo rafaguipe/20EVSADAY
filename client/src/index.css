@@ -239,3 +239,8 @@ body {
   .App[data-appearance="dark"] nav { padding-inline: 8px; gap: 6px; font-size: 10px; }
   .App[data-appearance="dark"] nav a { font-size: 8px; }
 }
+
+:root { --app-field:#fff; --app-field-border:#9db5ad; --app-link:#237e70; --app-chart:#75b5a5; }
+.App[data-appearance="dark"] { --app-field:#292929; --app-field-border:#777; --app-link:#a8c8ef; --app-chart:#769fce; }
+.App[data-appearance="dark"] textarea::placeholder, .App[data-appearance="dark"] input::placeholder { color:#bcbcbc; }
+.App main { padding-top:96px !important; }
