@@ -10,13 +10,13 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: #f4f8f6;
+  background: var(--app-bg);
 `;
 
 const FormCard = styled.div`
-  background: #ffffff;
-  border:2px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-card);
+  border:2px solid var(--app-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 40px;
   width: 100%;
   max-width: 500px;
@@ -30,14 +30,14 @@ const FormCard = styled.div`
   @media (max-width: 480px) {
     padding: 20px 15px;
     max-width: 95%;
-    border-radius: 14px;
+    border-radius: calc(14px * var(--app-roundness, 1));
   }
 `;
 
 const Title = styled.h1`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 24px;
-  color: #183c37;
+  color: var(--app-text);
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -66,20 +66,20 @@ const FormGroup = styled.div`
 `;
 
 const Label = styled.label`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
-  color: #183c37;
+  color: var(--app-text);
   text-transform: uppercase;
 `;
 
 const Input = styled.input`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   padding: 12px;
-  border: 2px solid #dce8e3;
-  background: #f4f8f6;
-  color: #183c37;
+  border: 2px solid var(--app-border);
+  background: var(--app-bg);
+  color: var(--app-text);
   font-size: 14px;
-  border-radius: 14px;
+  border-radius: calc(14px * var(--app-roundness, 1));
   min-height: 48px;
   
   @media (max-width: 768px) {
@@ -94,7 +94,7 @@ const Input = styled.input`
   
   &:focus {
     outline: none;
-    border-color: #536b65;
+    border-color: var(--app-muted);
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
   }
 `;
@@ -125,9 +125,9 @@ const AvatarGrid = styled.div`
 const AvatarOption = styled.div`
   width: 60px;
   height: 60px;
-  border: 3px solid ${props => props.selected ? '#237e70' : '#dce8e3'};
-  background: #f4f8f6;
-  border-radius: 14px;
+  border: 3px solid ${props => props.selected ? 'var(--app-accent)' : 'var(--app-border)'};
+  background: var(--app-bg);
+  border-radius: calc(14px * var(--app-roundness, 1));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -148,17 +148,17 @@ const AvatarOption = styled.div`
   }
   
   &:hover {
-    border-color: #536b65;
+    border-color: var(--app-muted);
     transform: scale(1.05);
   }
 `;
 
 const SubmitButton = styled.button`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 14px;
   padding: 15px;
-  border: 2px solid #dce8e3;
-  background: #237e70;
+  border: 2px solid var(--app-border);
+  background: var(--app-accent);
   color: #ffffff;
   cursor: pointer;
   text-transform: uppercase;
@@ -179,14 +179,14 @@ const SubmitButton = styled.button`
   }
   
   &:hover {
-    background: #237e70;
-    border-color: #237e70;
+    background: var(--app-accent);
+    border-color: var(--app-accent);
     transform: translateY(-2px);
   }
   
   &:disabled {
-    background: #dce8e3;
-    border-color: #536b65;
+    background: var(--app-border);
+    border-color: var(--app-muted);
     cursor: not-allowed;
     transform: none;
   }
@@ -195,9 +195,9 @@ const SubmitButton = styled.button`
 const LinkText = styled.div`
   text-align: center;
   margin-top: 20px;
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   
   @media (max-width: 768px) {
     font-size: 13px;
@@ -219,7 +219,7 @@ const StyledLink = styled(Link)`
 `;
 
 const ErrorMessage = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
   color: #ff6b6b;
   text-align: center;
@@ -241,9 +241,9 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalBox = styled.div`
-  background: #f4f8f6;
-  border:3px solid #237e70;
-  border-radius: 12px;
+  background: var(--app-bg);
+  border:3px solid var(--app-accent);
+  border-radius: calc(12px * var(--app-roundness, 1));
   padding: 30px;
   max-width: 500px;
   width: 90%;
@@ -258,14 +258,14 @@ const ModalBox = styled.div`
   @media (max-width: 480px) {
     padding: 20px 15px;
     max-width: 95%;
-    border-radius: 14px;
+    border-radius: calc(14px * var(--app-roundness, 1));
   }
 `;
 
 const ModalTitle = styled.h2`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 18px;
-  color: #237e70;
+  color: var(--app-accent);
   margin-bottom: 20px;
   text-transform: uppercase;
   
@@ -281,9 +281,9 @@ const ModalTitle = styled.h2`
 `;
 
 const ModalMessage = styled.p`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
-  color: #183c37;
+  color: var(--app-text);
   line-height: 1.6;
   margin-bottom: 25px;
   
@@ -316,12 +316,12 @@ const ModalIcon = styled.div`
 `;
 
 const ModalButton = styled.button`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   padding: 12px 24px;
-  background: #237e70;
+  background: var(--app-accent);
   color: white;
   border: none;
-  border-radius: 14px;
+  border-radius: calc(14px * var(--app-roundness, 1));
   cursor: pointer;
   font-size: 12px;
   transition: background 0.2s;
@@ -347,13 +347,13 @@ const ModalButton = styled.button`
 const EmailWarning = styled.div`
   background: rgba(255, 193, 7, 0.1);
   border: 2px solid #ffc107;
-  border-radius: 14px;
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 12px;
   margin-bottom: 20px;
 `;
 
 const WarningText = styled.p`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
   color: #ffc107;
   text-align: center;
@@ -371,13 +371,13 @@ const Checkbox = styled.input`
   margin-top: 2px;
   width: 16px;
   height: 16px;
-  accent-color: #237e70;
+  accent-color: var(--app-accent);
 `;
 
 const CheckboxLabel = styled.label`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #183c37;
+  color: var(--app-text);
   line-height:1.4;
   cursor: pointer;
   flex:1;
