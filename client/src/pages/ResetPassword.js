@@ -133,6 +133,8 @@ const StyledLink = styled(Link)`
   &:hover { color: #6a6a6a; }
 `;
 
+let initialRecoveryUrl = window.location.pathname === '/reset-password' ? new URL(window.location.href) : null;
+
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -142,127 +144,48 @@ const ResetPassword = () => {
   const [validating, setValidating] = useState(true);
   const [isValidLink, setIsValidLink] = useState(false);
   const navigate = useNavigate();
-  const processedRef = useRef(false);
+  const recoveryPromise = useRef(null);
 
   useEffect(() => {
-    let authSub;
-    let fallbackTimer;
     let mounted = true;
-
-    const handleRecovery = async () => {
-      try {
-        // 1. Extrair parametros da URL (hash ou query)
-        const hash = window.location.hash.substring(1);
-        const hashParams = new URLSearchParams(hash);
-        const queryParams = new URLSearchParams(window.location.search);
-
-        const type = hashParams.get('type') || queryParams.get('type');
-        const token = hashParams.get('access_token') || hashParams.get('token')
-          || queryParams.get('access_token') || queryParams.get('token');
-        const errorDesc = queryParams.get('error_description');
-
-        console.log('[ResetPassword] type:', type, 'hasToken:', !!token, 'error:', errorDesc);
-
-        if (errorDesc) {
-          console.log('[ResetPassword] Link com erro:', errorDesc);
-          if (!mounted) return;
-          setValidating(false);
-          setIsValidLink(false);
-          toast.error('Link invalido ou expirado.');
-          fallbackTimer = setTimeout(() => navigate('/forgot-password'), 4000);
-          return;
+    if (!recoveryPromise.current) {
+      recoveryPromise.current = (async () => {
+        const url = initialRecoveryUrl || new URL(window.location.href);
+        initialRecoveryUrl = null;
+        const query = url.searchParams;
+        const hash = new URLSearchParams(url.hash.slice(1));
+        const type = query.get('type') || hash.get('type');
+        if (query.has('error') || hash.has('error') ||
+            query.has('error_description') || hash.has('error_description')) return false;
+        const tokenHash = query.get('token_hash') || (type === 'recovery' ? query.get('token') : null);
+        if (tokenHash && type === 'recovery') {
+          const { data, error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: 'recovery' });
+          return !error && Boolean(data.session?.user);
         }
-
-        // 2. Verificar se ja existe sessao ativa
-        const { data: { session }, error: sessError } = await supabase.auth.getSession();
-        if (sessError) console.error('[ResetPassword] Erro ao obter sessao:', sessError);
-
-        if (session?.user) {
-          console.log('[ResetPassword] Sessao ativa encontrada:', session.user.email);
-          if (!mounted) return;
-          setIsValidLink(true);
-          setValidating(false);
-          window.history.replaceState(null, '', window.location.pathname);
-          toast.success('Link valido! Defina sua nova senha.');
-          return;
-        }
-
-        // 3. Se tem token, trocar por sessao via verifyOtp
-        if (token) {
-          console.log('[ResetPassword] Tentando verifyOtp com token...');
-          const { data, error: otpError } = await supabase.auth.verifyOtp({
-            token_hash: token,
-            type: 'recovery',
+        if (type === 'recovery' && hash.get('access_token') && hash.get('refresh_token')) {
+          const { data, error } = await supabase.auth.getSession();
+          if (!error && data.session?.access_token === hash.get('access_token')) return true;
+          const result = await supabase.auth.setSession({
+            access_token: hash.get('access_token'),
+            refresh_token: hash.get('refresh_token')
           });
-
-          if (otpError) {
-            console.error('[ResetPassword] verifyOtp falhou:', otpError.message);
-
-            // Fallback: escutar onAuthStateChange (caso o Supabase processe async)
-            console.log('[ResetPassword] Escutando onAuthStateChange...');
-            const { data: subData } = supabase.auth.onAuthStateChange((event, newSession) => {
-              console.log('[ResetPassword] Auth event:', event, newSession?.user?.email);
-              if ((event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')
-                  && newSession?.user && !processedRef.current) {
-                processedRef.current = true;
-                if (!mounted) return;
-                setIsValidLink(true);
-                setValidating(false);
-                window.history.replaceState(null, '', window.location.pathname);
-                toast.success('Link valido! Defina sua nova senha.');
-              }
-            });
-            authSub = subData.subscription;
-
-            // Timeout de 15s
-            fallbackTimer = setTimeout(() => {
-              if (!processedRef.current) {
-                console.log('[ResetPassword] Timeout - token expirado ou invalido');
-                if (!mounted) return;
-                setValidating(false);
-                setIsValidLink(false);
-                toast.error('Link expirado. Solicite um novo.');
-                setTimeout(() => navigate('/forgot-password'), 4000);
-              }
-            }, 15000);
-          } else {
-            console.log('[ResetPassword] verifyOtp sucesso!');
-            if (!mounted) return;
-            setIsValidLink(true);
-            setValidating(false);
-            window.history.replaceState(null, '', window.location.pathname);
-            toast.success('Link valido! Defina sua nova senha.');
-          }
-        } else {
-          // Sem token e sem sessao
-          console.log('[ResetPassword] Sem token nem sessao');
-          if (!mounted) return;
-          setValidating(false);
-          setIsValidLink(false);
-          toast.error('Link invalido ou expirado.');
-          fallbackTimer = setTimeout(() => navigate('/forgot-password'), 4000);
+          return !result.error && Boolean(result.data.session?.user);
         }
-      } catch (err) {
-        console.error('[ResetPassword] Erro inesperado:', err);
-        if (!mounted) return;
-        setValidating(false);
-        setIsValidLink(false);
-        toast.error('Erro ao processar link.');
-        fallbackTimer = setTimeout(() => navigate('/forgot-password'), 4000);
-      }
-    };
-
-    handleRecovery();
-
-    return () => {
-      mounted = false;
-      if (authSub) authSub.unsubscribe();
-      if (fallbackTimer) clearTimeout(fallbackTimer);
-    };
-  }, [navigate]);
+        return false;
+      })().catch(() => false);
+    }
+    recoveryPromise.current.then(valid => {
+      if (!mounted) return;
+      setIsValidLink(valid);
+      setValidating(false);
+      window.history.replaceState(null, '', window.location.pathname);
+    });
+    return () => { mounted = false; };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isValidLink || loading || success) return;
     setLoading(true);
     setError('');
 
@@ -283,6 +206,7 @@ const ResetPassword = () => {
         setError(error.message);
         toast.error('Erro ao atualizar senha: ' + error.message);
       } else {
+        await supabase.auth.signOut({ scope: 'local' });
         setSuccess(true);
         toast.success('Senha atualizada com sucesso!');
         setTimeout(() => navigate('/login'), 3000);
