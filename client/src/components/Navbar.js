@@ -4,8 +4,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../supabaseClient';
 import styled from 'styled-components';
 import { useEVTimer } from '../contexts/EVTimerContext';
-import { useChatNotification } from '../contexts/ChatNotificationContext';
-import { useDMNotification } from '../contexts/DMNotificationContext';
 import OfflineIndicator from './OfflineIndicator';
 
 const Nav = styled.nav`
@@ -196,40 +194,6 @@ const avatars = [
   '👨‍🦲', '👩‍🦲', '👨‍🦳', '👩‍🦳', '👴', '👵', '🧓', '👶'
 ];
 
-const NavLinkContainer = styled.div`
-  position: relative;
-  display: inline-block;
-`;
-
-const NotificationBadge = styled.div`
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: #ff6b6b;
-  color: white;
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 8px;
-  font-weight: bold;
-  font-family: 'Press Start 2P', monospace;
-  animation: ${props => props.count > 0 ? 'pulse 2s infinite' : 'none'};
-
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-  }
-`;
-
-const DMNotificationBadge = styled(NotificationBadge)`
-  background: #ffd700; /* Amarelo para DMs */
-  color: #000; /* Texto preto para DMs */
-`;
-
 const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -239,14 +203,7 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [badgesVisible, setBadgesVisible] = useState(true);
   const [leaderboardVisible, setLeaderboardVisible] = useState(true);
-  const [lojaVisible, setLojaVisible] = useState(true);
-  const [sobreVisible, setSobreVisible] = useState(false);
-  const [multimidiaVisible, setMultimidiaVisible] = useState(true);
-  const [chatVisible, setChatVisible] = useState(true);
-  const [votacaoVisible, setVotacaoVisible] = useState(false);
   const { timer: evTimer, formatTime } = useEVTimer();
-  const { unreadCount } = useChatNotification();
-  const { unreadDMs } = useDMNotification();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -297,88 +254,14 @@ const Navbar = () => {
     fetchProfile();
   }, [user]);
 
-  // Verificar visibilidade das abas
   useEffect(() => {
-    const checkTabVisibility = async () => {
-      if (!isAuthenticated) {
-        setLojaVisible(false);
-        setSobreVisible(false);
-        setMultimidiaVisible(true);
-        setChatVisible(true);
-        setBadgesVisible(true);
-        setLeaderboardVisible(true);
-        setVotacaoVisible(false);
-        return;
-      }
-
-      try {
-        const tabs = [
-          'loja_visible',
-          'sobre_visible',
-          'multimidia_visible',
-          'chat_visible',
-          'badges_visible',
-          'leaderboard_visible',
-          'votacao_visible'
-        ];
-
-        for (const tab of tabs) {
-          const { data, error } = await supabase
-            .rpc('get_system_setting', {
-              p_key: tab
-            });
-
-          if (error) {
-            console.error(`Erro ao verificar visibilidade da aba ${tab}:`, error);
-            // Valores padrão
-            if (tab === 'loja_visible') {
-              setLojaVisible(false);
-            } else if (tab === 'sobre_visible') {
-              setSobreVisible(false);
-            } else if (tab === 'multimidia_visible') {
-              setMultimidiaVisible(true);
-            } else if (tab === 'chat_visible') {
-              setChatVisible(true);
-            } else if (tab === 'badges_visible') {
-              setBadgesVisible(true);
-            } else if (tab === 'leaderboard_visible') {
-              setLeaderboardVisible(true);
-            } else if (tab === 'votacao_visible') {
-              setVotacaoVisible(false);
-            }
-          } else {
-            const isVisible = data === 'true';
-            if (tab === 'loja_visible') {
-              setLojaVisible(isVisible);
-            } else if (tab === 'sobre_visible') {
-              setSobreVisible(isVisible);
-            } else if (tab === 'multimidia_visible') {
-              setMultimidiaVisible(isVisible);
-            } else if (tab === 'chat_visible') {
-              setChatVisible(isVisible);
-            } else if (tab === 'badges_visible') {
-              setBadgesVisible(isVisible);
-            } else if (tab === 'leaderboard_visible') {
-              setLeaderboardVisible(isVisible);
-            } else if (tab === 'votacao_visible') {
-              setVotacaoVisible(isVisible);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Erro ao verificar visibilidade das abas:', error);
-        // Valores padrão em caso de erro
-        setLojaVisible(false);
-        setSobreVisible(false);
-        setMultimidiaVisible(true);
-        setChatVisible(true);
-        setBadgesVisible(true);
-        setLeaderboardVisible(true);
-        setVotacaoVisible(false);
-      }
-    };
-
-    checkTabVisibility();
+    if (!isAuthenticated) return;
+    Promise.all(['badges_visible', 'leaderboard_visible'].map(p_key =>
+      supabase.rpc('get_system_setting', { p_key })
+    )).then(([badges, ranking]) => {
+      if (!badges.error) setBadgesVisible(badges.data === 'true');
+      if (!ranking.error) setLeaderboardVisible(ranking.data === 'true');
+    });
   }, [isAuthenticated]);
 
   const handleLogout = () => {
@@ -426,45 +309,16 @@ const Navbar = () => {
                 Conquistas
               </NavLink>
             )}
-            {(isAdmin || chatVisible) && (
-              <NavLinkContainer>
-                <NavLink to="/chat" active={isActive('/chat')}>
-                  Chat
-                </NavLink>
-                {unreadCount > 0 && (
-                  <NotificationBadge count={unreadCount}>
-                    {unreadCount}
-                  </NotificationBadge>
-                )}
-                {/* Indicador de DMs não lidas */}
-                {unreadDMs > 0 && (
-                  <DMNotificationBadge count={unreadDMs}>
-                    {unreadDMs}
-                  </DMNotificationBadge>
-                )}
-              </NavLinkContainer>
-            )}
-            {(isAdmin || lojaVisible) && (
-              <NavLink to="/loja" active={isActive('/loja')}>
-                Loja
-              </NavLink>
-            )}
+            
+            
             <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
               Estatísticas
             </NavLink>
             <NavLink to="/sinaletica" active={isActive('/sinaletica')}>
               🌀 Sinalética
             </NavLink>
-            {(isAdmin || votacaoVisible) && (
-              <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')}>
-                🗳️ Votação
-              </NavLink>
-            )}
-            {(isAdmin || multimidiaVisible) && (
-              <NavLink to="/multimidia" active={isActive('/multimidia')}>
-                Multimídia
-              </NavLink>
-            )}
+            
+            
             <NavLink to="/profile" active={isActive('/profile')}>
               Configurações
             </NavLink>
@@ -507,45 +361,16 @@ const Navbar = () => {
                   Conquistas
                 </NavLink>
               )}
-              {(isAdmin || chatVisible) && (
-                <NavLinkContainer>
-                  <NavLink to="/chat" active={isActive('/chat')} onClick={closeMobileMenu}>
-                    Chat
-                  </NavLink>
-                  {unreadCount > 0 && (
-                    <NotificationBadge count={unreadCount}>
-                      {unreadCount}
-                    </NotificationBadge>
-                  )}
-                  {/* Indicador de DMs não lidas */}
-                  {unreadDMs > 0 && (
-                    <DMNotificationBadge count={unreadDMs}>
-                      {unreadDMs}
-                    </DMNotificationBadge>
-                  )}
-                </NavLinkContainer>
-              )}
-              {(isAdmin || lojaVisible) && (
-                <NavLink to="/loja" active={isActive('/loja')} onClick={closeMobileMenu}>
-                  Loja
-                </NavLink>
-              )}
+              
+              
               <NavLink to="/estatisticas" active={isActive('/estatisticas')} onClick={closeMobileMenu}>
                 Estatísticas
               </NavLink>
               <NavLink to="/sinaletica" active={isActive('/sinaletica')} onClick={closeMobileMenu}>
                 🌀 Sinalética
               </NavLink>
-              {(isAdmin || votacaoVisible) && (
-                <NavLink to="/votacao-mascote" active={isActive('/votacao-mascote')} onClick={closeMobileMenu}>
-                  🗳️ Votação
-                </NavLink>
-              )}
-              {(isAdmin || multimidiaVisible) && (
-                <NavLink to="/multimidia" active={isActive('/multimidia')} onClick={closeMobileMenu}>
-                  Multimídia
-                </NavLink>
-              )}
+              
+              
               <NavLink to="/profile" active={isActive('/profile')} onClick={closeMobileMenu}>
                 Configurações
               </NavLink>
