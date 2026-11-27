@@ -194,3 +194,36 @@ body {
     padding: 10px;
   }
 } 
+/* Aparência compartilhada: a estrutura funcional permanece a mesma. */
+:root {
+  --app-bg: #f4f8f6;
+  --app-card: #ffffff;
+  --app-text: #183c37;
+  --app-muted: #536b65;
+  --app-border: #dce8e3;
+  --app-soft: #e5f2ed;
+  --app-accent: #237e70;
+  --app-font: system-ui, sans-serif;
+  --app-roundness: 1;
+}
+.App { font-family: var(--app-font); background: var(--app-bg); color: var(--app-text); min-height:100vh; }
+.App[data-appearance="dark"] {
+  --app-bg: #181818;
+  --app-card: #222222;
+  --app-text: #ffffff;
+  --app-muted: #c5c5c5;
+  --app-border: #4a4a4a;
+  --app-soft: #303c4a;
+  --app-accent: #527eae;
+  --app-font: 'Press Start 2P', monospace;
+  --app-roundness: 0.25;
+  color-scheme: dark;
+}
+.App[data-appearance="dark"] button,
+.App[data-appearance="dark"] input,
+.App[data-appearance="dark"] select,
+.App[data-appearance="dark"] textarea { font-family: var(--app-font); }
+.App[data-appearance="dark"] nav a { font-size: 10px; }
+@media(max-width:1000px) {
+  .App[data-appearance="dark"] nav a { font-size: 9px; }
+}
