@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import toast from 'react-hot-toast';
 
 const Container = styled.div`
+  background: #f4f8f6; color: #183c37; font-family: system-ui, sans-serif; box-sizing: border-box; padding-bottom: 100px !important;
   padding: 20px;
   max-width: 1200px;
   margin:0 auto;
@@ -21,9 +22,9 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 24px;
-  color: #ffffff;
+  color: #183c37;
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -49,41 +50,41 @@ const StatsGrid = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 20px;
   text-align: center;
   backdrop-filter: blur(10px);
 `;
 
 const StatValue = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 24px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 8px;
 `;
 
 const StatLabel = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   text-transform: uppercase;
 `;
 
 const ProgressSection = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 25px;
   margin-bottom: 30px;
   backdrop-filter: blur(10px);
 `;
 
 const ProgressTitle = styled.h2`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 16px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 20px;
   text-transform: uppercase;
 `;
@@ -91,8 +92,8 @@ const ProgressTitle = styled.h2`
 const ProgressBar = styled.div`
   width: 100%;
   height: 20px;
-  background: #1a1a1a;
-  border: 2px solid #4a4a4a;
+  background: #f4f8f6;
+  border: 2px solid #dce8e3;
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 10px;
@@ -113,28 +114,28 @@ const ProgressFill = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, #eaf3ef 50%, transparent 100%);
     animation: shimmer 2s infinite;
   }
 `;
 
 const ProgressText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #6a6a6a;
+  color: #536b65;
   text-align: center;
 `;
 
 const LoadingText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
-  color: #6a6a6a;
+  color: #536b65;
   text-align: center;
   padding: 40px;
 `;
 
 const ErrorText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
   color: #ff6b6b;
   text-align: center;
@@ -142,26 +143,26 @@ const ErrorText = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 18px;
-  color: #ffffff;
+  color: #183c37;
   margin: 30px 0 20px 0;
   text-transform: uppercase;
 `;
 
 const ExportSection = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 25px;
   margin-bottom: 30px;
   backdrop-filter: blur(10px);
 `;
 
 const ExportTitle = styled.h3`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 15px;
   text-transform: uppercase;
 `;
@@ -174,19 +175,19 @@ const ExportButtons = styled.div`
 `;
 
 const ExportButton = styled.button`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
   padding: 10px 15px;
-  border: 2px solid #4a4a4a;
-  background: ${props => props.variant === 'csv' ? '#4a8a4a' : '#4a6a8a'};
+  border: 2px solid #dce8e3;
+  background: ${props => props.variant === 'csv' ? '#4a8a4a' : '#237e70'};
   color: #ffffff;
   cursor: pointer;
   text-transform: uppercase;
   transition: all 0.3s ease;
   
   &:hover:not(:disabled) {
-    background: ${props => props.variant === 'csv' ? '#6aaa6a' : '#6a8aaa'};
-    border-color: #6a6a6a;
+    background: ${props => props.variant === 'csv' ? '#6aaa6a' : '#237e70'};
+    border-color: #536b65;
   }
   
   &:disabled {
@@ -196,16 +197,16 @@ const ExportButton = styled.button`
 `;
 
 const ExportInfo = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   line-height: 1.4;
 `;
 
 const NoDataText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #6a6a6a;
+  color: #536b65;
   text-align: center;
   padding: 40px;
 `;
