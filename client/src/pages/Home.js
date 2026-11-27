@@ -14,7 +14,7 @@ const Hero = styled.div`
   justify-content: center;
   text-align: center;
   padding: 20px;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  background: #f4f8f6;
 `;
 
 const Logo = styled.div`
@@ -35,13 +35,13 @@ const LogoImage = styled.img`
 
 
 const Title = styled.h1`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 48px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 20px;
   text-transform: uppercase;
   letter-spacing: 4px;
-  animation: glow 2s ease-in-out infinite;
+  
   
   @media (max-width: 768px) {
     font-size: 24px;
@@ -54,9 +54,9 @@ const Title = styled.h1`
 `;
 
 const Subtitle = styled.p`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 16px;
-  color: #6a6a6a;
+  color: #536b65;
   margin-bottom: 40px;
   max-width: 600px;
   line-height: 1.8;
@@ -66,7 +66,7 @@ const Subtitle = styled.p`
   }
   
   @media (max-width: 480px) {
-    font-size: 10px;
+    font-size: 13px;
     line-height: 1.6;
     margin-bottom: 30px;
   }
@@ -82,9 +82,9 @@ const Features = styled.div`
 `;
 
 const FeatureCard = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 30px;
   text-align: center;
   backdrop-filter: blur(10px);
@@ -99,7 +99,7 @@ const FeatureCard = styled.div`
   }
   
   &:hover {
-    border-color: #6a6a6a;
+    border-color: #536b65;
     transform: translateY(-5px);
   }
 `;
@@ -120,9 +120,9 @@ const FeatureIcon = styled.div`
 `;
 
 const FeatureTitle = styled.h3`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 16px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 15px;
   text-transform: uppercase;
   
@@ -138,18 +138,18 @@ const FeatureTitle = styled.h3`
 `;
 
 const FeatureText = styled.p`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #6a6a6a;
+  color: #536b65;
   line-height: 1.6;
   
   @media (max-width: 768px) {
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.5;
   }
   
   @media (max-width: 480px) {
-    font-size: 10px;
+    font-size: 13px;
     line-height: 1.4;
   }
 `;
@@ -219,9 +219,9 @@ const Stats = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 20px;
   text-align: center;
   backdrop-filter: blur(10px);
@@ -236,9 +236,9 @@ const StatCard = styled.div`
 `;
 
 const StatNumber = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 24px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 10px;
   
   @media (max-width: 768px) {
@@ -253,24 +253,24 @@ const StatNumber = styled.div`
 `;
 
 const StatLabel = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   text-transform: uppercase;
   
   @media (max-width: 768px) {
-    font-size: 9px;
+    font-size: 13px;
   }
   
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
   }
 `;
 
 const AboutSection = styled.div`
   padding: 60px 20px;
-  background: rgba(26, 26, 26, 0.9);
-  border-top: 2px solid #4a4a4a;
+  background: #ffffff;
+  border-top: 2px solid #dce8e3;
 `;
 
 const AboutContainer = styled.div`
@@ -279,9 +279,9 @@ const AboutContainer = styled.div`
 `;
 
 const AboutTitle = styled.h2`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 24px;
-  color: #ffffff;
+  color: #183c37;
   text-align: center;
   margin-bottom: 40px;
   text-transform: uppercase;
@@ -298,9 +298,9 @@ const AboutTitle = styled.h2`
 `;
 
 const AboutCard = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 30px;
   margin-bottom: 30px;
   backdrop-filter: blur(10px);
@@ -349,9 +349,9 @@ const AboutCardLogo = styled.img`
 `;
 
 const AboutCardTitle = styled.h3`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 16px;
-  color: #ffffff;
+  color: #183c37;
   text-transform: uppercase;
   
   @media (max-width: 768px) {
@@ -364,27 +364,27 @@ const AboutCardTitle = styled.h3`
 `;
 
 const AboutCardText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #6a6a6a;
+  color: #536b65;
   line-height: 1.6;
   white-space: pre-wrap;
   
   @media (max-width: 768px) {
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.5;
   }
   
   @media (max-width: 480px) {
-    font-size: 10px;
+    font-size: 13px;
     line-height: 1.4;
   }
 `;
 
 // Estilos para o componente de progresso do próximo marco na Home
 const MilestoneContainer = styled.div`
-  background: rgba(26, 26, 26, 0.95);
-  border: 2px solid #4a6a8a;
+  background: #ffffff;
+  border: 2px solid #237e70;
   border-radius: 12px;
   padding: 20px;
   max-width: 400px;
@@ -399,23 +399,23 @@ const MilestoneContainer = styled.div`
   
   @media (max-width: 480px) {
     padding: 12px;
-    border-radius: 8px;
+    border-radius: 14px;
   }
 `;
 
 const MilestoneTitle = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #4a6a8a;
+  color: #237e70;
   margin-bottom: 12px;
   text-align: center;
   
   @media (max-width: 768px) {
-    font-size: 10px;
+    font-size: 13px;
   }
   
   @media (max-width: 480px) {
-    font-size: 9px;
+    font-size: 13px;
     margin-bottom: 10px;
   }
 `;
@@ -428,7 +428,7 @@ const MilestoneProgressBar = styled.div`
   width: 100%;
   height: 12px;
   background: #2a2a2a;
-  border-radius: 6px;
+  border-radius: 14px;
   overflow: hidden;
   position: relative;
 `;
@@ -436,7 +436,7 @@ const MilestoneProgressBar = styled.div`
 const MilestoneProgressFill = styled.div`
   height: 100%;
   background: linear-gradient(90deg, #4CAF50, #45a049);
-  border-radius: 6px;
+  border-radius: 14px;
   transition: width 0.5s ease;
   position: relative;
   
@@ -458,24 +458,24 @@ const MilestoneProgressFill = styled.div`
 `;
 
 const MilestoneProgressText = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #ffffff;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #183c37;
   text-align: center;
   margin-top: 6px;
   
   @media (max-width: 768px) {
-    font-size: 8px;
+    font-size: 13px;
   }
   
   @media (max-width: 480px) {
-    font-size: 7px;
+    font-size: 13px;
     margin-top: 4px;
   }
 `;
 
 const MilestoneCurrentTotal = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 16px;
   color: #4CAF50;
   text-align: center;
@@ -493,17 +493,17 @@ const MilestoneCurrentTotal = styled.div`
 `;
 
 const MilestoneNext = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
   color: #666;
   text-align: center;
   
   @media (max-width: 768px) {
-    font-size: 8px;
+    font-size: 13px;
   }
   
   @media (max-width: 480px) {
-    font-size: 7px;
+    font-size: 13px;
   }
 `;
 
