@@ -228,9 +228,9 @@ const Dev = () => {
         .from('profiles')
         .select('*', { count: 'exact' });
 
-      const { count: totalEVs } = await supabase
-        .from('evs')
-        .select('*', { count: 'exact' });
+      const { data: community, error: communityError } = await supabase.rpc('get_community_ev_statistics').single();
+      if (communityError) throw communityError;
+      const totalEVs = Number(community.total);
 
       const { count: totalBadges } = await supabase
         .from('badges')
@@ -239,10 +239,9 @@ const Dev = () => {
       // EVs de hoje
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      const { count: todayEVs } = await supabase
-        .from('evs')
-        .select('*', { count: 'exact' })
-        .gte('created_at', today.toISOString());
+      const { data: daily, error: dailyError } = await supabase.rpc('get_ev_leaderboard', { p_start: today.toISOString() });
+      if (dailyError) throw dailyError;
+      const todayEVs = (daily || []).reduce((sum, row) => sum + Number(row.evs_count), 0);
 
       setStats({
         totalUsers: totalUsers || 0,
