@@ -114,7 +114,7 @@ const ProgressFill = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, transparent 0%, #eaf3ef 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, var(--app-field) 50%, transparent 100%);
     animation: shimmer 2s infinite;
   }
 `;
@@ -482,8 +482,8 @@ const Estatisticas = () => {
     <Container>
       <Title>Progresso</Title>
       <StatsGrid><StatCard><StatValue>{streak}</StatValue><StatLabel>Sequência atual (dias)</StatLabel></StatCard><StatCard><StatValue>{userStats.total_evs}</StatValue><StatLabel>Total de EVs</StatLabel></StatCard></StatsGrid>
-      <section style={{background:'white',border:'1px solid #dce8e3',borderRadius:20,padding:20,marginBottom:20}}><h2 style={{fontSize:18}}>Últimos 7 dias</h2><div style={{display:'grid',gridTemplateColumns:'repeat(7,minmax(0,1fr))',gap:8,alignItems:'end',maxWidth:500,margin:'auto'}}>{week.map((day,i)=><div key={i} style={{display:'grid',gap:5,justifyItems:'center',fontSize:12}}><span>{day.count}</span><div style={{height:Math.max(3,day.count/Math.max(20,...week.map(d=>d.count))*90),width:'65%',background:i===6?'#237e70':'#9bcfc2',borderRadius:5}}/><span>{day.label}</span></div>)}</div></section>
-      <section style={{background:'white',border:'1px solid #dce8e3',borderRadius:20,padding:20,marginBottom:20}}><h2 style={{fontSize:18}}>EVs recentes</h2>{evData.length===0?<p>Nenhum EV registrado ainda.</p>:evData.slice(0,10).map((ev,i)=><div key={i} style={{padding:'12px 0',borderBottom:'1px solid #dce8e3',overflowWrap:'anywhere'}}><strong style={{color:'#237e70'}}>EV {ev.score}</strong> <small>{formatDate(ev.created_at)}</small>{ev.notes&&<p>{ev.notes}</p>}</div>)}</section>
+      <section style={{background:'var(--app-card)',border:'1px solid var(--app-border)',borderRadius:'calc(20px * var(--app-roundness))',padding:20,marginBottom:20}}><h2 style={{fontSize:18}}>Últimos 7 dias</h2><div style={{display:'grid',gridTemplateColumns:'repeat(7,minmax(0,1fr))',gap:8,alignItems:'end',maxWidth:500,margin:'auto'}}>{week.map((day,i)=><div key={i} style={{display:'grid',gap:5,justifyItems:'center',fontSize:12}}><span>{day.count}</span><div style={{height:Math.max(3,day.count/Math.max(20,...week.map(d=>d.count))*90),width:'65%',background:i===6?'#237e70':'var(--app-chart)',borderRadius:5}}/><span>{day.label}</span></div>)}</div></section>
+      <section style={{background:'var(--app-card)',border:'1px solid var(--app-border)',borderRadius:'calc(20px * var(--app-roundness))',padding:20,marginBottom:20}}><h2 style={{fontSize:18}}>EVs recentes</h2>{evData.length===0?<p>Nenhum EV registrado ainda.</p>:evData.slice(0,10).map((ev,i)=><div key={i} style={{padding:'12px 0',borderBottom:'1px solid var(--app-border)',overflowWrap:'anywhere'}}><strong style={{color:'var(--app-link)'}}>EV {ev.score}</strong> <small>{formatDate(ev.created_at)}</small>{ev.notes&&<p>{ev.notes}</p>}</div>)}</section>
       
       <SectionTitle>Minhas Estatísticas</SectionTitle>
       <StatsGrid>
