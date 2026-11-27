@@ -49,7 +49,7 @@ const Subtitle = styled.p`
 
 const Section = styled.div`
   background: var(--app-soft);
-  border: 1px solid var(--app-border);
+  border: 1px solid var(--app-field-border);
   border-radius: calc(12px * var(--app-roundness, 1));
   padding: 24px;
   margin-bottom: 20px;
@@ -85,8 +85,8 @@ const VeiculoGrid = styled.div`
 `;
 
 const VeiculoCard = styled.div`
-  background: #eaf3ef;
-  border: 1px solid var(--app-border);
+  background: var(--app-field);
+  border: 1px solid var(--app-field-border);
   border-radius: calc(10px * var(--app-roundness, 1));
   padding: 16px;
   border-left: 3px solid ${props => props.$color || 'var(--app-accent)'};
@@ -103,8 +103,8 @@ const VeiculoLabel = styled.label`
 const VeiculoInput = styled.textarea`
   width: 100%;
   min-height: 70px;
-  background: #eaf3ef;
-  border: 1px solid var(--app-border);
+  background: var(--app-field);
+  border: 1px solid var(--app-field-border);
   border-radius: calc(14px * var(--app-roundness, 1));
   color: var(--app-muted);
   padding: 10px;
@@ -116,7 +116,7 @@ const VeiculoInput = styled.textarea`
   &:focus {
     outline: none;
     border-color: var(--app-accent);
-    background: #eaf3ef;
+    background: var(--app-field);
   }
 
   &::placeholder {
@@ -146,7 +146,7 @@ const Dot = styled.button`
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 2px solid ${props => props.$active ? props.$filledColor : 'var(--app-border)'};
+  border: 2px solid ${props => props.$active ? props.$filledColor : 'var(--app-field-border)'};
   background: ${props => props.$active ? props.$filledColor : 'transparent'};
   cursor: pointer;
   font-size: 0;
@@ -158,7 +158,7 @@ const Dot = styled.button`
 
   &:hover {
     border-color: ${props => props.$filledColor || 'var(--app-accent)'};
-    background: ${props => props.$active ? props.$filledColor : '#eaf3ef'};
+    background: ${props => props.$active ? props.$filledColor : 'var(--app-field)'};
   }
 
   @media (max-width: 480px) {
@@ -181,8 +181,8 @@ const Label = styled.label`
 
 const Input = styled.input`
   width: 100%;
-  background: #eaf3ef;
-  border: 1px solid var(--app-border);
+  background: var(--app-field);
+  border: 1px solid var(--app-field-border);
   border-radius: calc(14px * var(--app-roundness, 1));
   color: var(--app-muted);
   padding: 10px;
@@ -199,8 +199,8 @@ const Input = styled.input`
 const TextArea = styled.textarea`
   width: 100%;
   min-height: 80px;
-  background: #eaf3ef;
-  border: 1px solid var(--app-border);
+  background: var(--app-field);
+  border: 1px solid var(--app-field-border);
   border-radius: calc(14px * var(--app-roundness, 1));
   color: var(--app-muted);
   padding: 10px;
@@ -256,12 +256,12 @@ const SaveBtn = styled(Btn)`
 `;
 
 const ClearBtn = styled(Btn)`
-  background: #eaf3ef;
+  background: var(--app-field);
   color: var(--app-muted);
-  border: 1px solid var(--app-border);
+  border: 1px solid var(--app-field-border);
 
   &:hover {
-    background: #eaf3ef;
+    background: var(--app-field);
   }
 `;
 
@@ -271,7 +271,7 @@ const ExportSection = styled.div`
   margin: 25px 0;
   padding: 18px;
   background: var(--app-soft);
-  border: 1px solid var(--app-border);
+  border: 1px solid var(--app-field-border);
   border-radius: calc(14px * var(--app-roundness, 1));
 `;
 
@@ -352,8 +352,8 @@ const TimelineTitle = styled.h2`
 `;
 
 const SinalCard = styled.div`
-  background: #eaf3ef;
-  border: 1px solid var(--app-border);
+  background: var(--app-field);
+  border: 1px solid var(--app-field-border);
   border-radius: calc(10px * var(--app-roundness, 1));
   padding: 16px;
   margin-bottom: 12px;
@@ -386,7 +386,7 @@ const SinalActions = styled.div`
 
 const ActionBtn = styled.button`
   background: none;
-  border: 1px solid var(--app-border);
+  border: 1px solid var(--app-field-border);
   color: var(--app-muted);
   padding: 4px 10px;
   border-radius: calc(14px * var(--app-roundness, 1));
@@ -406,7 +406,7 @@ const VeiculoRow = styled.div`
   gap: 10px;
   margin-bottom: 8px;
   padding: 8px;
-  background: #eaf3ef;
+  background: var(--app-field);
   border-radius: calc(14px * var(--app-roundness, 1));
 `;
 
@@ -471,7 +471,7 @@ const FilterRow = styled.div`
 const FilterBtn = styled.button`
   padding: 6px 14px;
   border-radius: calc(20px * var(--app-roundness, 1));
-  border: 1px solid ${props => props.$active ? 'var(--app-accent)' : 'var(--app-border)'};
+  border: 1px solid ${props => props.$active ? 'var(--app-accent)' : 'var(--app-field-border)'};
   background: ${props => props.$active ? 'var(--app-soft)' : 'transparent'};
   color: ${props => props.$active ? 'var(--app-accent)' : 'var(--app-muted)'};
   font-size: 13px;
