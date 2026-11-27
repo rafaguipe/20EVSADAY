@@ -300,22 +300,11 @@ const Estatisticas = () => {
       });
 
       // Carregar total de EVs da comunidade (mesmo método da janelinha)
-      const { count: communityTotalEVs, error: communityError } = await supabase
-        .from('evs')
-        .select('*', { count: 'exact' });
-
+      const { data: community, error: communityError } = await supabase
+        .rpc('get_community_ev_statistics').single();
       if (communityError) throw communityError;
-
-      // Carregar todas as EVs para calcular média da comunidade
-      const { data: allEVs, error: allEVsError } = await supabase
-        .from('evs')
-        .select('score');
-
-      if (allEVsError) throw allEVsError;
-
-      const community_average_score = allEVs?.length > 0 
-        ? (allEVs.reduce((sum, ev) => sum + ev.score, 0) / allEVs.length).toFixed(1) 
-        : 0;
+      const communityTotalEVs = Number(community.total);
+      const community_average_score = Number(community.average_score).toFixed(1);
 
       setCommunityStats({
         total_evs: communityTotalEVs || 0,
