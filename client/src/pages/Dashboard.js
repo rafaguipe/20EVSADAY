@@ -546,7 +546,7 @@ const EVNotes = styled.div`
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const { isOnline, saveEVOffline } = useSync();
+  const { isOnline } = useSync();
   const { soundEnabled } = useEVTimer();
   const [formData, setFormData] = useState({
     score: null,
@@ -791,26 +791,11 @@ const Dashboard = () => {
     setLoading(true);
     
     try {
-      // Tocar som de moeda sempre que registrar EV
-      setPlayCoinSound(true);
-      
-      if (!isOnline) {
-        // Modo offline - salvar no localStorage
-        const result = await saveEVOffline(formData.score, formData.notes);
-        
-        if (result.success) {
-          // Reset form
-          setFormData({
-            score: null,
-            notes: ''
-          });
-          
-          // Recarregar dados locais
-          await loadStats();
-          await loadRecentEVs();
-        }
-      } else {
-        // Modo online - salvar no Supabase
+      if (!isOnline || !navigator.onLine) {
+        toast.error('Sem conexão. Reconecte-se para registrar o EV.');
+        return;
+      }
+      {
         const { error } = await supabase
           .from('evs')
           .insert([
@@ -823,6 +808,7 @@ const Dashboard = () => {
           ]);
 
         if (error) throw error;
+        setPlayCoinSound(true);
         
         // Verificar se é o primeiro EV e atribuir badge de Iniciante Consciencial
         const { count: evCount } = await supabase
