@@ -39,7 +39,6 @@ const Profile = () => {
   const { intervalMinutes, setIntervalMinutes, updateInterval, soundEnabled, updateSoundEnabled, tabBlinkEnabled, updateTabBlinkEnabled } = useEVTimer();
   const [soundEnabledLocal, setSoundEnabledLocal] = useState(true);
   const [tabBlinkEnabledLocal, setTabBlinkEnabledLocal] = useState(true);
-  const [bluetoothEVEnabled, setBluetoothEVEnabled] = useState(false);
   const [evData, setEvData] = useState([]);
   const [exportLoading, setExportLoading] = useState(false);
   const [editingUsername, setEditingUsername] = useState(false);
@@ -74,12 +73,6 @@ const Profile = () => {
   useEffect(() => {
     if (profile?.tab_blink_enabled !== undefined) {
       setTabBlinkEnabledLocal(profile.tab_blink_enabled);
-    }
-  }, [profile]);
-
-  useEffect(() => {
-    if (profile?.bluetooth_ev_enabled !== undefined) {
-      setBluetoothEVEnabled(profile.bluetooth_ev_enabled);
     }
   }, [profile]);
 
@@ -447,41 +440,6 @@ const Profile = () => {
     }
   };
 
-  const handleBluetoothEVToggle = async () => {
-    const newValue = !bluetoothEVEnabled;
-
-    setBluetoothEVEnabled(newValue);
-
-    setLoading(true);
-
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .update({
-          bluetooth_ev_enabled: newValue,
-          updated_at: new Date().toISOString()
-        })
-        .eq('user_id', user.id)
-        .select();
-
-      if (error) {
-        setBluetoothEVEnabled(!newValue);
-
-        if (error.code === '42703') {
-          toast.error('❌ Campo bluetooth_ev_enabled não existe. Execute o script SQL primeiro!');
-        } else {
-          toast.error(`❌ Erro: ${error.message}`);
-        }
-      } else {
-        toast.success(newValue ? '🎮 Botão Bluetooth ativado!' : '⏸️ Botão Bluetooth desativado!');
-      }
-    } catch (err) {
-      setBluetoothEVEnabled(!newValue);
-      toast.error('❌ Erro inesperado!');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleUsernameEdit = () => {
     setEditingUsername(true);
@@ -851,21 +809,7 @@ const Profile = () => {
             </ToggleStatus>
           </ToggleContainer>
 
-          <ToggleContainer>
-            <ToggleLabel>Registro EV via Botão Bluetooth:</ToggleLabel>
-            <ToggleSwitch>
-              <ToggleInput
-                type="checkbox"
-                checked={bluetoothEVEnabled}
-                onChange={handleBluetoothEVToggle}
-                disabled={loading}
-              />
-              <ToggleSlider checked={bluetoothEVEnabled} />
-            </ToggleSwitch>
-            <ToggleStatus enabled={bluetoothEVEnabled}>
-              {bluetoothEVEnabled ? 'LIGADO' : 'DESLIGADO'}
-            </ToggleStatus>
-          </ToggleContainer>
+
 
         </Card>
       </Grid>
