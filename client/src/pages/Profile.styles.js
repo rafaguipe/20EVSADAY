@@ -4,7 +4,7 @@ export const Container = styled.div`
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-  background: ${({ theme }) => theme.background};
+  background: #f4f8f6; color: #183c37; padding-bottom: 100px !important;
 
   @media (max-width: 768px) {
     padding: 12px;
@@ -12,9 +12,9 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 24px;
-  color: ${({ theme }) => theme.text};
+  color: #183c37;
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -44,9 +44,9 @@ export const Grid = styled.div`
 `;
 
 export const Card = styled.div`
-  background: ${({ theme }) => theme.card};
-  border: 2px solid ${({ theme }) => theme.secondary};
-  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #dce8e3;
+  border-radius: 14px;
   padding: 25px;
   backdrop-filter: blur(10px);
 
@@ -60,9 +60,9 @@ export const Card = styled.div`
 `;
 
 export const CardTitle = styled.h2`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 16px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 20px;
   text-transform: uppercase;
 
@@ -94,8 +94,8 @@ export const ProfileInfo = styled.div`
 export const Avatar = styled.div`
   width: 80px;
   height: 80px;
-  background: #4a4a4a;
-  border: 3px solid #6a6a6a;
+  background: #dce8e3;
+  border: 3px solid #536b65;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -115,9 +115,9 @@ export const UserInfo = styled.div`
 `;
 
 export const Username = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 18px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 8px;
 
   @media (max-width: 768px) {
@@ -130,16 +130,16 @@ export const Username = styled.div`
 `;
 
 export const Email = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #6a6a6a;
+  color: #536b65;
 
   @media (max-width: 768px) {
-    font-size: 10px;
+    font-size: 13px;
   }
 
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
   }
 `;
 
@@ -162,9 +162,9 @@ export const AvatarGrid = styled.div`
 export const AvatarOption = styled.div`
   width: 60px;
   height: 60px;
-  border: 3px solid ${props => props.selected ? '#4a6a8a' : '#4a4a4a'};
-  background: #1a1a1a;
-  border-radius: 8px;
+  border: 3px solid ${props => props.selected ? '#237e70' : '#dce8e3'};
+  background: #f4f8f6;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -174,7 +174,7 @@ export const AvatarOption = styled.div`
   min-height: 48px;
 
   &:hover {
-    border-color: #6a6a6a;
+    border-color: #536b65;
     transform: scale(1.05);
   }
 
@@ -198,9 +198,9 @@ export const StatsGrid = styled.div`
 `;
 
 export const StatCard = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 15px;
   text-align: center;
   backdrop-filter: blur(10px);
@@ -211,9 +211,9 @@ export const StatCard = styled.div`
 `;
 
 export const StatValue = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 20px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 5px;
 
   @media (max-width: 768px) {
@@ -226,20 +226,20 @@ export const StatValue = styled.div`
 `;
 
 export const StatLabel = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   text-transform: uppercase;
 
   @media (max-width: 480px) {
-    font-size: 7px;
+    font-size: 13px;
   }
 `;
 
 export const HistoryChart = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 20px;
   backdrop-filter: blur(10px);
   margin-top: 20px;
@@ -251,9 +251,9 @@ export const HistoryChart = styled.div`
 `;
 
 export const ChartTitle = styled.h3`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 15px;
   text-transform: uppercase;
 
@@ -273,14 +273,14 @@ export const ChartBar = styled.div`
 `;
 
 export const ChartLabel = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #ffffff;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #183c37;
   width: 80px;
   min-width: 80px;
 
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
     width: 60px;
     min-width: 60px;
   }
@@ -288,8 +288,8 @@ export const ChartLabel = styled.div`
 
 export const ChartBarFill = styled.div`
   height: 20px;
-  background: #4a6a8a;
-  border-radius: 4px;
+  background: #237e70;
+  border-radius: 14px;
   margin: 0 10px;
   min-width: 20px;
   transition: width 0.3s ease;
@@ -301,22 +301,22 @@ export const ChartBarFill = styled.div`
 `;
 
 export const ChartValue = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   min-width: 60px;
   text-align: right;
 
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
     min-width: 40px;
   }
 `;
 
 export const LoadingText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
-  color: #6a6a6a;
+  color: #536b65;
   text-align: center;
   padding: 40px;
 
@@ -340,17 +340,17 @@ export const ToggleContainer = styled.div`
 `;
 
 export const ToggleLabel = styled.span`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: ${({ theme }) => theme.text};
+  color: #183c37;
   font-weight: bold;
 
   @media (max-width: 768px) {
-    font-size: 10px;
+    font-size: 13px;
   }
 
   @media (max-width: 480px) {
-    font-size: 9px;
+    font-size: 13px;
   }
 `;
 
@@ -387,7 +387,7 @@ export const ToggleSlider = styled.span`
   }
 
   ${({ checked }) => checked && `
-    background-color: #4a8a4a;
+    background-color: #237e70;
 
     &:before {
       transform: translateX(26px);
@@ -402,13 +402,13 @@ export const ToggleInput = styled.input`
 `;
 
 export const ToggleStatus = styled.span`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: ${({ enabled }) => enabled ? '#4a8a4a' : '#8a4a4a'};
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: ${({ enabled }) => enabled ? '#237e70' : '#8a4a4a'};
   margin-left: 8px;
 
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
   }
 `;
 
@@ -416,8 +416,8 @@ export const ExportSection = styled.div`
   margin-top: 20px;
   padding: 20px;
   background: rgba(74, 106, 138, 0.1);
-  border: 2px solid #4a6a8a;
-  border-radius: 8px;
+  border: 2px solid #237e70;
+  border-radius: 14px;
 
   @media (max-width: 480px) {
     margin-top: 14px;
@@ -426,9 +426,9 @@ export const ExportSection = styled.div`
 `;
 
 export const ExportTitle = styled.h3`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
-  color: #4a6a8a;
+  color: #237e70;
   margin-bottom: 15px;
   text-transform: uppercase;
 
@@ -448,12 +448,12 @@ export const ExportButtons = styled.div`
 `;
 
 export const ExportButton = styled.button`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   padding: 12px 20px;
   border: 2px solid ${({ variant }) => {
     if (variant === 'txt') return '#ffc107';
     if (variant === 'csv') return '#28a745';
-    return '#4a6a8a';
+    return '#237e70';
   }};
   background: ${({ variant }) => {
     if (variant === 'txt') return 'rgba(255, 193, 7, 0.1)';
@@ -463,9 +463,9 @@ export const ExportButton = styled.button`
   color: ${({ variant }) => {
     if (variant === 'txt') return '#ffc107';
     if (variant === 'csv') return '#28a745';
-    return '#4a6a8a';
+    return '#237e70';
   }};
-  border-radius: 6px;
+  border-radius: 14px;
   cursor: pointer;
   font-size: 12px;
   transition: all 0.2s;
@@ -478,7 +478,7 @@ export const ExportButton = styled.button`
     background: ${({ variant }) => {
       if (variant === 'txt') return '#ffc107';
       if (variant === 'csv') return '#28a745';
-      return '#4a6a8a';
+      return '#237e70';
     }};
     color: white;
     transform: translateY(-2px);
@@ -491,20 +491,20 @@ export const ExportButton = styled.button`
   }
 
   @media (max-width: 480px) {
-    font-size: 10px;
+    font-size: 13px;
     padding: 10px 14px;
   }
 `;
 
 export const ExportInfo = styled.p`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   margin-top: 15px;
   line-height: 1.4;
 
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
   }
 `;
 
@@ -512,8 +512,8 @@ export const TelegramSection = styled.div`
   margin-top: 20px;
   padding: 20px;
   background: rgba(74, 106, 138, 0.1);
-  border: 2px solid #4a6a8a;
-  border-radius: 8px;
+  border: 2px solid #237e70;
+  border-radius: 14px;
 
   @media (max-width: 480px) {
     margin-top: 14px;
@@ -522,25 +522,25 @@ export const TelegramSection = styled.div`
 `;
 
 export const TelegramText = styled.p`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   line-height: 1.5;
   margin: 0 0 12px;
 
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
   }
 `;
 
 export const TelegramCode = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
-  color: #ffffff;
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px dashed #4a6a8a;
+  color: #183c37;
+  background: #ffffff;
+  border: 2px dashed #237e70;
   padding: 12px;
-  border-radius: 6px;
+  border-radius: 14px;
   text-align: center;
   margin-bottom: 12px;
 
@@ -561,19 +561,19 @@ export const TelegramButtonRow = styled.div`
 `;
 
 export const TelegramButton = styled.button`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
   padding: 10px 16px;
-  border-radius: 6px;
-  border: 2px solid #4a6a8a;
+  border-radius: 14px;
+  border: 2px solid #237e70;
   background: rgba(74, 106, 138, 0.15);
-  color: #4a6a8a;
+  color: #237e70;
   cursor: pointer;
   transition: all 0.2s ease;
   min-height: 48px;
 
   &:hover {
-    background: #4a6a8a;
+    background: #237e70;
     color: #ffffff;
   }
 
@@ -583,7 +583,7 @@ export const TelegramButton = styled.button`
   }
 
   @media (max-width: 480px) {
-    font-size: 9px;
+    font-size: 13px;
     padding: 8px 12px;
   }
 `;

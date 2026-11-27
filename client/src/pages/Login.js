@@ -11,13 +11,13 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  background: #f4f8f6;
 `;
 
 const FormCard = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 40px;
   width: 100%;
   max-width: 400px;
@@ -31,14 +31,14 @@ const FormCard = styled.div`
   @media (max-width: 480px) {
     padding: 20px 15px;
     max-width: 95%;
-    border-radius: 6px;
+    border-radius: 14px;
   }
 `;
 
 const Title = styled.h1`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 24px;
-  color: #ffffff;
+  color: #183c37;
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -67,20 +67,20 @@ const FormGroup = styled.div`
 `;
 
 const Label = styled.label`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #ffffff;
+  color: #183c37;
   text-transform: uppercase;
 `;
 
 const Input = styled.input`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   padding: 12px;
-  border: 2px solid #4a4a4a;
-  background: #1a1a1a;
-  color: #ffffff;
+  border: 2px solid #dce8e3;
+  background: #f4f8f6;
+  color: #183c37;
   font-size: 14px;
-  border-radius: 4px;
+  border-radius: 14px;
   min-height: 48px;
   
   @media (max-width: 768px) {
@@ -89,23 +89,23 @@ const Input = styled.input`
   }
   
   @media (max-width: 480px) {
-    font-size: 11px;
+    font-size: 13px;
     padding: 8px;
   }
   
   &:focus {
     outline: none;
-    border-color: #6a6a6a;
+    border-color: #536b65;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
   }
 `;
 
 const SubmitButton = styled.button`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
   padding: 15px;
-  border: 2px solid #4a4a4a;
-  background: #2a4a6a;
+  border: 2px solid #dce8e3;
+  background: #237e70;
   color: #ffffff;
   cursor: pointer;
   text-transform: uppercase;
@@ -120,20 +120,20 @@ const SubmitButton = styled.button`
   }
   
   @media (max-width: 480px) {
-    font-size: 11px;
+    font-size: 13px;
     padding: 10px;
     width: 100%;
   }
   
   &:hover {
-    background: #4a6a8a;
-    border-color: #6a8aaa;
+    background: #237e70;
+    border-color: #237e70;
     transform: translateY(-2px);
   }
   
   &:disabled {
-    background: #4a4a4a;
-    border-color: #6a6a6a;
+    background: #dce8e3;
+    border-color: #536b65;
     cursor: not-allowed;
     transform: none;
   }
@@ -142,16 +142,16 @@ const SubmitButton = styled.button`
 const LinkText = styled.div`
   text-align: center;
   margin-top: 20px;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   
   @media (max-width: 768px) {
-    font-size: 10px;
+    font-size: 13px;
   }
   
   @media (max-width: 480px) {
-    font-size: 9px;
+    font-size: 13px;
   }
 `;
 
@@ -166,8 +166,8 @@ const StyledLink = styled(Link)`
 `;
 
 const ErrorMessage = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
   color: #ff6b6b;
   text-align: center;
   margin-top: 10px;
@@ -175,23 +175,23 @@ const ErrorMessage = styled.div`
 
 const ResendButton = styled.button`
   padding: 8px 16px;
-  border-radius: 6px;
-  border: 2px solid #4a6a8a;
+  border-radius: 14px;
+  border: 2px solid #237e70;
   background: transparent;
-  color: #4a6a8a;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  color: #237e70;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
   min-height: 48px;
   
   @media (max-width: 768px) {
-    font-size: 9px;
+    font-size: 13px;
     padding: 8px 12px;
   }
   
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
     padding: 6px 10px;
     width: 100%;
   }
@@ -208,16 +208,16 @@ const ResendButton = styled.button`
 
 const EmailInfo = styled.div`
   background: rgba(74, 106, 138, 0.1);
-  border: 2px solid #4a6a8a;
-  border-radius: 6px;
+  border: 2px solid #237e70;
+  border-radius: 14px;
   padding: 12px;
   margin-bottom: 20px;
 `;
 
 const InfoText = styled.p`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #4a6a8a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #237e70;
   text-align: center;
   margin: 0;
   line-height: 1.4;

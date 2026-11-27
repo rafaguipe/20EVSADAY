@@ -10,13 +10,13 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  background: #f4f8f6;
 `;
 
 const FormCard = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 40px;
   width: 100%;
   max-width: 400px;
@@ -24,9 +24,9 @@ const FormCard = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 24px;
-  color: #ffffff;
+  color: #183c37;
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -45,34 +45,34 @@ const FormGroup = styled.div`
 `;
 
 const Label = styled.label`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #ffffff;
+  color: #183c37;
   text-transform: uppercase;
 `;
 
 const Input = styled.input`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   padding: 12px;
-  border: 2px solid #4a4a4a;
-  background: #1a1a1a;
-  color: #ffffff;
+  border: 2px solid #dce8e3;
+  background: #f4f8f6;
+  color: #183c37;
   font-size: 14px;
-  border-radius: 4px;
+  border-radius: 14px;
   
   &:focus {
     outline: none;
-    border-color: #6a6a6a;
+    border-color: #536b65;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
   }
 `;
 
 const SubmitButton = styled.button`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
   padding: 15px;
-  border: 2px solid #4a4a4a;
-  background: #2a4a6a;
+  border: 2px solid #dce8e3;
+  background: #237e70;
   color: #ffffff;
   cursor: pointer;
   text-transform: uppercase;
@@ -80,14 +80,14 @@ const SubmitButton = styled.button`
   margin-top: 10px;
   
   &:hover {
-    background: #4a6a8a;
-    border-color: #6a8aaa;
+    background: #237e70;
+    border-color: #237e70;
     transform: translateY(-2px);
   }
   
   &:disabled {
-    background: #4a4a4a;
-    border-color: #6a6a6a;
+    background: #dce8e3;
+    border-color: #536b65;
     cursor: not-allowed;
     transform: none;
   }
@@ -96,9 +96,9 @@ const SubmitButton = styled.button`
 const LinkText = styled.div`
   text-align: center;
   margin-top: 20px;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
 `;
 
 const StyledLink = styled(Link)`
@@ -112,8 +112,8 @@ const StyledLink = styled(Link)`
 `;
 
 const SuccessMessage = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
   color: #4CAF50;
   text-align: center;
   margin-top: 10px;
@@ -121,8 +121,8 @@ const SuccessMessage = styled.div`
 `;
 
 const ErrorMessage = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
   color: #ff6b6b;
   text-align: center;
   margin-top: 10px;
@@ -130,16 +130,16 @@ const ErrorMessage = styled.div`
 
 const InfoBox = styled.div`
   background: rgba(74, 106, 138, 0.1);
-  border: 2px solid #4a6a8a;
-  border-radius: 6px;
+  border: 2px solid #237e70;
+  border-radius: 14px;
   padding: 12px;
   margin-bottom: 20px;
 `;
 
 const InfoText = styled.p`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #4a6a8a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #237e70;
   text-align: center;
   margin: 0;
   line-height: 1.4;
@@ -160,19 +160,18 @@ const ForgotPassword = () => {
     try {
       // URL de redirecionamento - deve estar configurada no Supabase
       const redirectUrl = `${window.location.origin}/reset-password`;
-      console.log('Enviando link de recuperação para:', email);
-      console.log('URL de redirecionamento:', redirectUrl);
-      
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
         redirectTo: redirectUrl
       });
 
       if (error) {
-        setError(error.message);
-        toast.error('Erro ao enviar e-mail: ' + error.message);
+        setError('Não foi possível solicitar a recuperação. Aguarde alguns minutos e tente novamente.');
+        
       } else {
         setSuccess(true);
-        toast.success('📧 E-mail enviado! Verifique sua caixa de entrada.');
+        toast.success('Solicitação recebida. Verifique seu e-mail.');
       }
     } catch (err) {
       setError('Erro inesperado ao enviar e-mail');
@@ -189,16 +188,7 @@ const ForgotPassword = () => {
         
         <InfoBox>
           <InfoText>
-            📧 Digite seu e-mail e tentaremos enviar um link para redefinir sua senha.<br/>
-            <br/>
-            ⚠️ <strong>Usando Outlook/Hotmail?</strong><br/>
-            O Outlook pode proteger o link. Para extrair o link real:<br/>
-            1. Clique com botão direito no link do e-mail<br/>
-            2. Selecione "Copiar endereço do link"<br/>
-            3. Cole em um editor de texto<br/>
-            4. Procure por "url=" e copie tudo após esse parâmetro<br/>
-            5. Decodifique (substitua %3A por :, %2F por /, %3F por ?, %26 por &)<br/>
-            6. Acesse o link decodificado no navegador
+            Informe seu e-mail cadastrado para solicitar um link de recuperação.
           </InfoText>
         </InfoBox>
         
@@ -207,7 +197,7 @@ const ForgotPassword = () => {
             ✅ Solicitação enviada!<br/>
             {window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1') 
               ? '⚠️ Em desenvolvimento local, o e-mail pode não ser enviado. Entre em contato com o administrador.'
-              : 'Verifique sua caixa de entrada e siga as instruções para redefinir sua senha. Se não receber o e-mail em alguns minutos, entre em contato com o administrador.'}
+              : 'Se houver uma conta associada ao e-mail, você receberá instruções. Confira também a pasta de spam.'}
           </SuccessMessage>
         ) : (
           <Form onSubmit={handleSubmit}>

@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import toast from 'react-hot-toast';
 
 const Container = styled.div`
+  background: #f4f8f6; color: #183c37; font-family: system-ui, sans-serif; box-sizing: border-box; padding-bottom: 100px !important;
   padding: 20px;
   max-width: 1200px;
   margin:0 auto;
@@ -21,9 +22,9 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 24px;
-  color: #ffffff;
+  color: #183c37;
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -49,41 +50,41 @@ const StatsGrid = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 20px;
   text-align: center;
   backdrop-filter: blur(10px);
 `;
 
 const StatValue = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 24px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 8px;
 `;
 
 const StatLabel = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   text-transform: uppercase;
 `;
 
 const ProgressSection = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 25px;
   margin-bottom: 30px;
   backdrop-filter: blur(10px);
 `;
 
 const ProgressTitle = styled.h2`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 16px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 20px;
   text-transform: uppercase;
 `;
@@ -91,8 +92,8 @@ const ProgressTitle = styled.h2`
 const ProgressBar = styled.div`
   width: 100%;
   height: 20px;
-  background: #1a1a1a;
-  border: 2px solid #4a4a4a;
+  background: #f4f8f6;
+  border: 2px solid #dce8e3;
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 10px;
@@ -113,28 +114,28 @@ const ProgressFill = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, #eaf3ef 50%, transparent 100%);
     animation: shimmer 2s infinite;
   }
 `;
 
 const ProgressText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #6a6a6a;
+  color: #536b65;
   text-align: center;
 `;
 
 const LoadingText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
-  color: #6a6a6a;
+  color: #536b65;
   text-align: center;
   padding: 40px;
 `;
 
 const ErrorText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
   color: #ff6b6b;
   text-align: center;
@@ -142,26 +143,26 @@ const ErrorText = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 18px;
-  color: #ffffff;
+  color: #183c37;
   margin: 30px 0 20px 0;
   text-transform: uppercase;
 `;
 
 const ExportSection = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 25px;
   margin-bottom: 30px;
   backdrop-filter: blur(10px);
 `;
 
 const ExportTitle = styled.h3`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 15px;
   text-transform: uppercase;
 `;
@@ -174,19 +175,19 @@ const ExportButtons = styled.div`
 `;
 
 const ExportButton = styled.button`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
   padding: 10px 15px;
-  border: 2px solid #4a4a4a;
-  background: ${props => props.variant === 'csv' ? '#4a8a4a' : '#4a6a8a'};
+  border: 2px solid #dce8e3;
+  background: ${props => props.variant === 'csv' ? '#4a8a4a' : '#237e70'};
   color: #ffffff;
   cursor: pointer;
   text-transform: uppercase;
   transition: all 0.3s ease;
   
   &:hover:not(:disabled) {
-    background: ${props => props.variant === 'csv' ? '#6aaa6a' : '#6a8aaa'};
-    border-color: #6a6a6a;
+    background: ${props => props.variant === 'csv' ? '#6aaa6a' : '#237e70'};
+    border-color: #536b65;
   }
   
   &:disabled {
@@ -196,16 +197,16 @@ const ExportButton = styled.button`
 `;
 
 const ExportInfo = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   line-height: 1.4;
 `;
 
 const NoDataText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #6a6a6a;
+  color: #536b65;
   text-align: center;
   padding: 40px;
 `;
@@ -226,6 +227,8 @@ const Estatisticas = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [exportLoading, setExportLoading] = useState(false);
+  const [week,setWeek]=useState([]);
+  const [streak,setStreak]=useState(0);
   const [evData, setEvData] = useState([]);
 
   const loadStats = async () => {
@@ -252,7 +255,7 @@ const Estatisticas = () => {
       while (hasMore) {
         const { data: scoresPage, error: scoresError } = await supabase
           .from('evs')
-          .select('score')
+          .select('score, created_at')
           .eq('user_id', user.id)
           .order('id', { ascending: true })
           .range(from, from + pageSize - 1);
@@ -289,7 +292,11 @@ const Estatisticas = () => {
       const max_score = allScores.length > 0 ? Math.max(...allScores.map(ev => ev.score)) : 0;
       
       // Calcular dias consecutivos
-      const consecutiveDays = calculateConsecutiveDays(userEVs);
+      const consecutiveDays = calculateConsecutiveDays(allScores);
+      const counts = new Map();
+      allScores.forEach(ev => { const key = new Date(ev.created_at).toDateString(); counts.set(key,(counts.get(key)||0)+1); });
+      setWeek(Array.from({length:7},(_,i)=>{const d=new Date(); d.setDate(d.getDate()-6+i); return {label:d.toLocaleDateString('pt-BR',{weekday:'short'}),count:counts.get(d.toDateString())||0};}));
+      const cursor=new Date(); if(!counts.has(cursor.toDateString())) cursor.setDate(cursor.getDate()-1); let streak=0; while(counts.has(cursor.toDateString())){streak++;cursor.setDate(cursor.getDate()-1);} setStreak(streak);
 
       setUserStats({
         total_evs,
@@ -300,22 +307,11 @@ const Estatisticas = () => {
       });
 
       // Carregar total de EVs da comunidade (mesmo método da janelinha)
-      const { count: communityTotalEVs, error: communityError } = await supabase
-        .from('evs')
-        .select('*', { count: 'exact' });
-
+      const { data: community, error: communityError } = await supabase
+        .rpc('get_community_ev_statistics').single();
       if (communityError) throw communityError;
-
-      // Carregar todas as EVs para calcular média da comunidade
-      const { data: allEVs, error: allEVsError } = await supabase
-        .from('evs')
-        .select('score');
-
-      if (allEVsError) throw allEVsError;
-
-      const community_average_score = allEVs?.length > 0 
-        ? (allEVs.reduce((sum, ev) => sum + ev.score, 0) / allEVs.length).toFixed(1) 
-        : 0;
+      const communityTotalEVs = Number(community.total);
+      const community_average_score = Number(community.average_score).toFixed(1);
 
       setCommunityStats({
         total_evs: communityTotalEVs || 0,
@@ -484,14 +480,14 @@ const Estatisticas = () => {
 
   return (
     <Container>
-      <Title>Estatísticas</Title>
+      <Title>Progresso</Title>
+      <StatsGrid><StatCard><StatValue>{streak}</StatValue><StatLabel>Sequência atual (dias)</StatLabel></StatCard><StatCard><StatValue>{userStats.total_evs}</StatValue><StatLabel>Total de EVs</StatLabel></StatCard></StatsGrid>
+      <section style={{background:'white',border:'1px solid #dce8e3',borderRadius:20,padding:20,marginBottom:20}}><h2 style={{fontSize:18}}>Últimos 7 dias</h2><div style={{display:'grid',gridTemplateColumns:'repeat(7,minmax(0,1fr))',gap:8,alignItems:'end',maxWidth:500,margin:'auto'}}>{week.map((day,i)=><div key={i} style={{display:'grid',gap:5,justifyItems:'center',fontSize:12}}><span>{day.count}</span><div style={{height:Math.max(3,day.count/Math.max(20,...week.map(d=>d.count))*90),width:'65%',background:i===6?'#237e70':'#9bcfc2',borderRadius:5}}/><span>{day.label}</span></div>)}</div></section>
+      <section style={{background:'white',border:'1px solid #dce8e3',borderRadius:20,padding:20,marginBottom:20}}><h2 style={{fontSize:18}}>EVs recentes</h2>{evData.length===0?<p>Nenhum EV registrado ainda.</p>:evData.slice(0,10).map((ev,i)=><div key={i} style={{padding:'12px 0',borderBottom:'1px solid #dce8e3',overflowWrap:'anywhere'}}><strong style={{color:'#237e70'}}>EV {ev.score}</strong> <small>{formatDate(ev.created_at)}</small>{ev.notes&&<p>{ev.notes}</p>}</div>)}</section>
       
       <SectionTitle>Minhas Estatísticas</SectionTitle>
       <StatsGrid>
-        <StatCard>
-          <StatValue>{userStats.total_evs}</StatValue>
-          <StatLabel>Total de EVs</StatLabel>
-        </StatCard>
+
         <StatCard>
           <StatValue>{userStats.total_points}</StatValue>
           <StatLabel>Total de Pontos</StatLabel>
@@ -506,7 +502,7 @@ const Estatisticas = () => {
         </StatCard>
         <StatCard>
           <StatValue>{userStats.consecutive_days}</StatValue>
-          <StatLabel>Dias Consecutivos</StatLabel>
+          <StatLabel>Maior sequência (dias)</StatLabel>
         </StatCard>
       </StatsGrid>
 

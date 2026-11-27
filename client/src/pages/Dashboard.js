@@ -7,360 +7,35 @@ import toast from 'react-hot-toast';
 import styled from 'styled-components';
 import SoundEffect from '../components/SoundEffect';
 import BadgeNotification from '../components/BadgeNotification';
-import DailyProgressBar from '../components/DailyProgressBar';
+import { Link } from 'react-router-dom';
 import EVReminder from '../components/EVReminder';
 import BluetoothEVController from '../components/experimental/BluetoothEVController';
 
 const Container = styled.div`
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  background: ${({ theme }) => theme.background};
+  max-width: 1000px; margin: auto; padding: 24px 16px 80px;
+  color: #183c37; background: #f4f8f6;
+  font-family: system-ui, sans-serif;
 `;
-
-const Title = styled.h1`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 24px;
-  color: ${props => props.theme.text};
-  text-align: center;
-  margin-bottom: 30px;
-  text-transform: uppercase;
-  
-  @media (max-width: 768px) {
-    font-size: 20px;
-    margin-bottom: 25px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 16px;
-    margin-bottom: 20px;
-  }
-`;
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  margin-bottom: 30px;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const Card = styled.div`
-  background: ${props => props.theme.card};
-  border: 2px solid ${props => props.theme.secondary};
-  border-radius: 8px;
-  padding: 25px;
-  backdrop-filter: blur(10px);
-  
-  @media (max-width: 768px) {
-    padding: 20px;
-  }
-  
-  @media (max-width: 480px) {
-    padding: 15px;
-  }
-`;
-
-const CardTitle = styled.h2`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 16px;
-  color: #ffffff;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  
-  @media (max-width: 768px) {
-    font-size: 14px;
-    margin-bottom: 15px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 12px;
-    margin-bottom: 12px;
-  }
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-`;
-
-const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const Label = styled.label`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 12px;
-  color: #ffffff;
-  text-transform: uppercase;
-  
-  @media (max-width: 768px) {
-    font-size: 11px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 10px;
-  }
-`;
-
-const TextArea = styled.textarea`
-  font-family: 'Press Start 2P', monospace;
-  padding: 12px;
-  border: 2px solid #4a4a4a;
-  background: #1a1a1a;
-  color: #ffffff;
-  font-size: 14px;
-  border-radius: 4px;
-  resize: vertical;
-  min-height: 80px;
-  
-  &:focus {
-    outline: none;
-    border-color: #6a6a6a;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-  }
-  
-  /* Ensure minimum touch target height */
-  min-height: 48px;
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    padding: 11px;
-    font-size: 13px;
-  }
-  
-  @media (max-width: 480px) {
-    padding: 10px;
-    font-size: 12px;
-    min-height: 60px;
-  }
-`;
-
-const ScoreButtons = styled.div`
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  margin-top: 10px;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
-  
-  @media (max-width: 480px) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
-  }
-`;
-
-const ScoreButton = styled.button`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 18px;
-  padding: 15px 10px;
-  border: 2px solid #4a4a4a;
-  background: ${props => props.selected ? '#4a6a8a' : '#1a1a1a'};
-  color: #ffffff;
-  cursor: pointer;
-  transition: all 0.1s ease;
-  min-height: 48px;
-  min-width: 48px;
-  
-  @media (max-width: 768px) {
-    font-size: 16px;
-    padding: 12px 8px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 14px;
-    padding: 10px 6px;
-  }
-  
-  &:hover {
-    background: ${props => props.selected ? '#6a8aaa' : '#4a4a4a'};
-    border-color: #6a6a6a;
-    transform: translateY(-2px);
-  }
-  
-  &:active {
-    transform: translateY(0);
-    background: ${props => props.selected ? '#3a5a7a' : '#0a0a0a'};
-  }
-`;
-
-const SubmitButton = styled.button`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 14px;
-  padding: 15px;
-  border: 2px solid #4a4a4a;
-  background: #2a6a2a;
-  color: #ffffff;
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: all 0.1s ease;
-  margin-top: 10px;
-  min-height: 48px;
-  min-width: 48px;
-  
-  @media (max-width: 768px) {
-    font-size: 12px;
-    padding: 12px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 11px;
-    padding: 12px;
-    width: 100%;
-  }
-  
-  &:hover {
-    background: #4a8a4a;
-    border-color: #6aaa6a;
-    transform: translateY(-2px);
-  }
-  
-  &:active {
-    transform: translateY(0);
-    background: #1a5a1a;
-  }
-  
-  &:disabled {
-    background: #4a4a4a;
-    border-color: #6a6a6a;
-    cursor: not-allowed;
-    transform: none;
-    opacity: 0.7;
-  }
-`;
-
-const EscalaSection = styled.div`
-  margin-top: 20px;
-  padding: 20px;
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
-  backdrop-filter: blur(10px);
-  
-  @media (max-width: 768px) {
-    padding: 15px;
-    margin-top: 15px;
-  }
-  
-  @media (max-width: 480px) {
-    padding: 12px;
-    margin-top: 12px;
-  }
-`;
-
-const EscalaTitle = styled.h3`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 12px;
-  color: #ffffff;
-  margin-bottom: 15px;
-  text-transform: uppercase;
-  text-align: center;
-  
-  @media (max-width: 768px) {
-    font-size: 11px;
-    margin-bottom: 12px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 10px;
-    margin-bottom: 10px;
-  }
-`;
-
-const EscalaGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 10px;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 8px;
-  }
-  
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-`;
-
-const EscalaCard = styled.div`
-  background: rgba(74, 106, 138, 0.1);
-  border: 1px solid #4a6a8a;
-  border-radius: 6px;
-  padding: 12px;
-  transition: transform 0.2s;
-  
-  @media (max-width: 768px) {
-    padding: 10px;
-  }
-  
-  @media (max-width: 480px) {
-    padding: 8px;
-  }
-  
-  &:hover {
-    transform: translateY(-1px);
-    background: rgba(74, 106, 138, 0.2);
-  }
-`;
-
-const EscalaNota = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-`;
-
-const NotaBadge = styled.span`
-  background: #4a6a8a;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 0.6rem;
-  font-weight: bold;
-  margin-right: 10px;
-  min-width: 30px;
-  text-align: center;
-  
-  @media (max-width: 768px) {
-    font-size: 0.55rem;
-    padding: 3px 6px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 0.5rem;
-    padding: 3px 5px;
-    margin-right: 6px;
-  }
-`;
-
-const EscalaDescricao = styled.p`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 0.5rem;
-  color: #ffffff;
-  line-height: 1.3;
-  margin: 0;
-  
-  @media (max-width: 768px) {
-    font-size: 0.45rem;
-    line-height: 1.4;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 0.4rem;
-    line-height: 1.5;
-  }
-`;
-
+const Title = styled.h1`font-size: 26px; text-align: center; margin: 16px 0; font-weight: 650;`;
+const Grid = styled.div`display: grid; grid-template-columns: minmax(0, 560px); justify-content:center; gap: 16px; @media(max-width: 700px){grid-template-columns: 1fr;}`;
+const Card = styled.section`background: white; border: 1px solid #dce8e3; border-radius: 20px; padding: 22px; min-width: 0;`;
+const CardTitle = styled.h2`font-size: 18px; margin: 0 0 16px; color: #183c37;`;
+const Form = styled.form`display: grid; gap: 16px;`;
+const FormGroup = styled.div`display: grid; gap: 8px;`;
+const Label = styled.label`font-size: 14px; font-weight: 600;`;
+const TextArea = styled.textarea`font: inherit; color: #183c37; background: #f4f8f6; border: 1px solid #b8cdc5; border-radius: 12px; padding: 12px; min-height: 80px; resize: vertical; width: 100%; box-sizing: border-box;`;
+const ScoreButtons = styled.div`display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 8px;`;
+const ScoreButton = styled.button`font: inherit; font-weight: 650; min-height: 48px; border-radius: 12px; border: 1px solid #b8cdc5; cursor: pointer; background: ${p=>p.selected?'#237e70':'#f4f8f6'}; color: ${p=>p.selected?'white':'#183c37'};`;
+const SubmitButton = styled.button`font: inherit; font-weight: 650; min-height: 50px; border: 0; border-radius: 12px; background: #237e70; color: white; cursor: pointer; &:disabled{opacity:.5;cursor:wait;}`;
+const EscalaSection = styled.details`margin-top: 20px; font-size: 14px;`;
+const EscalaTitle = styled.summary`cursor: pointer; font-weight: 600; margin-bottom: 12px;`;
+const EscalaGrid = styled.div`display: grid; gap: 8px;`;
+const EscalaCard = styled.div`background: #f4f8f6; padding: 10px; border-radius: 8px;`;
+const EscalaNota = styled.div`display: flex; align-items: center; gap: 10px;`;
+const NotaBadge = styled.span`font-weight: 650; white-space: nowrap;`;
+const EscalaDescricao = styled.p`margin: 0; font-size: 13px;`;
+const Hero = styled(Card)`text-align:center; margin-bottom: 16px; display:grid; justify-items:center; gap:12px;`;
+const ActionLink = styled(Link)`display:block; text-align:center; border:1px solid #237e70; color:#237e70; padding:14px; border-radius:12px; font-weight:650; text-decoration:none; width:100%; max-width:340px; box-sizing:border-box;`;
 const escalaAutoqualificacao = [
   {
     nota: 0,
@@ -384,169 +59,9 @@ const escalaAutoqualificacao = [
   }
 ];
 
-const StatsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-  margin-bottom: 30px;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px;
-    margin-bottom: 25px;
-  }
-  
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-`;
-
-const StatCard = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
-  backdrop-filter: blur(10px);
-  
-  @media (max-width: 768px) {
-    padding: 15px;
-  }
-  
-  @media (max-width: 480px) {
-    padding: 12px;
-  }
-`;
-
-const StatValue = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 24px;
-  color: #ffffff;
-  margin-bottom: 8px;
-  
-  @media (max-width: 768px) {
-    font-size: 20px;
-    margin-bottom: 6px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 18px;
-    margin-bottom: 5px;
-  }
-`;
-
-const StatLabel = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
-  text-transform: uppercase;
-  
-  @media (max-width: 768px) {
-    font-size: 9px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 8px;
-  }
-`;
-
-const RecentEVs = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
-  padding: 25px;
-  backdrop-filter: blur(10px);
-  
-  @media (max-width: 768px) {
-    padding: 20px;
-  }
-  
-  @media (max-width: 480px) {
-    padding: 15px;
-  }
-`;
-
-const EVItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  border-bottom: 1px solid #4a4a4a;
-  
-  &:last-child {
-    border-bottom: none;
-  }
-  
-  @media (max-width: 480px) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 12px;
-  }
-`;
-
-const EVInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-`;
-
-const EVScore = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 18px;
-  color: #ffffff;
-  font-weight: bold;
-  
-  @media (max-width: 768px) {
-    font-size: 16px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 14px;
-  }
-`;
-
-const EVDate = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
-  
-  @media (max-width: 768px) {
-    font-size: 9px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 8px;
-  }
-`;
-
-const EVNotes = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 12px;
-  color: #ffffff;
-  max-width: 300px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  
-  @media (max-width: 768px) {
-    font-size: 11px;
-    max-width: 200px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 10px;
-    max-width: 100%;
-    white-space: normal;
-    word-break: break-word;
-  }
-`;
-
 const Dashboard = () => {
   const { user } = useAuth();
-  const { isOnline, saveEVOffline } = useSync();
+  const { isOnline } = useSync();
   const { soundEnabled } = useEVTimer();
   const [formData, setFormData] = useState({
     score: null,
@@ -560,7 +75,6 @@ const Dashboard = () => {
     today_points: 0,
     week_evs: 0
   });
-  const [recentEVs, setRecentEVs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [playCoinSound, setPlayCoinSound] = useState(false);
   const [playVictorySound, setPlayVictorySound] = useState(false);
@@ -570,7 +84,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (user) {
       loadStats();
-      loadRecentEVs();
+
       checkRecentBadges();
     }
   }, [user]);
@@ -720,6 +234,7 @@ const Dashboard = () => {
         }
       }
 
+      if (!allEVs.length) setStats({total_evs:0,average_score:0,max_score:0,today_evs:0,today_points:0,week_evs:0});
       if (allEVs && allEVs.length > 0) {
         const total_evs = totalEVsCount || allEVs.length;
         const scores = allEVs.map(ev => ev.score);
@@ -757,21 +272,6 @@ const Dashboard = () => {
     }
   };
 
-  const loadRecentEVs = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('evs')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(10);
-
-      if (error) throw error;
-      setRecentEVs(data || []);
-    } catch (error) {
-      console.error('Erro ao carregar EVs recentes:', error);
-    }
-  };
 
   const handleScoreSelect = (score) => {
     setFormData({
@@ -791,26 +291,11 @@ const Dashboard = () => {
     setLoading(true);
     
     try {
-      // Tocar som de moeda sempre que registrar EV
-      setPlayCoinSound(true);
-      
-      if (!isOnline) {
-        // Modo offline - salvar no localStorage
-        const result = await saveEVOffline(formData.score, formData.notes);
-        
-        if (result.success) {
-          // Reset form
-          setFormData({
-            score: null,
-            notes: ''
-          });
-          
-          // Recarregar dados locais
-          await loadStats();
-          await loadRecentEVs();
-        }
-      } else {
-        // Modo online - salvar no Supabase
+      if (!isOnline || !navigator.onLine) {
+        toast.error('Sem conexão. Reconecte-se para registrar o EV.');
+        return;
+      }
+      {
         const { error } = await supabase
           .from('evs')
           .insert([
@@ -823,11 +308,12 @@ const Dashboard = () => {
           ]);
 
         if (error) throw error;
+        setPlayCoinSound(true);
         
         // Verificar se é o primeiro EV e atribuir badge de Iniciante Consciencial
-        const { data: evCount } = await supabase
+        const { count: evCount } = await supabase
           .from('evs')
-          .select('id', { count: 'exact' })
+          .select('id', { count: 'exact', head: true })
           .eq('user_id', user.id);
         
         // Verificar se é o primeiro EV e atribuir badge de Iniciante Consciencial
@@ -955,7 +441,7 @@ const Dashboard = () => {
         
         // Recarregar dados
         await loadStats();
-        await loadRecentEVs();
+
       }
       
     } catch (error) {
@@ -966,16 +452,6 @@ const Dashboard = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
 
   const checkAndAwardBadges = async () => {
     try {
@@ -1183,10 +659,18 @@ const Dashboard = () => {
   return (
     <Container>
       <EVReminder />
-      <Title>Registro</Title>
+      <Title>Sua prática de hoje</Title>
       
       {/* Barra de Progresso Diária */}
-      <DailyProgressBar currentEVs={stats.today_evs} targetEVs={20} />
+      <Hero>
+        <svg viewBox="0 0 220 220" width="210" role="img" aria-label={stats.today_evs + ' de 20 EVs'}>
+          <circle cx="110" cy="110" r="89" fill="none" stroke="#e0ebe6" strokeWidth="12"/>
+          <circle cx="110" cy="110" r="89" fill="none" stroke="#269b85" strokeWidth="12" strokeLinecap="round" strokeDasharray={Math.min(stats.today_evs/20,1)*559.2+' 559.2'} transform="rotate(-90 110 110)"/>
+          <text x="110" y="105" textAnchor="middle" fontSize="42" fontWeight="650" fill="#183c37">{stats.today_evs}<tspan fontSize="22">/20</tspan></text>
+          <text x="110" y="132" textAnchor="middle" fontSize="12" fill="#536b65">Estados Vibracionais</text>
+          <text x="110" y="151" textAnchor="middle" fontSize="13" fill="#237e70">{Math.round(stats.today_evs/20*100)}% da meta diária</text>
+        </svg>
+      </Hero>
 
       <Grid>
         <Card>
@@ -1239,25 +723,9 @@ const Dashboard = () => {
           </EscalaSection>
         </Card>
 
-        <RecentEVs>
-          <CardTitle>EVs Recentes</CardTitle>
-          {recentEVs.length === 0 ? (
-            <div style={{ textAlign: 'center', color: '#6a6a6a', padding: '20px' }}>
-              Nenhum EV registrado ainda
-            </div>
-          ) : (
-            recentEVs.map(ev => (
-              <EVItem key={ev.id}>
-                <EVInfo>
-                  <EVScore>EV {ev.score}</EVScore>
-                  <EVDate>{formatDate(ev.created_at)}</EVDate>
-                  {ev.notes && <EVNotes>{ev.notes}</EVNotes>}
-                </EVInfo>
-              </EVItem>
-            ))
-          )}
-        </RecentEVs>
+
       </Grid>
+      <div style={{display:'flex',justifyContent:'center',marginTop:16}}><ActionLink to="/sinaletica">Registrar sinalética</ActionLink></div>
       
       {/* Som de moeda quando registrar EV */}
       <SoundEffect 

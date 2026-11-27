@@ -10,13 +10,13 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  background: #f4f8f6;
 `;
 
 const FormCard = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border:2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border:2px solid #dce8e3;
+  border-radius: 14px;
   padding: 40px;
   width: 100%;
   max-width: 500px;
@@ -30,14 +30,14 @@ const FormCard = styled.div`
   @media (max-width: 480px) {
     padding: 20px 15px;
     max-width: 95%;
-    border-radius: 6px;
+    border-radius: 14px;
   }
 `;
 
 const Title = styled.h1`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 24px;
-  color: #ffffff;
+  color: #183c37;
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -66,20 +66,20 @@ const FormGroup = styled.div`
 `;
 
 const Label = styled.label`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #ffffff;
+  color: #183c37;
   text-transform: uppercase;
 `;
 
 const Input = styled.input`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   padding: 12px;
-  border: 2px solid #4a4a4a;
-  background: #1a1a1a;
-  color: #ffffff;
+  border: 2px solid #dce8e3;
+  background: #f4f8f6;
+  color: #183c37;
   font-size: 14px;
-  border-radius: 4px;
+  border-radius: 14px;
   min-height: 48px;
   
   @media (max-width: 768px) {
@@ -88,13 +88,13 @@ const Input = styled.input`
   }
   
   @media (max-width: 480px) {
-    font-size: 11px;
+    font-size: 13px;
     padding: 8px;
   }
   
   &:focus {
     outline: none;
-    border-color: #6a6a6a;
+    border-color: #536b65;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
   }
 `;
@@ -125,9 +125,9 @@ const AvatarGrid = styled.div`
 const AvatarOption = styled.div`
   width: 60px;
   height: 60px;
-  border: 3px solid ${props => props.selected ? '#4a6a8a' : '#4a4a4a'};
-  background: #1a1a1a;
-  border-radius: 8px;
+  border: 3px solid ${props => props.selected ? '#237e70' : '#dce8e3'};
+  background: #f4f8f6;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -148,17 +148,17 @@ const AvatarOption = styled.div`
   }
   
   &:hover {
-    border-color: #6a6a6a;
+    border-color: #536b65;
     transform: scale(1.05);
   }
 `;
 
 const SubmitButton = styled.button`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
   padding: 15px;
-  border: 2px solid #4a4a4a;
-  background: #2a6a2a;
+  border: 2px solid #dce8e3;
+  background: #237e70;
   color: #ffffff;
   cursor: pointer;
   text-transform: uppercase;
@@ -173,20 +173,20 @@ const SubmitButton = styled.button`
   }
   
   @media (max-width: 480px) {
-    font-size: 11px;
+    font-size: 13px;
     padding: 10px;
     width: 100%;
   }
   
   &:hover {
-    background: #4a8a4a;
-    border-color: #6aaa6a;
+    background: #237e70;
+    border-color: #237e70;
     transform: translateY(-2px);
   }
   
   &:disabled {
-    background: #4a4a4a;
-    border-color: #6a6a6a;
+    background: #dce8e3;
+    border-color: #536b65;
     cursor: not-allowed;
     transform: none;
   }
@@ -195,16 +195,16 @@ const SubmitButton = styled.button`
 const LinkText = styled.div`
   text-align: center;
   margin-top: 20px;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   
   @media (max-width: 768px) {
-    font-size: 10px;
+    font-size: 13px;
   }
   
   @media (max-width: 480px) {
-    font-size: 9px;
+    font-size: 13px;
   }
 `;
 
@@ -219,8 +219,8 @@ const StyledLink = styled(Link)`
 `;
 
 const ErrorMessage = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
   color: #ff6b6b;
   text-align: center;
   margin-top: 10px;
@@ -241,8 +241,8 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalBox = styled.div`
-  background: #1a1a1a;
-  border:3px solid #4a6a8a;
+  background: #f4f8f6;
+  border:3px solid #237e70;
   border-radius: 12px;
   padding: 30px;
   max-width: 500px;
@@ -258,14 +258,14 @@ const ModalBox = styled.div`
   @media (max-width: 480px) {
     padding: 20px 15px;
     max-width: 95%;
-    border-radius: 8px;
+    border-radius: 14px;
   }
 `;
 
 const ModalTitle = styled.h2`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 18px;
-  color: #4a6a8a;
+  color: #237e70;
   margin-bottom: 20px;
   text-transform: uppercase;
   
@@ -281,20 +281,20 @@ const ModalTitle = styled.h2`
 `;
 
 const ModalMessage = styled.p`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #ffffff;
+  color: #183c37;
   line-height: 1.6;
   margin-bottom: 25px;
   
   @media (max-width: 768px) {
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.5;
     margin-bottom: 20px;
   }
   
   @media (max-width: 480px) {
-    font-size: 10px;
+    font-size: 13px;
     line-height: 1.4;
     margin-bottom: 15px;
   }
@@ -316,12 +316,12 @@ const ModalIcon = styled.div`
 `;
 
 const ModalButton = styled.button`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   padding: 12px 24px;
-  background: #4a6a8a;
+  background: #237e70;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 14px;
   cursor: pointer;
   font-size: 12px;
   transition: background 0.2s;
@@ -329,12 +329,12 @@ const ModalButton = styled.button`
   min-width: 48px;
   
   @media (max-width: 768px) {
-    font-size: 11px;
+    font-size: 13px;
     padding: 10px 20px;
   }
   
   @media (max-width: 480px) {
-    font-size: 10px;
+    font-size: 13px;
     padding: 8px 16px;
     width: 100%;
   }
@@ -347,14 +347,14 @@ const ModalButton = styled.button`
 const EmailWarning = styled.div`
   background: rgba(255, 193, 7, 0.1);
   border: 2px solid #ffc107;
-  border-radius: 6px;
+  border-radius: 14px;
   padding: 12px;
   margin-bottom: 20px;
 `;
 
 const WarningText = styled.p`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
   color: #ffc107;
   text-align: center;
   margin: 0;
@@ -371,24 +371,24 @@ const Checkbox = styled.input`
   margin-top: 2px;
   width: 16px;
   height: 16px;
-  accent-color: #4a6a8a;
+  accent-color: #237e70;
 `;
 
 const CheckboxLabel = styled.label`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #ffffff;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #183c37;
   line-height:1.4;
   cursor: pointer;
   flex:1;
   
   @media (max-width: 768px) {
-    font-size: 9px;
+    font-size: 13px;
     line-height:1.3;
   }
   
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
     line-height:1.2;
   }
 `;

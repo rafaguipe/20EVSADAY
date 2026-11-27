@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import styled from 'styled-components';
 
 const Container = styled.div`
+  background: #f4f8f6; color: #183c37; font-family: system-ui, sans-serif; box-sizing: border-box; padding-bottom: 100px !important;
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
@@ -18,9 +19,9 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 24px;
-  color: #ffffff;
+  color: #183c37;
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -75,12 +76,12 @@ const FilterContainer = styled.div`
 `;
 
 const FilterButton = styled.button`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
   padding: 8px 15px;
-  border: 2px solid #4a4a4a;
-  background: ${props => props.active ? '#4a6a8a' : '#1a1a1a'};
-  color: #ffffff;
+  border: 2px solid #dce8e3;
+  background: ${props => props.active ? '#237e70' : '#f4f8f6'};
+  color: ${props => props.active ? '#ffffff' : '#183c37'};
   cursor: pointer;
   text-transform: uppercase;
   transition: all 0.3s ease;
@@ -88,29 +89,29 @@ const FilterButton = styled.button`
   min-width: 48px;
   
   &:hover {
-    background: ${props => props.active ? '#6a8aaa' : '#4a4a4a'};
-    border-color: #6a6a6a;
+    background: ${props => props.active ? '#237e70' : '#dce8e3'};
+    border-color: #536b65;
   }
   
   @media (max-width: 768px) {
-    font-size: 8px;
+    font-size: 13px;
     padding: 6px 12px;
   }
   
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
     padding: 10px 15px;
     width: 100%;
   }
 `;
 
 const Tab = styled.button`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
   padding: 12px 20px;
-  border: 2px solid #4a4a4a;
-  background: ${props => props.active ? '#4a6a8a' : '#1a1a1a'};
-  color: #ffffff;
+  border: 2px solid #dce8e3;
+  background: ${props => props.active ? '#237e70' : '#f4f8f6'};
+  color: ${props => props.active ? '#ffffff' : '#183c37'};
   cursor: pointer;
   text-transform: uppercase;
   transition: all 0.3s ease;
@@ -118,26 +119,26 @@ const Tab = styled.button`
   min-width: 48px;
   
   &:hover {
-    background: ${props => props.active ? '#6a8aaa' : '#4a4a4a'};
-    border-color: #6a6a6a;
+    background: ${props => props.active ? '#237e70' : '#dce8e3'};
+    border-color: #536b65;
   }
   
   @media (max-width: 768px) {
-    font-size: 10px;
+    font-size: 13px;
     padding: 10px 15px;
   }
   
   @media (max-width: 480px) {
-    font-size: 9px;
+    font-size: 13px;
     padding: 12px 15px;
     width: 100%;
   }
 `;
 
 const LeaderboardCard = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 25px;
   backdrop-filter: blur(10px);
   
@@ -156,7 +157,7 @@ const LeaderboardHeader = styled.div`
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 2px solid #4a4a4a;
+  border-bottom: 2px solid #dce8e3;
   
   @media (max-width: 480px) {
     flex-direction: column;
@@ -168,9 +169,9 @@ const LeaderboardHeader = styled.div`
 `;
 
 const LeaderboardTitle = styled.h2`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 16px;
-  color: #ffffff;
+  color: #183c37;
   text-transform: uppercase;
   
   @media (max-width: 768px) {
@@ -183,17 +184,17 @@ const LeaderboardTitle = styled.h2`
 `;
 
 const LeaderboardInfo = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   text-align: right;
   
   @media (max-width: 768px) {
-    font-size: 9px;
+    font-size: 13px;
   }
   
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
     text-align: left;
   }
 `;
@@ -202,7 +203,7 @@ const RankingItem = styled.div`
   display: flex;
   align-items: center;
   padding: 15px;
-  border-bottom: 1px solid #4a4a4a;
+  border-bottom: 1px solid #dce8e3;
   transition: all 0.3s ease;
   
   &:hover {
@@ -214,8 +215,8 @@ const RankingItem = styled.div`
   }
   
   ${props => props.isTop3 && `
-    background: rgba(74, 106, 138, 0.2);
-    border-left: 4px solid #4a6a8a;
+    background: #e5f2ed;
+    border-left: 4px solid #237e70;
   `}
   
   @media (max-width: 480px) {
@@ -226,9 +227,9 @@ const RankingItem = styled.div`
 `;
 
 const Rank = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 18px;
-  color: #ffffff;
+  color: #183c37;
   font-weight: bold;
   width: 50px;
   text-align: center;
@@ -251,9 +252,9 @@ const Rank = styled.div`
 const Avatar = styled.div`
   width: 40px;
   height: 40px;
-  background: #4a4a4a;
-  border: 2px solid #6a6a6a;
-  border-radius: 8px;
+  background: #dce8e3;
+  border: 2px solid #536b65;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -288,9 +289,9 @@ const UserInfo = styled.div`
 `;
 
 const Username = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
-  color: #ffffff;
+  color: #183c37;
   font-weight: bold;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -301,28 +302,28 @@ const Username = styled.div`
   }
   
   @media (max-width: 480px) {
-    font-size: 11px;
+    font-size: 13px;
   }
 `;
 
 const UserStats = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   
   @media (max-width: 768px) {
-    font-size: 9px;
+    font-size: 13px;
   }
   
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
   }
 `;
 
 const Score = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 16px;
-  color: #ffffff;
+  color: #183c37;
   font-weight: bold;
   text-align: right;
   min-width: 80px;
@@ -339,9 +340,9 @@ const Score = styled.div`
 `;
 
 const LoadingText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
-  color: #6a6a6a;
+  color: #536b65;
   text-align: center;
   padding: 40px;
   
@@ -351,43 +352,43 @@ const LoadingText = styled.div`
   }
   
   @media (max-width: 480px) {
-    font-size: 10px;
+    font-size: 13px;
     padding: 20px;
   }
 `;
 
 const ErrorText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
   color: #ff6b6b;
   text-align: center;
   padding: 40px;
   
   @media (max-width: 768px) {
-    font-size: 11px;
+    font-size: 13px;
     padding: 30px;
   }
   
   @media (max-width: 480px) {
-    font-size: 10px;
+    font-size: 13px;
     padding: 20px;
   }
 `;
 
 const EmptyText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #6a6a6a;
+  color: #536b65;
   text-align: center;
   padding: 40px;
   
   @media (max-width: 768px) {
-    font-size: 11px;
+    font-size: 13px;
     padding: 30px;
   }
   
   @media (max-width: 480px) {
-    font-size: 10px;
+    font-size: 13px;
     padding: 20px;
   }
 `;
@@ -419,92 +420,27 @@ const Leaderboard = () => {
       let leaderboard = [];
       let info = '';
 
-      const fetchAllEvs = async (startDate) => {
-        const pageSize = 1000;
-        let from = 0;
-        let hasMore = true;
-        let allRows = [];
-
-        while (hasMore) {
-          let query = supabase
-            .from('evs')
-            .select('score, created_at, user_id')
-            .order('id', { ascending: true })
-            .range(from, from + pageSize - 1);
-
-          if (startDate) {
-            query = query.gte('created_at', startDate.toISOString());
-          }
-
-          const { data, error: queryError } = await query;
-          if (queryError) throw queryError;
-
-          if (data && data.length > 0) {
-            allRows = allRows.concat(data);
-            from += pageSize;
-            hasMore = data.length === pageSize;
-          } else {
-            hasMore = false;
-          }
-        }
-
-        return allRows;
-      };
-
-      const buildLeaderboard = (evsRows) => {
-        if (!evsRows || evsRows.length === 0) return [];
-
-        const stats = evsRows.reduce((acc, ev) => {
-          const userId = ev.user_id;
-          if (!acc[userId]) {
-            acc[userId] = { total_points: 0, evs_count: 0, scores: [] };
-          }
-          acc[userId].total_points += ev.score;
-          acc[userId].evs_count += 1;
-          acc[userId].scores.push(ev.score);
-          return acc;
-        }, {});
-
-        return Object.entries(stats)
-          .map(([userId, statsRow]) => ({
-            user_id: userId,
-            nickname: profilesMap[userId]?.username || `Jogador ${userId.slice(0, 8)}`,
-            avatar_url: profilesMap[userId]?.avatar_url || 'avatar_1.png',
-            total_points: statsRow.total_points,
-            evs_count: statsRow.evs_count,
-            average_score: (statsRow.total_points / statsRow.evs_count).toFixed(1),
-            max_score: Math.max(...statsRow.scores)
-          }))
-          .sort((a, b) => b.evs_count - a.evs_count || b.total_points - a.total_points);
-      };
-
-      // Primeiro, buscar todos os perfis de usuários para ter os apelidos e avatars
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('user_id, username, avatar_url');
-
-      const profilesMap = {};
-      profiles?.forEach(profile => {
-        profilesMap[profile.user_id] = {
-          username: profile.username,
-          avatar_url: profile.avatar_url
-        };
-      });
-
-      switch (activeTab) {
-        case 'all-time':
-          leaderboard = buildLeaderboard(await fetchAllEvs());
-          info = `Todos os tempos • ${leaderboard.length} jogadores`;
-          break;
-
-        case 'daily':
-        default:
-          const now = new Date();
-          const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-          leaderboard = buildLeaderboard(await fetchAllEvs(dayStart));
-          info = `Data: ${dayStart.toLocaleDateString('pt-BR')} • ${leaderboard.length} jogadores`;
-          break;
-      }
+      const now = new Date();
+      const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const allTime = activeTab === 'all-time';
+      const { data: rows, error: rankingError } = await supabase.rpc(
+        'get_ev_leaderboard', { p_start: allTime ? null : dayStart.toISOString() }
+      );
+      if (rankingError) throw rankingError;
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles').select('user_id, username, avatar_url');
+      if (profilesError) throw profilesError;
+      const profilesMap = Object.fromEntries((profiles || []).map(p => [p.user_id, p]));
+      leaderboard = (rows || []).map(row => ({
+        ...row,
+        nickname: profilesMap[row.user_id]?.username || 'Jogador ' + row.user_id.slice(0, 8),
+        avatar_url: profilesMap[row.user_id]?.avatar_url || 'avatar_1.png',
+        total_points: Number(row.total_points),
+        evs_count: Number(row.evs_count),
+        average_score: Number(row.average_score).toFixed(1)
+      }));
+      info = (allTime ? 'Todos os tempos' : 'Data: ' + dayStart.toLocaleDateString('pt-BR'))
+        + ' • ' + leaderboard.length + ' jogadores';
 
       setLeaderboardData({ leaderboard, info });
     } catch (error) {
@@ -564,7 +500,7 @@ const Leaderboard = () => {
               justifyContent: 'space-between', 
               padding: '10px 15px',
               borderBottom: '1px solid #4a4a4a',
-              fontFamily: 'Press Start 2P, monospace',
+              fontFamily: 'system-ui, sans-serif',
               fontSize: '10px',
               color: '#6a6a6a',
               textTransform: 'uppercase'

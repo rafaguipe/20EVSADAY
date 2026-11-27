@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 // ─── Styled Components ───────────────────────────────────────────────
 
 const Container = styled.div`
+  background: #f4f8f6; color: #183c37; font-family: system-ui, sans-serif; box-sizing: border-box; padding-bottom: 100px !important;
   padding: 20px;
   max-width: 800px;
   margin: 0 auto;
@@ -21,9 +22,9 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 20px;
-  color: #ffffff;
+  color: #183c37;
   text-align: center;
   margin-bottom: 10px;
   text-transform: uppercase;
@@ -40,15 +41,15 @@ const Title = styled.h1`
 
 const Subtitle = styled.p`
   text-align: center;
-  color: #888;
+  color: #536b65;
   font-size: 12px;
   margin-bottom: 30px;
   line-height: 1.6;
 `;
 
 const Section = styled.div`
-  background: rgba(42, 74, 106, 0.15);
-  border: 1px solid #2a4a6a;
+  background: #e5f2ed;
+  border: 1px solid #dce8e3;
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 20px;
@@ -59,16 +60,16 @@ const Section = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #7abaff;
+  color: #237e70;
   margin-bottom: 16px;
   display: flex;
   align-items: center;
   gap: 10px;
 
   @media (max-width: 480px) {
-    font-size: 10px;
+    font-size: 13px;
   }
 `;
 
@@ -84,17 +85,17 @@ const VeiculoGrid = styled.div`
 `;
 
 const VeiculoCard = styled.div`
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid #3a3a5a;
+  background: #eaf3ef;
+  border: 1px solid #dce8e3;
   border-radius: 10px;
   padding: 16px;
-  border-left: 3px solid ${props => props.$color || '#4a6a8a'};
+  border-left: 3px solid ${props => props.$color || '#237e70'};
 `;
 
 const VeiculoLabel = styled.label`
   font-weight: bold;
   font-size: 13px;
-  color: ${props => props.$color || '#ccc'};
+  color: ${props => props.$color || '#536b65'};
   display: block;
   margin-bottom: 8px;
 `;
@@ -102,10 +103,10 @@ const VeiculoLabel = styled.label`
 const VeiculoInput = styled.textarea`
   width: 100%;
   min-height: 70px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #3a3a5a;
-  border-radius: 6px;
-  color: #e0e0e0;
+  background: #eaf3ef;
+  border: 1px solid #dce8e3;
+  border-radius: 14px;
+  color: #536b65;
   padding: 10px;
   font-size: 13px;
   font-family: inherit;
@@ -114,12 +115,12 @@ const VeiculoInput = styled.textarea`
 
   &:focus {
     outline: none;
-    border-color: #4a6a8a;
-    background: rgba(255, 255, 255, 0.08);
+    border-color: #237e70;
+    background: #eaf3ef;
   }
 
   &::placeholder {
-    color: #555;
+    color: #536b65;
   }
 `;
 
@@ -131,8 +132,8 @@ const IntensityRow = styled.div`
 `;
 
 const IntensityLabel = styled.span`
-  font-size: 10px;
-  color: #666;
+  font-size: 13px;
+  color: #536b65;
   white-space: nowrap;
 `;
 
@@ -145,7 +146,7 @@ const Dot = styled.button`
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 2px solid ${props => props.$active ? props.$filledColor : '#3a3a5a'};
+  border: 2px solid ${props => props.$active ? props.$filledColor : '#dce8e3'};
   background: ${props => props.$active ? props.$filledColor : 'transparent'};
   cursor: pointer;
   font-size: 0;
@@ -156,8 +157,8 @@ const Dot = styled.button`
   justify-content: center;
 
   &:hover {
-    border-color: ${props => props.$filledColor || '#4a6a8a'};
-    background: ${props => props.$active ? props.$filledColor : 'rgba(255,255,255,0.05)'};
+    border-color: ${props => props.$filledColor || '#237e70'};
+    background: ${props => props.$active ? props.$filledColor : '#eaf3ef'};
   }
 
   @media (max-width: 480px) {
@@ -173,17 +174,17 @@ const Row = styled.div`
 const Label = styled.label`
   font-weight: bold;
   font-size: 13px;
-  color: #aaa;
+  color: #536b65;
   display: block;
   margin-bottom: 6px;
 `;
 
 const Input = styled.input`
   width: 100%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #3a3a5a;
-  border-radius: 6px;
-  color: #e0e0e0;
+  background: #eaf3ef;
+  border: 1px solid #dce8e3;
+  border-radius: 14px;
+  color: #536b65;
   padding: 10px;
   font-size: 13px;
   font-family: inherit;
@@ -191,17 +192,17 @@ const Input = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #4a6a8a;
+    border-color: #237e70;
   }
 `;
 
 const TextArea = styled.textarea`
   width: 100%;
   min-height: 80px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #3a3a5a;
-  border-radius: 6px;
-  color: #e0e0e0;
+  background: #eaf3ef;
+  border: 1px solid #dce8e3;
+  border-radius: 14px;
+  color: #536b65;
   padding: 10px;
   font-size: 13px;
   font-family: inherit;
@@ -210,7 +211,7 @@ const TextArea = styled.textarea`
 
   &:focus {
     outline: none;
-    border-color: #4a6a8a;
+    border-color: #237e70;
   }
 `;
 
@@ -223,16 +224,16 @@ const ButtonRow = styled.div`
 
 const Btn = styled.button`
   padding: 12px 32px;
-  border-radius: 8px;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 11px;
+  border-radius: 14px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
   cursor: pointer;
   border: none;
   transition: all 0.2s;
 
   @media (max-width: 480px) {
     padding: 14px 24px;
-    font-size: 10px;
+    font-size: 13px;
     flex: 1;
     min-width: 120px;
   }
@@ -255,12 +256,12 @@ const SaveBtn = styled(Btn)`
 `;
 
 const ClearBtn = styled(Btn)`
-  background: rgba(255, 255, 255, 0.05);
-  color: #888;
-  border: 1px solid #3a3a5a;
+  background: #eaf3ef;
+  color: #536b65;
+  border: 1px solid #dce8e3;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: #eaf3ef;
   }
 `;
 
@@ -269,15 +270,15 @@ const ClearBtn = styled(Btn)`
 const ExportSection = styled.div`
   margin: 25px 0;
   padding: 18px;
-  background: rgba(74, 106, 138, 0.08);
-  border: 1px solid #3a4a6a;
-  border-radius: 8px;
+  background: #e5f2ed;
+  border: 1px solid #dce8e3;
+  border-radius: 14px;
 `;
 
 const ExportTitle = styled.h3`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 11px;
-  color: #7abaff;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #237e70;
   margin-bottom: 14px;
   text-transform: uppercase;
   text-align: center;
@@ -291,10 +292,10 @@ const ExportButtons = styled.div`
 `;
 
 const ExportBtn = styled.button`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
   padding: 10px 18px;
-  border-radius: 6px;
+  border-radius: 14px;
   cursor: pointer;
   border: 2px solid ${({ $variant }) =>
     $variant === 'csv' ? '#28a745' : '#ffc107'};
@@ -310,7 +311,7 @@ const ExportBtn = styled.button`
   &:hover:not(:disabled) {
     background: ${({ $variant }) =>
       $variant === 'csv' ? '#28a745' : '#ffc107'};
-    color: #1a1a1a;
+    color: #f4f8f6;
     transform: translateY(-1px);
   }
 
@@ -328,9 +329,9 @@ const ExportBtn = styled.button`
 `;
 
 const ExportInfo = styled.p`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
-  color: #5a5a7a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   text-align: center;
   margin-top: 12px;
   line-height: 1.5;
@@ -339,9 +340,9 @@ const ExportInfo = styled.p`
 // ─── Timeline ─────────────────────────────────────────────────────────
 
 const TimelineTitle = styled.h2`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
-  color: #7abaff;
+  color: #237e70;
   margin: 30px 0 20px;
   text-align: center;
 
@@ -351,15 +352,15 @@ const TimelineTitle = styled.h2`
 `;
 
 const SinalCard = styled.div`
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid #2a3a5a;
+  background: #eaf3ef;
+  border: 1px solid #dce8e3;
   border-radius: 10px;
   padding: 16px;
   margin-bottom: 12px;
   position: relative;
 
   &:hover {
-    border-color: #3a5a7a;
+    border-color: #237e70;
   }
 `;
 
@@ -374,7 +375,7 @@ const SinalHeader = styled.div`
 
 const SinalDate = styled.span`
   font-size: 12px;
-  color: #7abaff;
+  color: #237e70;
   font-weight: bold;
 `;
 
@@ -385,17 +386,17 @@ const SinalActions = styled.div`
 
 const ActionBtn = styled.button`
   background: none;
-  border: 1px solid #3a3a5a;
-  color: #666;
+  border: 1px solid #dce8e3;
+  color: #536b65;
   padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 10px;
+  border-radius: 14px;
+  font-size: 13px;
   cursor: pointer;
   font-family: inherit;
 
   &:hover {
-    border-color: #555;
-    color: #aaa;
+    border-color: #536b65;
+    color: #536b65;
   }
 `;
 
@@ -405,8 +406,8 @@ const VeiculoRow = styled.div`
   gap: 10px;
   margin-bottom: 8px;
   padding: 8px;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 6px;
+  background: #eaf3ef;
+  border-radius: 14px;
 `;
 
 const VeiculoIcon = styled.span`
@@ -420,9 +421,9 @@ const VeiculoContent = styled.div`
 `;
 
 const VeiculoName = styled.span`
-  font-size: 11px;
+  font-size: 13px;
   font-weight: bold;
-  color: ${props => props.$color || '#aaa'};
+  color: ${props => props.$color || '#536b65'};
   margin-right: 8px;
 `;
 
@@ -433,21 +434,21 @@ const IntensityBar = styled.span`
 
 const VeiculoText = styled.p`
   font-size: 12px;
-  color: #ccc;
+  color: #536b65;
   margin: 4px 0 0;
   line-height: 1.5;
 `;
 
 const ContextText = styled.p`
   font-size: 12px;
-  color: #999;
+  color: #536b65;
   margin-top: 8px;
   font-style: italic;
 `;
 
 const NotesText = styled.p`
   font-size: 12px;
-  color: #bbb;
+  color: #536b65;
   margin-top: 6px;
   line-height: 1.5;
 `;
@@ -455,7 +456,7 @@ const NotesText = styled.p`
 const EmptyState = styled.div`
   text-align: center;
   padding: 40px 20px;
-  color: #555;
+  color: #536b65;
   font-size: 13px;
   line-height: 1.8;
 `;
@@ -470,16 +471,16 @@ const FilterRow = styled.div`
 const FilterBtn = styled.button`
   padding: 6px 14px;
   border-radius: 20px;
-  border: 1px solid ${props => props.$active ? '#4a6a8a' : '#2a3a5a'};
-  background: ${props => props.$active ? 'rgba(74, 106, 138, 0.2)' : 'transparent'};
-  color: ${props => props.$active ? '#7abaff' : '#666'};
-  font-size: 10px;
+  border: 1px solid ${props => props.$active ? '#237e70' : '#dce8e3'};
+  background: ${props => props.$active ? '#e5f2ed' : 'transparent'};
+  color: ${props => props.$active ? '#237e70' : '#536b65'};
+  font-size: 13px;
   cursor: pointer;
   font-family: inherit;
 
   &:hover {
-    border-color: #4a6a8a;
-    color: #7abaff;
+    border-color: #237e70;
+    color: #237e70;
   }
 `;
 

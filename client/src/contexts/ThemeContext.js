@@ -10,25 +10,19 @@ const themes = {
     secondary: '#4a4a4a',
   },
   light: {
-    background: '#f5f5f5',
+    background: '#f4f8f6',
     card: '#fff',
-    text: '#181818',
-    secondary: '#d1d1d1',
+    text: '#183c37',
+    secondary: '#dce8e3',
   },
 };
 
 export const ThemeProvider = ({ children }) => {
-  const [themeName, setThemeName] = useState('dark');
+  const [themeName, setThemeName] = useState(() => { try { return localStorage.getItem('theme_v2') === 'dark' ? 'dark' : 'light'; } catch { return 'light'; } });
+
 
   useEffect(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved && (saved === 'dark' || saved === 'light')) {
-      setThemeName(saved);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('theme', themeName);
+    try { localStorage.setItem('theme_v2', themeName); } catch {}
   }, [themeName]);
 
   const toggleTheme = () => {

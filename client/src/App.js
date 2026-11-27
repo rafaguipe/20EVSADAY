@@ -16,19 +16,13 @@ import Profile from './pages/Profile';
 import Dev from './pages/Dev';
 import Estatisticas from './pages/Estatisticas';
 import LoadingSpinner from './components/LoadingSpinner';
-import Multimidia from './pages/Multimidia';
-import ChatEV from './pages/ChatEV';
-import Loja from './pages/Loja';
 import Sinaletica from './pages/Sinaletica';
-import VotacaoMascote from './pages/VotacaoMascote';
 
 import { supabase } from './supabaseClient';
 import AnnouncementPopup from './components/AnnouncementPopup';
 // Pop-up do próximo marco - COMENTADO: estava sobrepondo elementos no celular
 // Vamos usar o componente EVSMilestoneProgress na Home page em vez do pop-up
 // import EVSMilestoneTracker from './components/EVSMilestoneTracker';
-import { DMNotificationProvider } from './contexts/DMNotificationContext';
-import DMNotificationIndicator from './components/DMNotificationIndicator';
 
 // Componente para rotas protegidas
 const ProtectedRoute = ({ children }) => {
@@ -113,14 +107,14 @@ function App() {
   return (
     <StyledThemeProvider theme={theme}>
       <GlobalStyle />
-      <DMNotificationProvider>
+
         <div className="App">
           <Navbar />
           <AnnouncementPopup />
           {/* Pop-up do próximo marco - COMENTADO: estava sobrepondo elementos no celular */}
           {/* <EVSMilestoneTracker /> */}
           {/* EVSMilestoneProgress agora está na Home page */}
-          <DMNotificationIndicator />
+
           <main style={{ paddingTop: '80px', minHeight: 'calc(100vh - 80px)' }}>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -168,15 +162,8 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
-              <Route 
-                path="/chat" 
-                element={
-                  <ProtectedRoute>
-                    <ChatEV />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route path="/loja" element={<Loja />} />
+              <Route path="/chat" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/loja" element={<Navigate to="/dashboard" replace />} />
               <Route 
                 path="/sinaletica" 
                 element={
@@ -185,14 +172,7 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
-              <Route 
-                path="/votacao-mascote" 
-                element={
-                  <ProtectedRoute>
-                    <VotacaoMascote />
-                  </ProtectedRoute>
-                } 
-              />
+              <Route path="/votacao-mascote" element={<Navigate to="/dashboard" replace />} />
 
               <Route 
                 path="/dev" 
@@ -202,11 +182,11 @@ function App() {
                   </AdminRoute>
                 } 
               />
-              <Route path="/multimidia" element={<Multimidia />} />
+              <Route path="/multimidia" element={<Navigate to="/dashboard" replace />} />
             </Routes>
           </main>
         </div>
-      </DMNotificationProvider>
+
     </StyledThemeProvider>
   );
 }
