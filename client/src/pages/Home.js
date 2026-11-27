@@ -582,16 +582,14 @@ const Home = () => {
 
   const loadMilestoneProgress = async () => {
     try {
-      const { count, error } = await supabase
-        .from('evs')
-        .select('*', { count: 'exact' });
+      const { data, error } = await supabase.rpc('get_community_ev_statistics').single();
 
       if (error) {
         console.error('Erro ao buscar total de EVS:', error);
         return;
       }
 
-      const total = count || 0;
+      const total = Number(data?.total || 0);
       setTotalEVS(total);
 
       // Calcular próximo marco
