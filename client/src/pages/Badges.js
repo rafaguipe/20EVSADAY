@@ -18,9 +18,9 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 24px;
-  color: #183c37;
+  color: var(--app-text);
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -56,9 +56,9 @@ const StatsGrid = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: #ffffff;
-  border: 2px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-card);
+  border: 2px solid var(--app-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 20px;
   text-align: center;
   backdrop-filter: blur(10px);
@@ -73,9 +73,9 @@ const StatCard = styled.div`
 `;
 
 const StatValue = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 24px;
-  color: #183c37;
+  color: var(--app-text);
   margin-bottom: 8px;
   
   @media (max-width: 768px) {
@@ -90,9 +90,9 @@ const StatValue = styled.div`
 `;
 
 const StatLabel = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   text-transform: uppercase;
   
   @media (max-width: 768px) {
@@ -124,9 +124,9 @@ const BadgesGrid = styled.div`
 `;
 
 const BadgeCard = styled.div`
-  background: #ffffff;
-  border: 2px solid ${props => props.earned ? '#237e70' : '#dce8e3'};
-  border-radius: 14px;
+  background: var(--app-card);
+  border: 2px solid ${props => props.earned ? 'var(--app-accent)' : 'var(--app-border)'};
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 20px;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
@@ -185,9 +185,9 @@ const BadgeInfo = styled.div`
 `;
 
 const BadgeName = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 14px;
-  color: #183c37;
+  color: var(--app-text);
   margin-bottom: 5px;
   text-transform: uppercase;
   word-break: break-word;
@@ -205,9 +205,9 @@ const BadgeName = styled.div`
 `;
 
 const BadgeDescription = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   line-height: 1.4;
   
   @media (max-width: 768px) {
@@ -236,9 +236,9 @@ const BadgeProgress = styled.div`
 const ProgressBar = styled.div`
   width: 100%;
   height: 8px;
-  background: #f4f8f6;
-  border: 1px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-bg);
+  border: 1px solid var(--app-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
   overflow: hidden;
   margin-bottom: 8px;
   
@@ -255,15 +255,15 @@ const ProgressBar = styled.div`
 
 const ProgressFill = styled.div`
   height: 100%;
-  background: ${props => props.earned ? '#237e70' : '#237e70'};
+  background: ${props => props.earned ? 'var(--app-accent)' : 'var(--app-accent)'};
   width: ${props => props.percentage}%;
   transition: width 0.3s ease;
 `;
 
 const ProgressText = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   text-align: center;
   
   @media (max-width: 768px) {
@@ -279,12 +279,12 @@ const EarnedBadge = styled.div`
   position: absolute;
   top: -10px;
   right: -10px;
-  background: #237e70;
+  background: var(--app-accent);
   color: #ffffff;
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
   padding: 5px 10px;
-  border-radius: 14px;
+  border-radius: calc(14px * var(--app-roundness, 1));
   text-transform: uppercase;
   
   @media (max-width: 768px) {
@@ -303,9 +303,9 @@ const EarnedBadge = styled.div`
 `;
 
 const RecentBadges = styled.div`
-  background: #ffffff;
-  border: 2px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-card);
+  border: 2px solid var(--app-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 25px;
   backdrop-filter: blur(10px);
   
@@ -323,7 +323,7 @@ const RecentBadgeItem = styled.div`
   align-items: center;
   gap: 15px;
   padding: 15px;
-  border-bottom: 1px solid #dce8e3;
+  border-bottom: 1px solid var(--app-border);
   
   &:last-child {
     border-bottom: none;
@@ -354,9 +354,9 @@ const RecentBadgeInfo = styled.div`
 `;
 
 const RecentBadgeName = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
-  color: #183c37;
+  color: var(--app-text);
   margin-bottom: 5px;
   
   @media (max-width: 768px) {
@@ -371,9 +371,9 @@ const RecentBadgeName = styled.div`
 `;
 
 const RecentBadgeDate = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   
   @media (max-width: 768px) {
     font-size: 13px;
@@ -385,9 +385,9 @@ const RecentBadgeDate = styled.div`
 `;
 
 const LoadingText = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 14px;
-  color: #536b65;
+  color: var(--app-muted);
   text-align: center;
   padding: 40px;
   
@@ -403,7 +403,7 @@ const LoadingText = styled.div`
 `;
 
 const ErrorText = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
   color: #ff6b6b;
   text-align: center;
