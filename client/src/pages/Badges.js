@@ -18,9 +18,9 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 24px;
-  color: #ffffff;
+  color: #183c37;
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -56,9 +56,9 @@ const StatsGrid = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 20px;
   text-align: center;
   backdrop-filter: blur(10px);
@@ -73,9 +73,9 @@ const StatCard = styled.div`
 `;
 
 const StatValue = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 24px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 8px;
   
   @media (max-width: 768px) {
@@ -90,17 +90,17 @@ const StatValue = styled.div`
 `;
 
 const StatLabel = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   text-transform: uppercase;
   
   @media (max-width: 768px) {
-    font-size: 9px;
+    font-size: 13px;
   }
   
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
   }
 `;
 
@@ -124,9 +124,9 @@ const BadgesGrid = styled.div`
 `;
 
 const BadgeCard = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid ${props => props.earned ? '#4a8a4a' : '#4a4a4a'};
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid ${props => props.earned ? '#237e70' : '#dce8e3'};
+  border-radius: 14px;
   padding: 20px;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
@@ -146,7 +146,7 @@ const BadgeCard = styled.div`
   
   &:hover {
     transform: translateY(-2px);
-    border-color: ${props => props.earned ? '#6aaa6a' : '#6a6a6a'};
+    border-color: ${props => props.earned ? '#237e70' : '#536b65'};
   }
 `;
 
@@ -185,9 +185,9 @@ const BadgeInfo = styled.div`
 `;
 
 const BadgeName = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 5px;
   text-transform: uppercase;
   word-break: break-word;
@@ -199,24 +199,24 @@ const BadgeName = styled.div`
   }
   
   @media (max-width: 480px) {
-    font-size: 11px;
+    font-size: 13px;
     margin-bottom: 3px;
   }
 `;
 
 const BadgeDescription = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   line-height: 1.4;
   
   @media (max-width: 768px) {
-    font-size: 9px;
+    font-size: 13px;
     line-height: 1.5;
   }
   
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
     line-height: 1.6;
   }
 `;
@@ -236,9 +236,9 @@ const BadgeProgress = styled.div`
 const ProgressBar = styled.div`
   width: 100%;
   height: 8px;
-  background: #1a1a1a;
-  border: 1px solid #4a4a4a;
-  border-radius: 4px;
+  background: #f4f8f6;
+  border: 1px solid #dce8e3;
+  border-radius: 14px;
   overflow: hidden;
   margin-bottom: 8px;
   
@@ -255,23 +255,23 @@ const ProgressBar = styled.div`
 
 const ProgressFill = styled.div`
   height: 100%;
-  background: ${props => props.earned ? '#4a8a4a' : '#4a6a8a'};
+  background: ${props => props.earned ? '#237e70' : '#237e70'};
   width: ${props => props.percentage}%;
   transition: width 0.3s ease;
 `;
 
 const ProgressText = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   text-align: center;
   
   @media (max-width: 768px) {
-    font-size: 9px;
+    font-size: 13px;
   }
   
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
   }
 `;
 
@@ -279,23 +279,23 @@ const EarnedBadge = styled.div`
   position: absolute;
   top: -10px;
   right: -10px;
-  background: #4a8a4a;
+  background: #237e70;
   color: #ffffff;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
   padding: 5px 10px;
-  border-radius: 4px;
+  border-radius: 14px;
   text-transform: uppercase;
   
   @media (max-width: 768px) {
-    font-size: 9px;
+    font-size: 13px;
     padding: 4px 8px;
     top: -8px;
     right: -8px;
   }
   
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
     padding: 3px 6px;
     top: -6px;
     right: -6px;
@@ -303,9 +303,9 @@ const EarnedBadge = styled.div`
 `;
 
 const RecentBadges = styled.div`
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #4a4a4a;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 2px solid #dce8e3;
+  border-radius: 14px;
   padding: 25px;
   backdrop-filter: blur(10px);
   
@@ -323,7 +323,7 @@ const RecentBadgeItem = styled.div`
   align-items: center;
   gap: 15px;
   padding: 15px;
-  border-bottom: 1px solid #4a4a4a;
+  border-bottom: 1px solid #dce8e3;
   
   &:last-child {
     border-bottom: none;
@@ -354,40 +354,40 @@ const RecentBadgeInfo = styled.div`
 `;
 
 const RecentBadgeName = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: #ffffff;
+  color: #183c37;
   margin-bottom: 5px;
   
   @media (max-width: 768px) {
-    font-size: 11px;
+    font-size: 13px;
     margin-bottom: 4px;
   }
   
   @media (max-width: 480px) {
-    font-size: 10px;
+    font-size: 13px;
     margin-bottom: 3px;
   }
 `;
 
 const RecentBadgeDate = styled.div`
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #6a6a6a;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #536b65;
   
   @media (max-width: 768px) {
-    font-size: 9px;
+    font-size: 13px;
   }
   
   @media (max-width: 480px) {
-    font-size: 8px;
+    font-size: 13px;
   }
 `;
 
 const LoadingText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 14px;
-  color: #6a6a6a;
+  color: #536b65;
   text-align: center;
   padding: 40px;
   
@@ -397,25 +397,25 @@ const LoadingText = styled.div`
   }
   
   @media (max-width: 480px) {
-    font-size: 10px;
+    font-size: 13px;
     padding: 20px;
   }
 `;
 
 const ErrorText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: system-ui, sans-serif;
   font-size: 12px;
   color: #ff6b6b;
   text-align: center;
   padding: 40px;
   
   @media (max-width: 768px) {
-    font-size: 11px;
+    font-size: 13px;
     padding: 30px;
   }
   
   @media (max-width: 480px) {
-    font-size: 10px;
+    font-size: 13px;
     padding: 20px;
   }
 `;
