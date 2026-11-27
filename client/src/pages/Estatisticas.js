@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import toast from 'react-hot-toast';
 
 const Container = styled.div`
-  background: #f4f8f6; color: #183c37; font-family: system-ui, sans-serif; box-sizing: border-box; padding-bottom: 100px !important;
+  background: var(--app-bg); color: var(--app-text); font-family: var(--app-font); box-sizing: border-box; padding-bottom: 100px !important;
   padding: 20px;
   max-width: 1200px;
   margin:0 auto;
@@ -22,9 +22,9 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 24px;
-  color: #183c37;
+  color: var(--app-text);
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -50,41 +50,41 @@ const StatsGrid = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: #ffffff;
-  border: 2px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-card);
+  border: 2px solid var(--app-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 20px;
   text-align: center;
   backdrop-filter: blur(10px);
 `;
 
 const StatValue = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 24px;
-  color: #183c37;
+  color: var(--app-text);
   margin-bottom: 8px;
 `;
 
 const StatLabel = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   text-transform: uppercase;
 `;
 
 const ProgressSection = styled.div`
-  background: #ffffff;
-  border: 2px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-card);
+  border: 2px solid var(--app-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 25px;
   margin-bottom: 30px;
   backdrop-filter: blur(10px);
 `;
 
 const ProgressTitle = styled.h2`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 16px;
-  color: #183c37;
+  color: var(--app-text);
   margin-bottom: 20px;
   text-transform: uppercase;
 `;
@@ -92,9 +92,9 @@ const ProgressTitle = styled.h2`
 const ProgressBar = styled.div`
   width: 100%;
   height: 20px;
-  background: #f4f8f6;
-  border: 2px solid #dce8e3;
-  border-radius: 10px;
+  background: var(--app-bg);
+  border: 2px solid var(--app-border);
+  border-radius: calc(10px * var(--app-roundness, 1));
   overflow: hidden;
   margin-bottom: 10px;
   position: relative;
@@ -120,22 +120,22 @@ const ProgressFill = styled.div`
 `;
 
 const ProgressText = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
-  color: #536b65;
+  color: var(--app-muted);
   text-align: center;
 `;
 
 const LoadingText = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 14px;
-  color: #536b65;
+  color: var(--app-muted);
   text-align: center;
   padding: 40px;
 `;
 
 const ErrorText = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
   color: #ff6b6b;
   text-align: center;
@@ -143,26 +143,26 @@ const ErrorText = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 18px;
-  color: #183c37;
+  color: var(--app-text);
   margin: 30px 0 20px 0;
   text-transform: uppercase;
 `;
 
 const ExportSection = styled.div`
-  background: #ffffff;
-  border: 2px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-card);
+  border: 2px solid var(--app-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 25px;
   margin-bottom: 30px;
   backdrop-filter: blur(10px);
 `;
 
 const ExportTitle = styled.h3`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 14px;
-  color: #183c37;
+  color: var(--app-text);
   margin-bottom: 15px;
   text-transform: uppercase;
 `;
@@ -175,19 +175,19 @@ const ExportButtons = styled.div`
 `;
 
 const ExportButton = styled.button`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
   padding: 10px 15px;
-  border: 2px solid #dce8e3;
-  background: ${props => props.variant === 'csv' ? '#4a8a4a' : '#237e70'};
+  border: 2px solid var(--app-border);
+  background: ${props => props.variant === 'csv' ? '#4a8a4a' : 'var(--app-accent)'};
   color: #ffffff;
   cursor: pointer;
   text-transform: uppercase;
   transition: all 0.3s ease;
   
   &:hover:not(:disabled) {
-    background: ${props => props.variant === 'csv' ? '#6aaa6a' : '#237e70'};
-    border-color: #536b65;
+    background: ${props => props.variant === 'csv' ? '#6aaa6a' : 'var(--app-accent)'};
+    border-color: var(--app-muted);
   }
   
   &:disabled {
@@ -197,16 +197,16 @@ const ExportButton = styled.button`
 `;
 
 const ExportInfo = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   line-height: 1.4;
 `;
 
 const NoDataText = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
-  color: #536b65;
+  color: var(--app-muted);
   text-align: center;
   padding: 40px;
 `;
