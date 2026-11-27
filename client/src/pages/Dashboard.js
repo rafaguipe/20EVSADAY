@@ -825,9 +825,9 @@ const Dashboard = () => {
         if (error) throw error;
         
         // Verificar se é o primeiro EV e atribuir badge de Iniciante Consciencial
-        const { data: evCount } = await supabase
+        const { count: evCount } = await supabase
           .from('evs')
-          .select('id', { count: 'exact' })
+          .select('id', { count: 'exact', head: true })
           .eq('user_id', user.id);
         
         // Verificar se é o primeiro EV e atribuir badge de Iniciante Consciencial
