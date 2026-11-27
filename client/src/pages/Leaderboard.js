@@ -433,14 +433,14 @@ const Leaderboard = () => {
       const profilesMap = Object.fromEntries((profiles || []).map(p => [p.user_id, p]));
       leaderboard = (rows || []).map(row => ({
         ...row,
-        nickname: profilesMap[row.user_id]?.username || 'Jogador ' + row.user_id.slice(0, 8),
+        nickname: profilesMap[row.user_id]?.username || 'Participante ' + row.user_id.slice(0, 8),
         avatar_url: profilesMap[row.user_id]?.avatar_url || 'avatar_1.png',
         total_points: Number(row.total_points),
         evs_count: Number(row.evs_count),
         average_score: Number(row.average_score).toFixed(1)
       }));
       info = (allTime ? 'Todos os tempos' : 'Data: ' + dayStart.toLocaleDateString('pt-BR'))
-        + ' • ' + leaderboard.length + ' jogadores';
+        + ' • ' + leaderboard.length + ' participantes';
 
       setLeaderboardData({ leaderboard, info });
     } catch (error) {
@@ -506,7 +506,7 @@ const Leaderboard = () => {
               textTransform: 'uppercase'
             }}>
               <span>Rank</span>
-              <span>Jogador</span>
+              <span>Participante</span>
               <span>EVs</span>
             </div>
             
