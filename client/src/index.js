@@ -7,7 +7,6 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { EVTimerProvider } from './contexts/EVTimerContext';
 import { SyncProvider } from './contexts/SyncContext';
-import { ChatNotificationProvider } from './contexts/ChatNotificationContext';
 import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -18,7 +17,7 @@ root.render(
         <ThemeProvider>
           <EVTimerProvider>
             <SyncProvider>
-              <ChatNotificationProvider>
+
                 <App />
                 <Toaster 
                   position="top-right"
@@ -33,7 +32,7 @@ root.render(
                     },
                   }}
                 />
-              </ChatNotificationProvider>
+
             </SyncProvider>
           </EVTimerProvider>
         </ThemeProvider>
