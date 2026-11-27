@@ -16,24 +16,24 @@ const SpinnerContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  min-height: 120px;
+  background: transparent;
 `;
 
 const Spinner = styled.div`
-  width: 64px;
-  height: 64px;
+  width: 24px;
+  height: 24px;
   border: 4px solid #4a4a4a;
-  border-top: 4px solid #ffffff;
+  border-top: 4px solid #269b85;
   border-radius: 50%;
   animation: ${spin} 1s linear infinite;
   margin-bottom: 20px;
 `;
 
 const LoadingText = styled.div`
-  font-family: 'Press Start 2P', monospace;
+  font-family: inherit;
   font-size: 14px;
-  color: #ffffff;
+  color: inherit;
   animation: ${pulse} 2s ease-in-out infinite;
   text-align: center;
 `;
