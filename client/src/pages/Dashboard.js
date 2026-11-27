@@ -12,29 +12,29 @@ import EVReminder from '../components/EVReminder';
 
 const Container = styled.div`
   max-width: 1000px; margin: auto; padding: 24px 16px 80px;
-  color: #183c37; background: #f4f8f6;
-  font-family: system-ui, sans-serif;
+  color: var(--app-text); background: var(--app-bg);
+  font-family: var(--app-font);
 `;
 const Title = styled.h1`font-size: 26px; text-align: center; margin: 16px 0; font-weight: 650;`;
 const Grid = styled.div`display: grid; grid-template-columns: minmax(0, 560px); justify-content:center; gap: 16px; @media(max-width: 700px){grid-template-columns: 1fr;}`;
-const Card = styled.section`background: white; border: 1px solid #dce8e3; border-radius: 20px; padding: 22px; min-width: 0;`;
-const CardTitle = styled.h2`font-size: 18px; margin: 0 0 16px; color: #183c37;`;
+const Card = styled.section`background: var(--app-card); border: 1px solid var(--app-border); border-radius: calc(20px * var(--app-roundness, 1)); padding: 22px; min-width: 0;`;
+const CardTitle = styled.h2`font-size: 18px; margin: 0 0 16px; color: var(--app-text);`;
 const Form = styled.form`display: grid; gap: 16px;`;
 const FormGroup = styled.div`display: grid; gap: 8px;`;
 const Label = styled.label`font-size: 14px; font-weight: 600;`;
-const TextArea = styled.textarea`font: inherit; color: #183c37; background: #f4f8f6; border: 1px solid #b8cdc5; border-radius: 12px; padding: 12px; min-height: 80px; resize: vertical; width: 100%; box-sizing: border-box;`;
+const TextArea = styled.textarea`font: inherit; color: var(--app-text); background: var(--app-bg); border: 1px solid var(--app-border); border-radius: calc(12px * var(--app-roundness, 1)); padding: 12px; min-height: 80px; resize: vertical; width: 100%; box-sizing: border-box;`;
 const ScoreButtons = styled.div`display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 8px;`;
-const ScoreButton = styled.button`font: inherit; font-weight: 650; min-height: 48px; border-radius: 12px; border: 1px solid #b8cdc5; cursor: pointer; background: ${p=>p.selected?'#237e70':'#f4f8f6'}; color: ${p=>p.selected?'white':'#183c37'};`;
-const SubmitButton = styled.button`font: inherit; font-weight: 650; min-height: 50px; border: 0; border-radius: 12px; background: #237e70; color: white; cursor: pointer; &:disabled{opacity:.5;cursor:wait;}`;
+const ScoreButton = styled.button`font: inherit; font-weight: 650; min-height: 48px; border-radius: calc(12px * var(--app-roundness, 1)); border: 1px solid var(--app-border); cursor: pointer; background: ${p=>p.selected?'var(--app-accent)':'var(--app-bg)'}; color: ${p=>p.selected?'white':'var(--app-text)'};`;
+const SubmitButton = styled.button`font: inherit; font-weight: 650; min-height: 50px; border: 0; border-radius: calc(12px * var(--app-roundness, 1)); background: var(--app-accent); color: white; cursor: pointer; &:disabled{opacity:.5;cursor:wait;}`;
 const EscalaSection = styled.details`margin-top: 20px; font-size: 14px;`;
 const EscalaTitle = styled.summary`cursor: pointer; font-weight: 600; margin-bottom: 12px;`;
 const EscalaGrid = styled.div`display: grid; gap: 8px;`;
-const EscalaCard = styled.div`background: #f4f8f6; padding: 10px; border-radius: 8px;`;
+const EscalaCard = styled.div`background: var(--app-bg); padding: 10px; border-radius: calc(8px * var(--app-roundness, 1));`;
 const EscalaNota = styled.div`display: flex; align-items: center; gap: 10px;`;
 const NotaBadge = styled.span`font-weight: 650; white-space: nowrap;`;
 const EscalaDescricao = styled.p`margin: 0; font-size: 13px;`;
 const Hero = styled(Card)`text-align:center; margin-bottom: 16px; display:grid; justify-items:center; gap:12px;`;
-const ActionLink = styled(Link)`display:block; text-align:center; border:1px solid #237e70; color:#237e70; padding:14px; border-radius:12px; font-weight:650; text-decoration:none; width:100%; max-width:340px; box-sizing:border-box;`;
+const ActionLink = styled(Link)`display:block; text-align:center; border:1px solid var(--app-accent); color:var(--app-accent); padding:14px; border-radius:calc(12px * var(--app-roundness, 1)); font-weight:650; text-decoration:none; width:100%; max-width:340px; box-sizing:border-box;`;
 const escalaAutoqualificacao = [
   {
     nota: 0,
