@@ -59,7 +59,7 @@ const Navbar = () => {
             setProfile(data);
             setIsAdmin(data.is_admin || false);
           } else {
-            const nickname = user.user_metadata?.nickname || `Jogador ${user.id.slice(0, 8)}`;
+            const nickname = user.user_metadata?.nickname || `Participante ${user.id.slice(0, 8)}`;
             const avatar_id = user.user_metadata?.avatar_id || 1;
 
             const { data: newProfile, error: createError } = await supabase
