@@ -160,19 +160,18 @@ const ForgotPassword = () => {
     try {
       // URL de redirecionamento - deve estar configurada no Supabase
       const redirectUrl = `${window.location.origin}/reset-password`;
-      console.log('Enviando link de recuperação para:', email);
-      console.log('URL de redirecionamento:', redirectUrl);
-      
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
         redirectTo: redirectUrl
       });
 
       if (error) {
-        setError(error.message);
-        toast.error('Erro ao enviar e-mail: ' + error.message);
+        setError('Não foi possível solicitar a recuperação. Aguarde alguns minutos e tente novamente.');
+        
       } else {
         setSuccess(true);
-        toast.success('📧 E-mail enviado! Verifique sua caixa de entrada.');
+        toast.success('Solicitação recebida. Verifique seu e-mail.');
       }
     } catch (err) {
       setError('Erro inesperado ao enviar e-mail');
@@ -189,16 +188,7 @@ const ForgotPassword = () => {
         
         <InfoBox>
           <InfoText>
-            📧 Digite seu e-mail e tentaremos enviar um link para redefinir sua senha.<br/>
-            <br/>
-            ⚠️ <strong>Usando Outlook/Hotmail?</strong><br/>
-            O Outlook pode proteger o link. Para extrair o link real:<br/>
-            1. Clique com botão direito no link do e-mail<br/>
-            2. Selecione "Copiar endereço do link"<br/>
-            3. Cole em um editor de texto<br/>
-            4. Procure por "url=" e copie tudo após esse parâmetro<br/>
-            5. Decodifique (substitua %3A por :, %2F por /, %3F por ?, %26 por &)<br/>
-            6. Acesse o link decodificado no navegador
+            Informe seu e-mail cadastrado para solicitar um link de recuperação.
           </InfoText>
         </InfoBox>
         
@@ -207,7 +197,7 @@ const ForgotPassword = () => {
             ✅ Solicitação enviada!<br/>
             {window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1') 
               ? '⚠️ Em desenvolvimento local, o e-mail pode não ser enviado. Entre em contato com o administrador.'
-              : 'Verifique sua caixa de entrada e siga as instruções para redefinir sua senha. Se não receber o e-mail em alguns minutos, entre em contato com o administrador.'}
+              : 'Se houver uma conta associada ao e-mail, você receberá instruções. Confira também a pasta de spam.'}
           </SuccessMessage>
         ) : (
           <Form onSubmit={handleSubmit}>
