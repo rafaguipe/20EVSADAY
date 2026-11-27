@@ -4,7 +4,7 @@ export const Container = styled.div`
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-  background: #f4f8f6; color: #183c37; padding-bottom: 100px !important;
+  background: var(--app-bg); color: var(--app-text); padding-bottom: 100px !important;
 
   @media (max-width: 768px) {
     padding: 12px;
@@ -12,9 +12,9 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 24px;
-  color: #183c37;
+  color: var(--app-text);
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -44,9 +44,9 @@ export const Grid = styled.div`
 `;
 
 export const Card = styled.div`
-  background: #ffffff;
-  border: 1px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-card);
+  border: 1px solid var(--app-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 25px;
   backdrop-filter: blur(10px);
 
@@ -60,9 +60,9 @@ export const Card = styled.div`
 `;
 
 export const CardTitle = styled.h2`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 16px;
-  color: #183c37;
+  color: var(--app-text);
   margin-bottom: 20px;
   text-transform: uppercase;
 
@@ -94,9 +94,9 @@ export const ProfileInfo = styled.div`
 export const Avatar = styled.div`
   width: 80px;
   height: 80px;
-  background: #dce8e3;
-  border: 3px solid #536b65;
-  border-radius: 12px;
+  background: var(--app-border);
+  border: 3px solid var(--app-muted);
+  border-radius: calc(12px * var(--app-roundness, 1));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,9 +115,9 @@ export const UserInfo = styled.div`
 `;
 
 export const Username = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 18px;
-  color: #183c37;
+  color: var(--app-text);
   margin-bottom: 8px;
 
   @media (max-width: 768px) {
@@ -130,9 +130,9 @@ export const Username = styled.div`
 `;
 
 export const Email = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
-  color: #536b65;
+  color: var(--app-muted);
 
   @media (max-width: 768px) {
     font-size: 13px;
@@ -162,9 +162,9 @@ export const AvatarGrid = styled.div`
 export const AvatarOption = styled.div`
   width: 60px;
   height: 60px;
-  border: 3px solid ${props => props.selected ? '#237e70' : '#dce8e3'};
-  background: #f4f8f6;
-  border-radius: 14px;
+  border: 3px solid ${props => props.selected ? 'var(--app-accent)' : 'var(--app-border)'};
+  background: var(--app-bg);
+  border-radius: calc(14px * var(--app-roundness, 1));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -174,7 +174,7 @@ export const AvatarOption = styled.div`
   min-height: 48px;
 
   &:hover {
-    border-color: #536b65;
+    border-color: var(--app-muted);
     transform: scale(1.05);
   }
 
@@ -198,9 +198,9 @@ export const StatsGrid = styled.div`
 `;
 
 export const StatCard = styled.div`
-  background: #ffffff;
-  border: 2px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-card);
+  border: 2px solid var(--app-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 15px;
   text-align: center;
   backdrop-filter: blur(10px);
@@ -211,9 +211,9 @@ export const StatCard = styled.div`
 `;
 
 export const StatValue = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 20px;
-  color: #183c37;
+  color: var(--app-text);
   margin-bottom: 5px;
 
   @media (max-width: 768px) {
@@ -226,9 +226,9 @@ export const StatValue = styled.div`
 `;
 
 export const StatLabel = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   text-transform: uppercase;
 
   @media (max-width: 480px) {
@@ -237,9 +237,9 @@ export const StatLabel = styled.div`
 `;
 
 export const HistoryChart = styled.div`
-  background: #ffffff;
-  border: 2px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-card);
+  border: 2px solid var(--app-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 20px;
   backdrop-filter: blur(10px);
   margin-top: 20px;
@@ -251,9 +251,9 @@ export const HistoryChart = styled.div`
 `;
 
 export const ChartTitle = styled.h3`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 14px;
-  color: #183c37;
+  color: var(--app-text);
   margin-bottom: 15px;
   text-transform: uppercase;
 
@@ -273,9 +273,9 @@ export const ChartBar = styled.div`
 `;
 
 export const ChartLabel = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #183c37;
+  color: var(--app-text);
   width: 80px;
   min-width: 80px;
 
@@ -288,8 +288,8 @@ export const ChartLabel = styled.div`
 
 export const ChartBarFill = styled.div`
   height: 20px;
-  background: #237e70;
-  border-radius: 14px;
+  background: var(--app-accent);
+  border-radius: calc(14px * var(--app-roundness, 1));
   margin: 0 10px;
   min-width: 20px;
   transition: width 0.3s ease;
@@ -301,9 +301,9 @@ export const ChartBarFill = styled.div`
 `;
 
 export const ChartValue = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   min-width: 60px;
   text-align: right;
 
@@ -314,9 +314,9 @@ export const ChartValue = styled.div`
 `;
 
 export const LoadingText = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 14px;
-  color: #536b65;
+  color: var(--app-muted);
   text-align: center;
   padding: 40px;
 
@@ -340,9 +340,9 @@ export const ToggleContainer = styled.div`
 `;
 
 export const ToggleLabel = styled.span`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
-  color: #183c37;
+  color: var(--app-text);
   font-weight: bold;
 
   @media (max-width: 768px) {
@@ -372,7 +372,7 @@ export const ToggleSlider = styled.span`
   bottom: 0;
   background-color: #8a4a4a;
   transition: 0.4s;
-  border-radius: 34px;
+  border-radius: calc(34px * var(--app-roundness, 1));
 
   &:before {
     position: absolute;
@@ -381,7 +381,7 @@ export const ToggleSlider = styled.span`
     width: 26px;
     left: 4px;
     bottom: 4px;
-    background-color: white;
+    background-color: var(--app-card);
     transition: 0.4s;
     border-radius: 50%;
   }
@@ -402,9 +402,9 @@ export const ToggleInput = styled.input`
 `;
 
 export const ToggleStatus = styled.span`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: ${({ enabled }) => enabled ? '#237e70' : '#8a4a4a'};
+  color: ${({ enabled }) => enabled ? 'var(--app-accent)' : '#8a4a4a'};
   margin-left: 8px;
 
   @media (max-width: 480px) {
@@ -416,8 +416,8 @@ export const ExportSection = styled.div`
   margin-top: 20px;
   padding: 20px;
   background: rgba(74, 106, 138, 0.1);
-  border: 2px solid #237e70;
-  border-radius: 14px;
+  border: 2px solid var(--app-accent);
+  border-radius: calc(14px * var(--app-roundness, 1));
 
   @media (max-width: 480px) {
     margin-top: 14px;
@@ -426,9 +426,9 @@ export const ExportSection = styled.div`
 `;
 
 export const ExportTitle = styled.h3`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 14px;
-  color: #237e70;
+  color: var(--app-accent);
   margin-bottom: 15px;
   text-transform: uppercase;
 
@@ -448,12 +448,12 @@ export const ExportButtons = styled.div`
 `;
 
 export const ExportButton = styled.button`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   padding: 12px 20px;
   border: 2px solid ${({ variant }) => {
     if (variant === 'txt') return '#ffc107';
     if (variant === 'csv') return '#28a745';
-    return '#237e70';
+    return 'var(--app-accent)';
   }};
   background: ${({ variant }) => {
     if (variant === 'txt') return 'rgba(255, 193, 7, 0.1)';
@@ -463,9 +463,9 @@ export const ExportButton = styled.button`
   color: ${({ variant }) => {
     if (variant === 'txt') return '#ffc107';
     if (variant === 'csv') return '#28a745';
-    return '#237e70';
+    return 'var(--app-accent)';
   }};
-  border-radius: 14px;
+  border-radius: calc(14px * var(--app-roundness, 1));
   cursor: pointer;
   font-size: 12px;
   transition: all 0.2s;
@@ -478,7 +478,7 @@ export const ExportButton = styled.button`
     background: ${({ variant }) => {
       if (variant === 'txt') return '#ffc107';
       if (variant === 'csv') return '#28a745';
-      return '#237e70';
+      return 'var(--app-accent)';
     }};
     color: white;
     transform: translateY(-2px);
@@ -497,9 +497,9 @@ export const ExportButton = styled.button`
 `;
 
 export const ExportInfo = styled.p`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   margin-top: 15px;
   line-height: 1.4;
 
@@ -512,8 +512,8 @@ export const TelegramSection = styled.div`
   margin-top: 20px;
   padding: 20px;
   background: rgba(74, 106, 138, 0.1);
-  border: 2px solid #237e70;
-  border-radius: 14px;
+  border: 2px solid var(--app-accent);
+  border-radius: calc(14px * var(--app-roundness, 1));
 
   @media (max-width: 480px) {
     margin-top: 14px;
@@ -522,9 +522,9 @@ export const TelegramSection = styled.div`
 `;
 
 export const TelegramText = styled.p`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   line-height: 1.5;
   margin: 0 0 12px;
 
@@ -534,13 +534,13 @@ export const TelegramText = styled.p`
 `;
 
 export const TelegramCode = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 14px;
-  color: #183c37;
-  background: #ffffff;
-  border: 2px dashed #237e70;
+  color: var(--app-text);
+  background: var(--app-card);
+  border: 2px dashed var(--app-accent);
   padding: 12px;
-  border-radius: 14px;
+  border-radius: calc(14px * var(--app-roundness, 1));
   text-align: center;
   margin-bottom: 12px;
 
@@ -561,19 +561,19 @@ export const TelegramButtonRow = styled.div`
 `;
 
 export const TelegramButton = styled.button`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
   padding: 10px 16px;
-  border-radius: 14px;
-  border: 2px solid #237e70;
+  border-radius: calc(14px * var(--app-roundness, 1));
+  border: 2px solid var(--app-accent);
   background: rgba(74, 106, 138, 0.15);
-  color: #237e70;
+  color: var(--app-accent);
   cursor: pointer;
   transition: all 0.2s ease;
   min-height: 48px;
 
   &:hover {
-    background: #237e70;
+    background: var(--app-accent);
     color: #ffffff;
   }
 
