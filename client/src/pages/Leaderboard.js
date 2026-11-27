@@ -215,7 +215,7 @@ const RankingItem = styled.div`
   }
   
   ${props => props.isTop3 && `
-    background: #e5f2ed;
+    background: var(--app-soft);
     border-left: 4px solid #237e70;
   `}
   
