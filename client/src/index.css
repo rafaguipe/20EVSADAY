@@ -214,7 +214,7 @@ body {
   --app-muted: #c5c5c5;
   --app-border: #4a4a4a;
   --app-soft: #303c4a;
-  --app-accent: #527eae;
+  --app-accent: #42658c;
   --app-font: 'Press Start 2P', monospace;
   --app-roundness: 0.25;
   color-scheme: dark;
@@ -226,4 +226,16 @@ body {
 .App[data-appearance="dark"] nav a { font-size: 10px; }
 @media(max-width:1000px) {
   .App[data-appearance="dark"] nav a { font-size: 9px; }
+}
+
+.App[data-appearance="dark"] a:not([class]) { color: #a8c8ef; }
+.App[data-appearance="dark"] nav a { color: #dce9fa; }
+.App[data-appearance="dark"] nav button { color: #dce9fa; }
+.App[data-appearance="dark"] h1 { font-size: clamp(16px, 3vw, 23px); line-height: 1.7; overflow-wrap: anywhere; }
+.App[data-appearance="dark"] h2 { font-size: clamp(13px, 2vw, 17px); line-height: 1.7; overflow-wrap: anywhere; }
+.App[data-appearance="dark"] input, .App[data-appearance="dark"] textarea, .App[data-appearance="dark"] select { color: #fff; background-color: #222; }
+.App[data-appearance="dark"] button { overflow-wrap: anywhere; }
+@media(max-width:600px) {
+  .App[data-appearance="dark"] nav { padding-inline: 8px; gap: 6px; font-size: 10px; }
+  .App[data-appearance="dark"] nav a { font-size: 8px; }
 }
