@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  background: #f4f8f6; color: #183c37; font-family: system-ui, sans-serif; box-sizing: border-box; padding-bottom: 100px !important;
+  background: var(--app-bg); color: var(--app-text); font-family: var(--app-font); box-sizing: border-box; padding-bottom: 100px !important;
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
@@ -19,9 +19,9 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 24px;
-  color: #183c37;
+  color: var(--app-text);
   text-align: center;
   margin-bottom: 30px;
   text-transform: uppercase;
@@ -76,12 +76,12 @@ const FilterContainer = styled.div`
 `;
 
 const FilterButton = styled.button`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
   padding: 8px 15px;
-  border: 2px solid #dce8e3;
-  background: ${props => props.active ? '#237e70' : '#f4f8f6'};
-  color: ${props => props.active ? '#ffffff' : '#183c37'};
+  border: 2px solid var(--app-border);
+  background: ${props => props.active ? 'var(--app-accent)' : 'var(--app-bg)'};
+  color: ${props => props.active ? '#ffffff' : 'var(--app-text)'};
   cursor: pointer;
   text-transform: uppercase;
   transition: all 0.3s ease;
@@ -89,8 +89,8 @@ const FilterButton = styled.button`
   min-width: 48px;
   
   &:hover {
-    background: ${props => props.active ? '#237e70' : '#dce8e3'};
-    border-color: #536b65;
+    background: ${props => props.active ? 'var(--app-accent)' : 'var(--app-border)'};
+    border-color: var(--app-muted);
   }
   
   @media (max-width: 768px) {
@@ -106,12 +106,12 @@ const FilterButton = styled.button`
 `;
 
 const Tab = styled.button`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
   padding: 12px 20px;
-  border: 2px solid #dce8e3;
-  background: ${props => props.active ? '#237e70' : '#f4f8f6'};
-  color: ${props => props.active ? '#ffffff' : '#183c37'};
+  border: 2px solid var(--app-border);
+  background: ${props => props.active ? 'var(--app-accent)' : 'var(--app-bg)'};
+  color: ${props => props.active ? '#ffffff' : 'var(--app-text)'};
   cursor: pointer;
   text-transform: uppercase;
   transition: all 0.3s ease;
@@ -119,8 +119,8 @@ const Tab = styled.button`
   min-width: 48px;
   
   &:hover {
-    background: ${props => props.active ? '#237e70' : '#dce8e3'};
-    border-color: #536b65;
+    background: ${props => props.active ? 'var(--app-accent)' : 'var(--app-border)'};
+    border-color: var(--app-muted);
   }
   
   @media (max-width: 768px) {
@@ -136,9 +136,9 @@ const Tab = styled.button`
 `;
 
 const LeaderboardCard = styled.div`
-  background: #ffffff;
-  border: 2px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-card);
+  border: 2px solid var(--app-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 25px;
   backdrop-filter: blur(10px);
   
@@ -157,7 +157,7 @@ const LeaderboardHeader = styled.div`
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 2px solid #dce8e3;
+  border-bottom: 2px solid var(--app-border);
   
   @media (max-width: 480px) {
     flex-direction: column;
@@ -169,9 +169,9 @@ const LeaderboardHeader = styled.div`
 `;
 
 const LeaderboardTitle = styled.h2`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 16px;
-  color: #183c37;
+  color: var(--app-text);
   text-transform: uppercase;
   
   @media (max-width: 768px) {
@@ -184,9 +184,9 @@ const LeaderboardTitle = styled.h2`
 `;
 
 const LeaderboardInfo = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   text-align: right;
   
   @media (max-width: 768px) {
@@ -203,7 +203,7 @@ const RankingItem = styled.div`
   display: flex;
   align-items: center;
   padding: 15px;
-  border-bottom: 1px solid #dce8e3;
+  border-bottom: 1px solid var(--app-border);
   transition: all 0.3s ease;
   
   &:hover {
@@ -227,9 +227,9 @@ const RankingItem = styled.div`
 `;
 
 const Rank = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 18px;
-  color: #183c37;
+  color: var(--app-text);
   font-weight: bold;
   width: 50px;
   text-align: center;
@@ -252,9 +252,9 @@ const Rank = styled.div`
 const Avatar = styled.div`
   width: 40px;
   height: 40px;
-  background: #dce8e3;
-  border: 2px solid #536b65;
-  border-radius: 14px;
+  background: var(--app-border);
+  border: 2px solid var(--app-muted);
+  border-radius: calc(14px * var(--app-roundness, 1));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -289,9 +289,9 @@ const UserInfo = styled.div`
 `;
 
 const Username = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 14px;
-  color: #183c37;
+  color: var(--app-text);
   font-weight: bold;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -307,9 +307,9 @@ const Username = styled.div`
 `;
 
 const UserStats = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   
   @media (max-width: 768px) {
     font-size: 13px;
@@ -321,9 +321,9 @@ const UserStats = styled.div`
 `;
 
 const Score = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 16px;
-  color: #183c37;
+  color: var(--app-text);
   font-weight: bold;
   text-align: right;
   min-width: 80px;
@@ -340,9 +340,9 @@ const Score = styled.div`
 `;
 
 const LoadingText = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 14px;
-  color: #536b65;
+  color: var(--app-muted);
   text-align: center;
   padding: 40px;
   
@@ -358,7 +358,7 @@ const LoadingText = styled.div`
 `;
 
 const ErrorText = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
   color: #ff6b6b;
   text-align: center;
@@ -376,9 +376,9 @@ const ErrorText = styled.div`
 `;
 
 const EmptyText = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
-  color: #536b65;
+  color: var(--app-muted);
   text-align: center;
   padding: 40px;
   
