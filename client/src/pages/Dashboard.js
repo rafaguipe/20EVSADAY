@@ -5,6 +5,7 @@ import { useSync } from '../contexts/SyncContext';
 import { useEVTimer } from '../contexts/EVTimerContext';
 import toast from 'react-hot-toast';
 import styled from 'styled-components';
+import { useTheme } from '../contexts/ThemeContext';
 import SoundEffect from '../components/SoundEffect';
 import BadgeNotification from '../components/BadgeNotification';
 import { Link } from 'react-router-dom';
@@ -60,6 +61,15 @@ const escalaAutoqualificacao = [
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const { themeName } = useTheme();
+  const [dailyGoal, setDailyGoal] = useState(20);
+  useEffect(() => {
+    let active = true;
+    setDailyGoal(20);
+    if (user?.id) supabase.from('profiles').select('daily_ev_goal').eq('user_id', user.id).maybeSingle().then(({data}) => { if(active && Number.isInteger(data?.daily_ev_goal) && data.daily_ev_goal >= 1) setDailyGoal(data.daily_ev_goal); });
+    return () => { active = false; };
+  }, [user?.id]);
+
   const { isOnline } = useSync();
   const { soundEnabled } = useEVTimer();
   const [formData, setFormData] = useState({
@@ -662,13 +672,23 @@ const Dashboard = () => {
       
       {/* Barra de Progresso Diária */}
       <Hero>
-        <svg viewBox="0 0 220 220" width="210" role="img" aria-label={stats.today_evs + ' de 20 EVs'}>
-          <circle cx="110" cy="110" r="89" fill="none" stroke="#e0ebe6" strokeWidth="12"/>
-          <circle cx="110" cy="110" r="89" fill="none" stroke="#269b85" strokeWidth="12" strokeLinecap="round" strokeDasharray={Math.min(stats.today_evs/20,1)*559.2+' 559.2'} transform="rotate(-90 110 110)"/>
-          <text x="110" y="105" textAnchor="middle" fontSize="42" fontWeight="650" fill="#183c37">{stats.today_evs}<tspan fontSize="22">/20</tspan></text>
-          <text x="110" y="132" textAnchor="middle" fontSize="12" fill="#536b65">Estados Vibracionais</text>
-          <text x="110" y="151" textAnchor="middle" fontSize="13" fill="#237e70">{Math.round(stats.today_evs/20*100)}% da meta diária</text>
-        </svg>
+        {themeName === 'dark' ? (
+          <div style={{width:'100%',maxWidth:420,display:'grid',gap:16,padding:8}}>
+            <strong style={{fontSize:'clamp(20px,5vw,32px)',color:'#fff'}}>{stats.today_evs}/{dailyGoal}</strong>
+            <div role="progressbar" aria-label="Meta diária de EVs" aria-valuemin={0} aria-valuemax={dailyGoal} aria-valuenow={Math.min(stats.today_evs,dailyGoal)} style={{display:'grid',gridTemplateColumns:'repeat(10,minmax(0,1fr))',gap:5}}>
+              {Array.from({length:Math.min(dailyGoal,20)},(_,i) => <span key={i} style={{height:22,border:'1px solid #626262',background: i < Math.floor(stats.today_evs/dailyGoal*Math.min(dailyGoal,20)) ? '#63bc72':'#333'}} />)}
+            </div>
+            <span style={{fontSize:12,color:'#a9e6ad',lineHeight:1.8}}>{Math.round(stats.today_evs/dailyGoal*100)}% da meta diária</span>
+          </div>
+        ) : (
+          <svg viewBox="0 0 220 220" width="210" role="img" aria-label={stats.today_evs + ' de ' + dailyGoal + ' EVs'}>
+            <circle cx="110" cy="110" r="89" fill="none" stroke="#e0ebe6" strokeWidth="12"/>
+            <circle cx="110" cy="110" r="89" fill="none" stroke="#269b85" strokeWidth="12" strokeLinecap="round" strokeDasharray={Math.min(stats.today_evs/dailyGoal,1)*559.2+' 559.2'} transform="rotate(-90 110 110)"/>
+            <text x="110" y="105" textAnchor="middle" fontSize="36" fontWeight="650" fill="#183c37">{stats.today_evs}<tspan fontSize="20">/{dailyGoal}</tspan></text>
+            <text x="110" y="132" textAnchor="middle" fontSize="12" fill="#536b65">Estados Vibracionais</text>
+            <text x="110" y="151" textAnchor="middle" fontSize="13" fill="#237e70">{Math.round(stats.today_evs/dailyGoal*100)}% da meta diária</text>
+          </svg>
+        )}
       </Hero>
 
       <Grid>
