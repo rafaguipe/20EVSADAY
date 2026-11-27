@@ -14,7 +14,7 @@ const Hero = styled.div`
   justify-content: center;
   text-align: center;
   padding: 20px;
-  background: #f4f8f6;
+  background: var(--app-bg);
 `;
 
 const Logo = styled.div`
@@ -35,9 +35,9 @@ const LogoImage = styled.img`
 
 
 const Title = styled.h1`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 48px;
-  color: #183c37;
+  color: var(--app-text);
   margin-bottom: 20px;
   text-transform: uppercase;
   letter-spacing: 4px;
@@ -54,9 +54,9 @@ const Title = styled.h1`
 `;
 
 const Subtitle = styled.p`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 16px;
-  color: #536b65;
+  color: var(--app-muted);
   margin-bottom: 40px;
   max-width: 600px;
   line-height: 1.8;
@@ -82,9 +82,9 @@ const Features = styled.div`
 `;
 
 const FeatureCard = styled.div`
-  background: #ffffff;
-  border: 2px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-card);
+  border: 2px solid var(--app-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 30px;
   text-align: center;
   backdrop-filter: blur(10px);
@@ -99,7 +99,7 @@ const FeatureCard = styled.div`
   }
   
   &:hover {
-    border-color: #536b65;
+    border-color: var(--app-muted);
     transform: translateY(-5px);
   }
 `;
@@ -120,9 +120,9 @@ const FeatureIcon = styled.div`
 `;
 
 const FeatureTitle = styled.h3`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 16px;
-  color: #183c37;
+  color: var(--app-text);
   margin-bottom: 15px;
   text-transform: uppercase;
   
@@ -138,9 +138,9 @@ const FeatureTitle = styled.h3`
 `;
 
 const FeatureText = styled.p`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
-  color: #536b65;
+  color: var(--app-muted);
   line-height: 1.6;
   
   @media (max-width: 768px) {
@@ -219,9 +219,9 @@ const Stats = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: #ffffff;
-  border: 2px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-card);
+  border: 2px solid var(--app-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 20px;
   text-align: center;
   backdrop-filter: blur(10px);
@@ -236,9 +236,9 @@ const StatCard = styled.div`
 `;
 
 const StatNumber = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 24px;
-  color: #183c37;
+  color: var(--app-text);
   margin-bottom: 10px;
   
   @media (max-width: 768px) {
@@ -253,9 +253,9 @@ const StatNumber = styled.div`
 `;
 
 const StatLabel = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   text-transform: uppercase;
   
   @media (max-width: 768px) {
@@ -269,8 +269,8 @@ const StatLabel = styled.div`
 
 const AboutSection = styled.div`
   padding: 60px 20px;
-  background: #ffffff;
-  border-top: 2px solid #dce8e3;
+  background: var(--app-card);
+  border-top: 2px solid var(--app-border);
 `;
 
 const AboutContainer = styled.div`
@@ -279,9 +279,9 @@ const AboutContainer = styled.div`
 `;
 
 const AboutTitle = styled.h2`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 24px;
-  color: #183c37;
+  color: var(--app-text);
   text-align: center;
   margin-bottom: 40px;
   text-transform: uppercase;
@@ -298,9 +298,9 @@ const AboutTitle = styled.h2`
 `;
 
 const AboutCard = styled.div`
-  background: #ffffff;
-  border: 2px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-card);
+  border: 2px solid var(--app-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
   padding: 30px;
   margin-bottom: 30px;
   backdrop-filter: blur(10px);
@@ -349,9 +349,9 @@ const AboutCardLogo = styled.img`
 `;
 
 const AboutCardTitle = styled.h3`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 16px;
-  color: #183c37;
+  color: var(--app-text);
   text-transform: uppercase;
   
   @media (max-width: 768px) {
@@ -364,9 +364,9 @@ const AboutCardTitle = styled.h3`
 `;
 
 const AboutCardText = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
-  color: #536b65;
+  color: var(--app-muted);
   line-height: 1.6;
   white-space: pre-wrap;
   
@@ -383,9 +383,9 @@ const AboutCardText = styled.div`
 
 // Estilos para o componente de progresso do próximo marco na Home
 const MilestoneContainer = styled.div`
-  background: #ffffff;
-  border: 2px solid #237e70;
-  border-radius: 12px;
+  background: var(--app-card);
+  border: 2px solid var(--app-accent);
+  border-radius: calc(12px * var(--app-roundness, 1));
   padding: 20px;
   max-width: 400px;
   width: 100%;
@@ -399,14 +399,14 @@ const MilestoneContainer = styled.div`
   
   @media (max-width: 480px) {
     padding: 12px;
-    border-radius: 14px;
+    border-radius: calc(14px * var(--app-roundness, 1));
   }
 `;
 
 const MilestoneTitle = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
-  color: #237e70;
+  color: var(--app-accent);
   margin-bottom: 12px;
   text-align: center;
   
@@ -428,7 +428,7 @@ const MilestoneProgressBar = styled.div`
   width: 100%;
   height: 12px;
   background: #2a2a2a;
-  border-radius: 14px;
+  border-radius: calc(14px * var(--app-roundness, 1));
   overflow: hidden;
   position: relative;
 `;
@@ -436,7 +436,7 @@ const MilestoneProgressBar = styled.div`
 const MilestoneProgressFill = styled.div`
   height: 100%;
   background: linear-gradient(90deg, #4CAF50, #45a049);
-  border-radius: 14px;
+  border-radius: calc(14px * var(--app-roundness, 1));
   transition: width 0.5s ease;
   position: relative;
   
@@ -458,9 +458,9 @@ const MilestoneProgressFill = styled.div`
 `;
 
 const MilestoneProgressText = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #183c37;
+  color: var(--app-text);
   text-align: center;
   margin-top: 6px;
   
@@ -475,7 +475,7 @@ const MilestoneProgressText = styled.div`
 `;
 
 const MilestoneCurrentTotal = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 16px;
   color: #4CAF50;
   text-align: center;
@@ -493,7 +493,7 @@ const MilestoneCurrentTotal = styled.div`
 `;
 
 const MilestoneNext = styled.div`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
   color: #666;
   text-align: center;

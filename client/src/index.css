@@ -194,3 +194,53 @@ body {
     padding: 10px;
   }
 } 
+/* Aparência compartilhada: a estrutura funcional permanece a mesma. */
+:root {
+  --app-bg: #f4f8f6;
+  --app-card: #ffffff;
+  --app-text: #183c37;
+  --app-muted: #536b65;
+  --app-border: #dce8e3;
+  --app-soft: #e5f2ed;
+  --app-accent: #237e70;
+  --app-font: system-ui, sans-serif;
+  --app-roundness: 1;
+}
+.App { font-family: var(--app-font); background: var(--app-bg); color: var(--app-text); min-height:100vh; }
+.App[data-appearance="dark"] {
+  --app-bg: #181818;
+  --app-card: #222222;
+  --app-text: #ffffff;
+  --app-muted: #c5c5c5;
+  --app-border: #4a4a4a;
+  --app-soft: #303c4a;
+  --app-accent: #42658c;
+  --app-font: 'Press Start 2P', monospace;
+  --app-roundness: 0.25;
+  color-scheme: dark;
+}
+.App[data-appearance="dark"] button,
+.App[data-appearance="dark"] input,
+.App[data-appearance="dark"] select,
+.App[data-appearance="dark"] textarea { font-family: var(--app-font); }
+.App[data-appearance="dark"] nav a { font-size: 10px; }
+@media(max-width:1000px) {
+  .App[data-appearance="dark"] nav a { font-size: 9px; }
+}
+
+.App[data-appearance="dark"] a:not([class]) { color: #a8c8ef; }
+.App[data-appearance="dark"] nav a { color: #dce9fa; }
+.App[data-appearance="dark"] nav button { color: #dce9fa; }
+.App[data-appearance="dark"] h1 { font-size: clamp(16px, 3vw, 23px); line-height: 1.7; overflow-wrap: anywhere; }
+.App[data-appearance="dark"] h2 { font-size: clamp(13px, 2vw, 17px); line-height: 1.7; overflow-wrap: anywhere; }
+.App[data-appearance="dark"] input, .App[data-appearance="dark"] textarea, .App[data-appearance="dark"] select { color: #fff; background-color: #222; }
+.App[data-appearance="dark"] button { overflow-wrap: anywhere; }
+@media(max-width:600px) {
+  .App[data-appearance="dark"] nav { padding-inline: 8px; gap: 6px; font-size: 10px; }
+  .App[data-appearance="dark"] nav a { font-size: 8px; }
+}
+
+:root { --app-field:#fff; --app-field-border:#9db5ad; --app-link:#237e70; --app-chart:#75b5a5; }
+.App[data-appearance="dark"] { --app-field:#292929; --app-field-border:#777; --app-link:#a8c8ef; --app-chart:#769fce; }
+.App[data-appearance="dark"] textarea::placeholder, .App[data-appearance="dark"] input::placeholder { color:#bcbcbc; }
+.App main { padding-top:96px !important; }

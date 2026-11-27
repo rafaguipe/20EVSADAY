@@ -7,23 +7,23 @@ import { useEVTimer } from '../contexts/EVTimerContext';
 import OfflineIndicator from './OfflineIndicator';
 
 const Nav = styled.nav`
- position:fixed; inset:0 0 auto; height:80px; z-index:1000; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 20px; background:#fff; color:#183c37; border-bottom:1px solid #dce8e3; font-family:system-ui,sans-serif;
+ position:fixed; inset:0 0 auto; height:80px; z-index:1000; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 20px; background:var(--app-card); color:var(--app-text); border-bottom:1px solid var(--app-border); font-family: var(--app-font);
 `;
-const LogoContainer = styled(Link)`display:flex; align-items:center; gap:8px; text-decoration:none; color:#183c37; font-weight:750; white-space:nowrap;`;
+const LogoContainer = styled(Link)`display:flex; align-items:center; gap:8px; text-decoration:none; color:var(--app-text); font-weight:750; white-space:nowrap;`;
 const LogoImage = styled.img`height:38px; width:auto;`;
 const NavLinks = styled.div`display:flex; align-items:center; gap:4px; @media(max-width:1000px){display:none;}`;
-const NavLink = styled(Link)`font:inherit; font-size:14px; font-weight:600; color:${p=>p.active?'#237e70':'#536b65'}; background:${p=>p.active?'#e5f2ed':'transparent'}; text-decoration:none; padding:10px; border-radius:10px; &:hover{background:#e5f2ed;}`;
+const NavLink = styled(Link)`font:inherit; font-size:14px; font-weight:600; color:${p=>p.active?'var(--app-accent)':'var(--app-muted)'}; background:${p=>p.active?'var(--app-soft)':'transparent'}; text-decoration:none; padding:10px; border-radius:calc(10px * var(--app-roundness, 1)); &:hover{background:var(--app-soft);}`;
 const UserSection = styled.div`display:flex; align-items:center; gap:12px;`;
 const UserInfo = styled.div`display:flex; align-items:center; gap:8px; @media(max-width:1000px){display:none;}`;
-const Avatar = styled.div`background:#e5f2ed; border-radius:50%; padding:8px;`;
+const Avatar = styled.div`background:var(--app-soft); border-radius:50%; padding:8px;`;
 const Username = styled.span`font-size:14px; font-weight:600;`;
-const LogoutBtn = styled.button`font:inherit; border:1px solid #b8cdc5; border-radius:10px; background:white; color:#237e70; padding:9px 14px; cursor:pointer;`;
+const LogoutBtn = styled.button`font:inherit; border:1px solid var(--app-border); border-radius:calc(10px * var(--app-roundness, 1)); background:var(--app-card); color:var(--app-accent); padding:9px 14px; cursor:pointer;`;
 const AuthButtons = styled.div`display:flex; gap:8px;`;
-const AuthBtn = styled(NavLink)`border:1px solid #b8cdc5;`;
+const AuthBtn = styled(NavLink)`border:1px solid var(--app-border);`;
 const MobileMenu = styled.div`display:none; @media(max-width:1000px){display:block;}`;
-const MobileMenuBtn = styled.button`font:inherit; background:white; color:#237e70; border:1px solid #b8cdc5; border-radius:10px; padding:9px; cursor:pointer;`;
-const MobileMenuContent = styled.div`position:absolute; top:80px; right:0; left:0; background:white; border-bottom:1px solid #dce8e3; display:${p=>p.open?'flex':'none'}; flex-direction:column; padding:16px; gap:6px;`;
-const BottomNav = styled.div`display:none; @media(max-width:1000px){display:grid; grid-template-columns:repeat(4,1fr); position:fixed; bottom:0; left:0; right:0; background:white; border-top:1px solid #dce8e3; padding:6px 4px calc(6px + env(safe-area-inset-bottom)); box-shadow:0 -4px 20px #183c3710; & a{text-align:center; font-size:12px; padding:8px 2px;}}`;
+const MobileMenuBtn = styled.button`font:inherit; background:var(--app-card); color:var(--app-accent); border:1px solid var(--app-border); border-radius:calc(10px * var(--app-roundness, 1)); padding:9px; cursor:pointer;`;
+const MobileMenuContent = styled.div`position:absolute; top:80px; right:0; left:0; background:var(--app-card); border-bottom:1px solid var(--app-border); display:${p=>p.open?'flex':'none'}; flex-direction:column; padding:16px; gap:6px;`;
+const BottomNav = styled.div`display:none; @media(max-width:1000px){display:grid; grid-template-columns:repeat(4,1fr); position:fixed; bottom:0; left:0; right:0; background:var(--app-card); border-top:1px solid var(--app-border); padding:6px 4px calc(6px + env(safe-area-inset-bottom)); box-shadow:0 -4px 20px #183c3710; & a{text-align:center; font-size:12px; padding:8px 2px;}}`;
 const avatars = [
   '👤', '👨', '👩', '🧑', '👨‍🦰', '👩‍🦰', '👨‍🦱', '👩‍🦱',
   '👨‍🦲', '👩‍🦲', '👨‍🦳', '👩‍🦳', '👴', '👵', '🧓', '👶'
@@ -132,7 +132,10 @@ const Navbar = () => {
         <>
           <NavLinks>
             <NavLink to="/dashboard" active={isActive('/dashboard')}>
-              Registro
+              ⚡ EV
+            </NavLink>
+            <NavLink to="/sinaletica" active={isActive('/sinaletica')}>
+              🌀 Sinalética
             </NavLink>
             <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
               Progresso
@@ -150,9 +153,7 @@ const Navbar = () => {
             
             
             
-            <NavLink to="/sinaletica" active={isActive('/sinaletica')}>
-              🌀 Sinalética
-            </NavLink>
+            
             
             
             <NavLink to="/profile" active={isActive('/profile')}>
@@ -185,7 +186,10 @@ const Navbar = () => {
             </MobileMenuBtn>
             <MobileMenuContent open={mobileMenuOpen}>
               <NavLink to="/dashboard" active={isActive('/dashboard')} onClick={closeMobileMenu}>
-                Registro
+                ⚡ EV
+              </NavLink>
+            <NavLink to="/sinaletica" active={isActive('/sinaletica')} onClick={closeMobileMenu}>
+                🌀 Sinalética
               </NavLink>
             <NavLink to="/estatisticas" active={isActive('/estatisticas')} onClick={closeMobileMenu}>Progresso</NavLink>
               {(isAdmin || leaderboardVisible) && (
@@ -201,9 +205,7 @@ const Navbar = () => {
               
               
               
-              <NavLink to="/sinaletica" active={isActive('/sinaletica')} onClick={closeMobileMenu}>
-                🌀 Sinalética
-              </NavLink>
+              
               
               
               <NavLink to="/profile" active={isActive('/profile')} onClick={closeMobileMenu}>
@@ -217,7 +219,7 @@ const Navbar = () => {
               <LogoutBtn onClick={() => { closeMobileMenu(); handleLogout(); }}>Sair</LogoutBtn>
             </MobileMenuContent>
           </MobileMenu>
-          <BottomNav>{[['/dashboard','Registro'],['/estatisticas','Progresso'],['/sinaletica','Sinalética'],['/profile','Perfil']].map(([path,label]) => <NavLink key={path} to={path} active={isActive(path)} onClick={closeMobileMenu}>{label}</NavLink>)}</BottomNav>
+          <BottomNav>{[['/dashboard','⚡ EV'],['/sinaletica','🌀 Sinalética'],['/estatisticas','Progresso'],['/profile','Perfil']].map(([path,label]) => <NavLink key={path} to={path} active={isActive(path)} onClick={closeMobileMenu}>{label}</NavLink>)}</BottomNav>
         </>
       ) : (
         <AuthButtons>

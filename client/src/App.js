@@ -98,7 +98,7 @@ const GlobalStyle = createGlobalStyle`
 
 function App() {
   const { loading } = useAuth();
-  const { theme } = useTheme();
+  const { theme, themeName } = useTheme();
 
   if (loading) {
     return <LoadingSpinner />;
@@ -108,7 +108,7 @@ function App() {
     <StyledThemeProvider theme={theme}>
       <GlobalStyle />
 
-        <div className="App">
+        <div className="App" data-appearance={themeName}>
           <Navbar />
           <AnnouncementPopup />
           {/* Pop-up do próximo marco - COMENTADO: estava sobrepondo elementos no celular */}

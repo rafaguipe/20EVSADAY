@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 // ─── Styled Components ───────────────────────────────────────────────
 
 const Container = styled.div`
-  background: #f4f8f6; color: #183c37; font-family: system-ui, sans-serif; box-sizing: border-box; padding-bottom: 100px !important;
+  background: var(--app-bg); color: var(--app-text); font-family: var(--app-font); box-sizing: border-box; padding-bottom: 100px !important;
   padding: 20px;
   max-width: 800px;
   margin: 0 auto;
@@ -22,9 +22,9 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 20px;
-  color: #183c37;
+  color: var(--app-text);
   text-align: center;
   margin-bottom: 10px;
   text-transform: uppercase;
@@ -41,16 +41,16 @@ const Title = styled.h1`
 
 const Subtitle = styled.p`
   text-align: center;
-  color: #536b65;
+  color: var(--app-muted);
   font-size: 12px;
   margin-bottom: 30px;
   line-height: 1.6;
 `;
 
 const Section = styled.div`
-  background: #e5f2ed;
-  border: 1px solid #dce8e3;
-  border-radius: 12px;
+  background: var(--app-soft);
+  border: 1px solid var(--app-field-border);
+  border-radius: calc(12px * var(--app-roundness, 1));
   padding: 24px;
   margin-bottom: 20px;
 
@@ -60,9 +60,9 @@ const Section = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 12px;
-  color: #237e70;
+  color: var(--app-accent);
   margin-bottom: 16px;
   display: flex;
   align-items: center;
@@ -85,17 +85,17 @@ const VeiculoGrid = styled.div`
 `;
 
 const VeiculoCard = styled.div`
-  background: #eaf3ef;
-  border: 1px solid #dce8e3;
-  border-radius: 10px;
+  background: var(--app-field);
+  border: 1px solid var(--app-field-border);
+  border-radius: calc(10px * var(--app-roundness, 1));
   padding: 16px;
-  border-left: 3px solid ${props => props.$color || '#237e70'};
+  border-left: 3px solid ${props => props.$color || 'var(--app-accent)'};
 `;
 
 const VeiculoLabel = styled.label`
   font-weight: bold;
   font-size: 13px;
-  color: ${props => props.$color || '#536b65'};
+  color: ${props => props.$color || 'var(--app-muted)'};
   display: block;
   margin-bottom: 8px;
 `;
@@ -103,10 +103,10 @@ const VeiculoLabel = styled.label`
 const VeiculoInput = styled.textarea`
   width: 100%;
   min-height: 70px;
-  background: #eaf3ef;
-  border: 1px solid #dce8e3;
-  border-radius: 14px;
-  color: #536b65;
+  background: var(--app-field);
+  border: 1px solid var(--app-field-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
+  color: var(--app-muted);
   padding: 10px;
   font-size: 13px;
   font-family: inherit;
@@ -115,12 +115,12 @@ const VeiculoInput = styled.textarea`
 
   &:focus {
     outline: none;
-    border-color: #237e70;
-    background: #eaf3ef;
+    border-color: var(--app-accent);
+    background: var(--app-field);
   }
 
   &::placeholder {
-    color: #536b65;
+    color: var(--app-muted);
   }
 `;
 
@@ -133,7 +133,7 @@ const IntensityRow = styled.div`
 
 const IntensityLabel = styled.span`
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   white-space: nowrap;
 `;
 
@@ -146,7 +146,7 @@ const Dot = styled.button`
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 2px solid ${props => props.$active ? props.$filledColor : '#dce8e3'};
+  border: 2px solid ${props => props.$active ? props.$filledColor : 'var(--app-field-border)'};
   background: ${props => props.$active ? props.$filledColor : 'transparent'};
   cursor: pointer;
   font-size: 0;
@@ -157,8 +157,8 @@ const Dot = styled.button`
   justify-content: center;
 
   &:hover {
-    border-color: ${props => props.$filledColor || '#237e70'};
-    background: ${props => props.$active ? props.$filledColor : '#eaf3ef'};
+    border-color: ${props => props.$filledColor || 'var(--app-accent)'};
+    background: ${props => props.$active ? props.$filledColor : 'var(--app-field)'};
   }
 
   @media (max-width: 480px) {
@@ -174,17 +174,17 @@ const Row = styled.div`
 const Label = styled.label`
   font-weight: bold;
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   display: block;
   margin-bottom: 6px;
 `;
 
 const Input = styled.input`
   width: 100%;
-  background: #eaf3ef;
-  border: 1px solid #dce8e3;
-  border-radius: 14px;
-  color: #536b65;
+  background: var(--app-field);
+  border: 1px solid var(--app-field-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
+  color: var(--app-muted);
   padding: 10px;
   font-size: 13px;
   font-family: inherit;
@@ -192,17 +192,17 @@ const Input = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #237e70;
+    border-color: var(--app-accent);
   }
 `;
 
 const TextArea = styled.textarea`
   width: 100%;
   min-height: 80px;
-  background: #eaf3ef;
-  border: 1px solid #dce8e3;
-  border-radius: 14px;
-  color: #536b65;
+  background: var(--app-field);
+  border: 1px solid var(--app-field-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
+  color: var(--app-muted);
   padding: 10px;
   font-size: 13px;
   font-family: inherit;
@@ -211,7 +211,7 @@ const TextArea = styled.textarea`
 
   &:focus {
     outline: none;
-    border-color: #237e70;
+    border-color: var(--app-accent);
   }
 `;
 
@@ -224,8 +224,8 @@ const ButtonRow = styled.div`
 
 const Btn = styled.button`
   padding: 12px 32px;
-  border-radius: 14px;
-  font-family: system-ui, sans-serif;
+  border-radius: calc(14px * var(--app-roundness, 1));
+  font-family: var(--app-font);
   font-size: 13px;
   cursor: pointer;
   border: none;
@@ -256,12 +256,12 @@ const SaveBtn = styled(Btn)`
 `;
 
 const ClearBtn = styled(Btn)`
-  background: #eaf3ef;
-  color: #536b65;
-  border: 1px solid #dce8e3;
+  background: var(--app-field);
+  color: var(--app-muted);
+  border: 1px solid var(--app-field-border);
 
   &:hover {
-    background: #eaf3ef;
+    background: var(--app-field);
   }
 `;
 
@@ -270,15 +270,15 @@ const ClearBtn = styled(Btn)`
 const ExportSection = styled.div`
   margin: 25px 0;
   padding: 18px;
-  background: #e5f2ed;
-  border: 1px solid #dce8e3;
-  border-radius: 14px;
+  background: var(--app-soft);
+  border: 1px solid var(--app-field-border);
+  border-radius: calc(14px * var(--app-roundness, 1));
 `;
 
 const ExportTitle = styled.h3`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #237e70;
+  color: var(--app-accent);
   margin-bottom: 14px;
   text-transform: uppercase;
   text-align: center;
@@ -292,10 +292,10 @@ const ExportButtons = styled.div`
 `;
 
 const ExportBtn = styled.button`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
   padding: 10px 18px;
-  border-radius: 14px;
+  border-radius: calc(14px * var(--app-roundness, 1));
   cursor: pointer;
   border: 2px solid ${({ $variant }) =>
     $variant === 'csv' ? '#28a745' : '#ffc107'};
@@ -311,7 +311,7 @@ const ExportBtn = styled.button`
   &:hover:not(:disabled) {
     background: ${({ $variant }) =>
       $variant === 'csv' ? '#28a745' : '#ffc107'};
-    color: #f4f8f6;
+    color: var(--app-bg);
     transform: translateY(-1px);
   }
 
@@ -329,9 +329,9 @@ const ExportBtn = styled.button`
 `;
 
 const ExportInfo = styled.p`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 13px;
-  color: #536b65;
+  color: var(--app-muted);
   text-align: center;
   margin-top: 12px;
   line-height: 1.5;
@@ -340,9 +340,9 @@ const ExportInfo = styled.p`
 // ─── Timeline ─────────────────────────────────────────────────────────
 
 const TimelineTitle = styled.h2`
-  font-family: system-ui, sans-serif;
+  font-family: var(--app-font);
   font-size: 14px;
-  color: #237e70;
+  color: var(--app-accent);
   margin: 30px 0 20px;
   text-align: center;
 
@@ -352,15 +352,15 @@ const TimelineTitle = styled.h2`
 `;
 
 const SinalCard = styled.div`
-  background: #eaf3ef;
-  border: 1px solid #dce8e3;
-  border-radius: 10px;
+  background: var(--app-field);
+  border: 1px solid var(--app-field-border);
+  border-radius: calc(10px * var(--app-roundness, 1));
   padding: 16px;
   margin-bottom: 12px;
   position: relative;
 
   &:hover {
-    border-color: #237e70;
+    border-color: var(--app-accent);
   }
 `;
 
@@ -375,7 +375,7 @@ const SinalHeader = styled.div`
 
 const SinalDate = styled.span`
   font-size: 12px;
-  color: #237e70;
+  color: var(--app-accent);
   font-weight: bold;
 `;
 
@@ -386,17 +386,17 @@ const SinalActions = styled.div`
 
 const ActionBtn = styled.button`
   background: none;
-  border: 1px solid #dce8e3;
-  color: #536b65;
+  border: 1px solid var(--app-field-border);
+  color: var(--app-muted);
   padding: 4px 10px;
-  border-radius: 14px;
+  border-radius: calc(14px * var(--app-roundness, 1));
   font-size: 13px;
   cursor: pointer;
   font-family: inherit;
 
   &:hover {
-    border-color: #536b65;
-    color: #536b65;
+    border-color: var(--app-muted);
+    color: var(--app-muted);
   }
 `;
 
@@ -406,8 +406,8 @@ const VeiculoRow = styled.div`
   gap: 10px;
   margin-bottom: 8px;
   padding: 8px;
-  background: #eaf3ef;
-  border-radius: 14px;
+  background: var(--app-field);
+  border-radius: calc(14px * var(--app-roundness, 1));
 `;
 
 const VeiculoIcon = styled.span`
@@ -423,7 +423,7 @@ const VeiculoContent = styled.div`
 const VeiculoName = styled.span`
   font-size: 13px;
   font-weight: bold;
-  color: ${props => props.$color || '#536b65'};
+  color: ${props => props.$color || 'var(--app-muted)'};
   margin-right: 8px;
 `;
 
@@ -434,21 +434,21 @@ const IntensityBar = styled.span`
 
 const VeiculoText = styled.p`
   font-size: 12px;
-  color: #536b65;
+  color: var(--app-muted);
   margin: 4px 0 0;
   line-height: 1.5;
 `;
 
 const ContextText = styled.p`
   font-size: 12px;
-  color: #536b65;
+  color: var(--app-muted);
   margin-top: 8px;
   font-style: italic;
 `;
 
 const NotesText = styled.p`
   font-size: 12px;
-  color: #536b65;
+  color: var(--app-muted);
   margin-top: 6px;
   line-height: 1.5;
 `;
@@ -456,7 +456,7 @@ const NotesText = styled.p`
 const EmptyState = styled.div`
   text-align: center;
   padding: 40px 20px;
-  color: #536b65;
+  color: var(--app-muted);
   font-size: 13px;
   line-height: 1.8;
 `;
@@ -470,17 +470,17 @@ const FilterRow = styled.div`
 
 const FilterBtn = styled.button`
   padding: 6px 14px;
-  border-radius: 20px;
-  border: 1px solid ${props => props.$active ? '#237e70' : '#dce8e3'};
-  background: ${props => props.$active ? '#e5f2ed' : 'transparent'};
-  color: ${props => props.$active ? '#237e70' : '#536b65'};
+  border-radius: calc(20px * var(--app-roundness, 1));
+  border: 1px solid ${props => props.$active ? 'var(--app-accent)' : 'var(--app-field-border)'};
+  background: ${props => props.$active ? 'var(--app-soft)' : 'transparent'};
+  color: ${props => props.$active ? 'var(--app-accent)' : 'var(--app-muted)'};
   font-size: 13px;
   cursor: pointer;
   font-family: inherit;
 
   &:hover {
-    border-color: #237e70;
-    color: #237e70;
+    border-color: var(--app-accent);
+    color: var(--app-accent);
   }
 `;
 

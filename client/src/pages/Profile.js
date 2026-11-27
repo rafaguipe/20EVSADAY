@@ -23,8 +23,23 @@ const avatars = [
 
 const Profile = () => {
   const { user, updateAvatar } = useAuth();
-  const { themeName, toggleTheme } = useTheme();
+  const { themeName, setThemeName } = useTheme();
   const [profile, setProfile] = useState(null);
+  const [goalDraft, setGoalDraft] = useState('20');
+  const [savingGoal, setSavingGoal] = useState(false);
+  useEffect(() => { setGoalDraft(String(profile?.daily_ev_goal ?? 20)); }, [profile?.daily_ev_goal, user?.id]);
+  const saveDailyGoal = async () => {
+    const goal = Number(goalDraft);
+    if (!Number.isInteger(goal) || goal < 1 || goal > 200) { toast.error('Informe uma meta inteira entre 1 e 200.'); return; }
+    setSavingGoal(true);
+    try {
+      const {data,error} = await supabase.from('profiles').update({daily_ev_goal:goal}).eq('user_id',user.id).select('daily_ev_goal').single();
+      if(error) throw error;
+      setProfile(prev => ({...prev,daily_ev_goal:data.daily_ev_goal}));
+      toast.success('Meta diária salva.');
+    } catch { toast.error('Não foi possível salvar a meta.'); }
+    finally { setSavingGoal(false); }
+  };
   const [stats, setStats] = useState({
     total_evs: 0,
     average_score: 0,
@@ -736,26 +751,20 @@ const Profile = () => {
         <Card>
           <CardTitle>Ajustes</CardTitle>
           <div style={{ marginBottom: 16 }}>
-            <strong>Tema:</strong> {themeName === 'dark' ? 'Escuro' : 'Claro'}
-            <button
-              style={{
-                marginLeft: 16,
-                padding: '8px 20px',
-                borderRadius: 8,
-                border: 'none',
-                background: themeName === 'dark' ? '#4a6a8a' : '#d1d1d1',
-                color: themeName === 'dark' ? '#fff' : '#222',
-                fontFamily: 'Press Start 2P, monospace',
-                fontSize: 12,
-                cursor: 'pointer',
-                transition: 'background 0.2s',
-              }}
-              onClick={toggleTheme}
-            >
-              Alternar Tema
-            </button>
+            <label htmlFor="appearance"><strong>Aparência:</strong></label>
+            <select id="appearance" value={themeName} onChange={e => setThemeName(e.target.value)} style={{marginLeft:12,padding:10,maxWidth:'100%',font:'inherit'}}>
+              <option value="light">Moderno — claro</option>
+              <option value="dark">Clássico — pixel art</option>
+            </select>
           </div>
           <div style={{ marginBottom: 16 }}>
+            <label htmlFor="daily-goal"><strong>Meta diária de EVs:</strong></label>
+            <div style={{display:'flex',gap:8,flexWrap:'wrap',marginTop:8}}>
+              <input id="daily-goal" type="number" min={1} max={200} step={1} value={goalDraft} onChange={e=>setGoalDraft(e.target.value)} style={{width:90,padding:8,font:'inherit'}} />
+              <button type="button" onClick={saveDailyGoal} disabled={savingGoal || !profile} style={{padding:8,background:'var(--app-accent)',color:'white',border:0,font:'inherit',cursor:'pointer'}}>{savingGoal?'Salvando...':'Salvar meta'}</button>
+            </div>
+          </div>
+          <div style={{marginBottom:16}}>
             <strong>Intervalo entre EVs:</strong>
             <input
               type="number"

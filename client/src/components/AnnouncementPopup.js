@@ -170,6 +170,7 @@ const AnnouncementPopup = () => {
   };
 
   const closePopup = () => {
+    sessionStorage.setItem('announcement_shown', 'true');
     setShowPopup(false);
   };
 

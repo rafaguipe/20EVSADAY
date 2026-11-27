@@ -5,6 +5,7 @@ import { useSync } from '../contexts/SyncContext';
 import { useEVTimer } from '../contexts/EVTimerContext';
 import toast from 'react-hot-toast';
 import styled from 'styled-components';
+import { useTheme } from '../contexts/ThemeContext';
 import SoundEffect from '../components/SoundEffect';
 import BadgeNotification from '../components/BadgeNotification';
 import { Link } from 'react-router-dom';
@@ -12,29 +13,29 @@ import EVReminder from '../components/EVReminder';
 
 const Container = styled.div`
   max-width: 1000px; margin: auto; padding: 24px 16px 80px;
-  color: #183c37; background: #f4f8f6;
-  font-family: system-ui, sans-serif;
+  color: var(--app-text); background: var(--app-bg);
+  font-family: var(--app-font);
 `;
 const Title = styled.h1`font-size: 26px; text-align: center; margin: 16px 0; font-weight: 650;`;
 const Grid = styled.div`display: grid; grid-template-columns: minmax(0, 560px); justify-content:center; gap: 16px; @media(max-width: 700px){grid-template-columns: 1fr;}`;
-const Card = styled.section`background: white; border: 1px solid #dce8e3; border-radius: 20px; padding: 22px; min-width: 0;`;
-const CardTitle = styled.h2`font-size: 18px; margin: 0 0 16px; color: #183c37;`;
+const Card = styled.section`background: var(--app-card); border: 1px solid var(--app-border); border-radius: calc(20px * var(--app-roundness, 1)); padding: 22px; min-width: 0;`;
+const CardTitle = styled.h2`font-size: 18px; margin: 0 0 16px; color: var(--app-text);`;
 const Form = styled.form`display: grid; gap: 16px;`;
 const FormGroup = styled.div`display: grid; gap: 8px;`;
 const Label = styled.label`font-size: 14px; font-weight: 600;`;
-const TextArea = styled.textarea`font: inherit; color: #183c37; background: #f4f8f6; border: 1px solid #b8cdc5; border-radius: 12px; padding: 12px; min-height: 80px; resize: vertical; width: 100%; box-sizing: border-box;`;
+const TextArea = styled.textarea`font: inherit; color: var(--app-text); background: var(--app-bg); border: 1px solid var(--app-border); border-radius: calc(12px * var(--app-roundness, 1)); padding: 12px; min-height: 80px; resize: vertical; width: 100%; box-sizing: border-box;`;
 const ScoreButtons = styled.div`display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 8px;`;
-const ScoreButton = styled.button`font: inherit; font-weight: 650; min-height: 48px; border-radius: 12px; border: 1px solid #b8cdc5; cursor: pointer; background: ${p=>p.selected?'#237e70':'#f4f8f6'}; color: ${p=>p.selected?'white':'#183c37'};`;
-const SubmitButton = styled.button`font: inherit; font-weight: 650; min-height: 50px; border: 0; border-radius: 12px; background: #237e70; color: white; cursor: pointer; &:disabled{opacity:.5;cursor:wait;}`;
+const ScoreButton = styled.button`font: inherit; font-weight: 650; min-height: 48px; border-radius: calc(12px * var(--app-roundness, 1)); border: 1px solid var(--app-border); cursor: pointer; background: ${p=>p.selected?'var(--app-accent)':'var(--app-bg)'}; color: ${p=>p.selected?'white':'var(--app-text)'};`;
+const SubmitButton = styled.button`font: inherit; font-weight: 650; min-height: 50px; border: 0; border-radius: calc(12px * var(--app-roundness, 1)); background: var(--app-accent); color: white; cursor: pointer; &:disabled{opacity:.5;cursor:wait;}`;
 const EscalaSection = styled.details`margin-top: 20px; font-size: 14px;`;
 const EscalaTitle = styled.summary`cursor: pointer; font-weight: 600; margin-bottom: 12px;`;
 const EscalaGrid = styled.div`display: grid; gap: 8px;`;
-const EscalaCard = styled.div`background: #f4f8f6; padding: 10px; border-radius: 8px;`;
+const EscalaCard = styled.div`background: var(--app-bg); padding: 10px; border-radius: calc(8px * var(--app-roundness, 1));`;
 const EscalaNota = styled.div`display: flex; align-items: center; gap: 10px;`;
 const NotaBadge = styled.span`font-weight: 650; white-space: nowrap;`;
 const EscalaDescricao = styled.p`margin: 0; font-size: 13px;`;
 const Hero = styled(Card)`text-align:center; margin-bottom: 16px; display:grid; justify-items:center; gap:12px;`;
-const ActionLink = styled(Link)`display:block; text-align:center; border:1px solid #237e70; color:#237e70; padding:14px; border-radius:12px; font-weight:650; text-decoration:none; width:100%; max-width:340px; box-sizing:border-box;`;
+const ActionLink = styled(Link)`display:block; text-align:center; border:1px solid var(--app-accent); color:var(--app-accent); padding:14px; border-radius:calc(12px * var(--app-roundness, 1)); font-weight:650; text-decoration:none; width:100%; max-width:340px; box-sizing:border-box;`;
 const escalaAutoqualificacao = [
   {
     nota: 0,
@@ -60,6 +61,15 @@ const escalaAutoqualificacao = [
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const { themeName } = useTheme();
+  const [dailyGoal, setDailyGoal] = useState(20);
+  useEffect(() => {
+    let active = true;
+    setDailyGoal(20);
+    if (user?.id) supabase.from('profiles').select('daily_ev_goal').eq('user_id', user.id).maybeSingle().then(({data}) => { if(active && Number.isInteger(data?.daily_ev_goal) && data.daily_ev_goal >= 1) setDailyGoal(data.daily_ev_goal); });
+    return () => { active = false; };
+  }, [user?.id]);
+
   const { isOnline } = useSync();
   const { soundEnabled } = useEVTimer();
   const [formData, setFormData] = useState({
@@ -662,13 +672,23 @@ const Dashboard = () => {
       
       {/* Barra de Progresso Diária */}
       <Hero>
-        <svg viewBox="0 0 220 220" width="210" role="img" aria-label={stats.today_evs + ' de 20 EVs'}>
-          <circle cx="110" cy="110" r="89" fill="none" stroke="#e0ebe6" strokeWidth="12"/>
-          <circle cx="110" cy="110" r="89" fill="none" stroke="#269b85" strokeWidth="12" strokeLinecap="round" strokeDasharray={Math.min(stats.today_evs/20,1)*559.2+' 559.2'} transform="rotate(-90 110 110)"/>
-          <text x="110" y="105" textAnchor="middle" fontSize="42" fontWeight="650" fill="#183c37">{stats.today_evs}<tspan fontSize="22">/20</tspan></text>
-          <text x="110" y="132" textAnchor="middle" fontSize="12" fill="#536b65">Estados Vibracionais</text>
-          <text x="110" y="151" textAnchor="middle" fontSize="13" fill="#237e70">{Math.round(stats.today_evs/20*100)}% da meta diária</text>
-        </svg>
+        {themeName === 'dark' ? (
+          <div style={{width:'100%',maxWidth:420,display:'grid',gap:16,padding:8}}>
+            <strong style={{fontSize:'clamp(20px,5vw,32px)',color:'#fff'}}>{stats.today_evs}/{dailyGoal}</strong>
+            <div role="progressbar" aria-label="Meta diária de EVs" aria-valuemin={0} aria-valuemax={dailyGoal} aria-valuenow={Math.min(stats.today_evs,dailyGoal)} style={{display:'grid',gridTemplateColumns:'repeat(10,minmax(0,1fr))',gap:5}}>
+              {Array.from({length:Math.min(dailyGoal,20)},(_,i) => <span key={i} style={{height:22,border:'1px solid #626262',background: i < Math.floor(stats.today_evs/dailyGoal*Math.min(dailyGoal,20)) ? '#63bc72':'#333'}} />)}
+            </div>
+            <span style={{fontSize:12,color:'#a9e6ad',lineHeight:1.8}}>{Math.round(stats.today_evs/dailyGoal*100)}% da meta diária</span>
+          </div>
+        ) : (
+          <svg viewBox="0 0 220 220" width="210" role="img" aria-label={stats.today_evs + ' de ' + dailyGoal + ' EVs'}>
+            <circle cx="110" cy="110" r="89" fill="none" stroke="#e0ebe6" strokeWidth="12"/>
+            <circle cx="110" cy="110" r="89" fill="none" stroke="#269b85" strokeWidth="12" strokeLinecap="round" strokeDasharray={Math.min(stats.today_evs/dailyGoal,1)*559.2+' 559.2'} transform="rotate(-90 110 110)"/>
+            <text x="110" y="105" textAnchor="middle" fontSize="36" fontWeight="650" fill="#183c37">{stats.today_evs}<tspan fontSize="20">/{dailyGoal}</tspan></text>
+            <text x="110" y="132" textAnchor="middle" fontSize="12" fill="#536b65">Estados Vibracionais</text>
+            <text x="110" y="151" textAnchor="middle" fontSize="13" fill="#237e70">{Math.round(stats.today_evs/dailyGoal*100)}% da meta diária</text>
+          </svg>
+        )}
       </Hero>
 
       <Grid>
