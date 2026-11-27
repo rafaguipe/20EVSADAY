@@ -256,7 +256,7 @@ Média recente: ${average}
       const profileMap = new Map((profiles ?? []).map(profile => [profile.user_id, profile.username]))
 
       const rankingLines = topUsers.map((user, index) => {
-        const name = profileMap.get(user.user_id) ?? `Jogador ${user.user_id.slice(0, 6)}`
+        const name = profileMap.get(user.user_id) ?? `Participante ${user.user_id.slice(0, 6)}`
         return `${index + 1}. ${name} — ${user.total_points} pts (${user.evs_count} EVs)`
       })
 
