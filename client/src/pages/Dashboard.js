@@ -17,7 +17,7 @@ const Container = styled.div`
   font-family: system-ui, sans-serif;
 `;
 const Title = styled.h1`font-size: 26px; text-align: center; margin: 16px 0; font-weight: 650;`;
-const Grid = styled.div`display: grid; grid-template-columns: 1fr 1fr; gap: 16px; @media(max-width: 700px){grid-template-columns: 1fr;}`;
+const Grid = styled.div`display: grid; grid-template-columns: minmax(0, 560px); justify-content:center; gap: 16px; @media(max-width: 700px){grid-template-columns: 1fr;}`;
 const Card = styled.section`background: white; border: 1px solid #dce8e3; border-radius: 20px; padding: 22px; min-width: 0;`;
 const CardTitle = styled.h2`font-size: 18px; margin: 0 0 16px; color: #183c37;`;
 const Form = styled.form`display: grid; gap: 16px;`;
@@ -36,8 +36,6 @@ const NotaBadge = styled.span`font-weight: 650; white-space: nowrap;`;
 const EscalaDescricao = styled.p`margin: 0; font-size: 13px;`;
 const Hero = styled(Card)`text-align:center; margin-bottom: 16px; display:grid; justify-items:center; gap:12px;`;
 const ActionLink = styled(Link)`display:block; text-align:center; border:1px solid #237e70; color:#237e70; padding:14px; border-radius:12px; font-weight:650; text-decoration:none; width:100%; max-width:340px; box-sizing:border-box;`;
-const Week = styled.div`display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:8px; align-items:end; width:100%; max-width:400px; margin:auto;`;
-const Metrics = styled.div`display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0;`;
 const escalaAutoqualificacao = [
   {
     nota: 0,
@@ -61,12 +59,6 @@ const escalaAutoqualificacao = [
   }
 ];
 
-const RecentEVs = styled(Card)``;
-const EVItem = styled.div`padding: 12px 0; border-bottom: 1px solid #e3ece8;`;
-const EVInfo = styled.div`display:grid; gap:5px;`;
-const EVScore = styled.strong`color:#237e70;`;
-const EVDate = styled.span`font-size:13px;color:#536b65;`;
-const EVNotes = styled.p`font-size:14px;margin:0;overflow-wrap:anywhere;`;
 const Dashboard = () => {
   const { user } = useAuth();
   const { isOnline } = useSync();
@@ -83,9 +75,6 @@ const Dashboard = () => {
     today_points: 0,
     week_evs: 0
   });
-  const [week, setWeek] = useState([]);
-  const [streak, setStreak] = useState(0);
-  const [recentEVs, setRecentEVs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [playCoinSound, setPlayCoinSound] = useState(false);
   const [playVictorySound, setPlayVictorySound] = useState(false);
@@ -95,7 +84,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (user) {
       loadStats();
-      loadRecentEVs();
+
       checkRecentBadges();
     }
   }, [user]);
@@ -245,14 +234,6 @@ const Dashboard = () => {
         }
       }
 
-      const counts = new Map();
-      allEVs.forEach(ev => { const key = new Date(ev.created_at).toDateString(); counts.set(key, (counts.get(key)||0)+1); });
-      setWeek(Array.from({length:7}, (_,i) => { const d = new Date(); d.setDate(d.getDate()-6+i); return {label:d.toLocaleDateString('pt-BR',{weekday:'short'}), count:counts.get(d.toDateString())||0}; }));
-      const cursor = new Date();
-      if (!counts.has(cursor.toDateString())) cursor.setDate(cursor.getDate()-1);
-      let consecutive = 0;
-      while (counts.has(cursor.toDateString())) { consecutive++; cursor.setDate(cursor.getDate()-1); }
-      setStreak(consecutive);
       if (!allEVs.length) setStats({total_evs:0,average_score:0,max_score:0,today_evs:0,today_points:0,week_evs:0});
       if (allEVs && allEVs.length > 0) {
         const total_evs = totalEVsCount || allEVs.length;
@@ -291,21 +272,6 @@ const Dashboard = () => {
     }
   };
 
-  const loadRecentEVs = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('evs')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(10);
-
-      if (error) throw error;
-      setRecentEVs(data || []);
-    } catch (error) {
-      console.error('Erro ao carregar EVs recentes:', error);
-    }
-  };
 
   const handleScoreSelect = (score) => {
     setFormData({
@@ -475,7 +441,7 @@ const Dashboard = () => {
         
         // Recarregar dados
         await loadStats();
-        await loadRecentEVs();
+
       }
       
     } catch (error) {
@@ -486,16 +452,6 @@ const Dashboard = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
 
   const checkAndAwardBadges = async () => {
     try {
@@ -714,11 +670,7 @@ const Dashboard = () => {
           <text x="110" y="132" textAnchor="middle" fontSize="12" fill="#536b65">Estados Vibracionais</text>
           <text x="110" y="151" textAnchor="middle" fontSize="13" fill="#237e70">{Math.round(stats.today_evs/20*100)}% da meta diária</text>
         </svg>
-        <ActionLink to="/sinaletica">Registrar sinalética</ActionLink>
-        <CardTitle>Últimos 7 dias</CardTitle>
-        <Week>{week.map((day,i)=><div key={i} style={{display:'grid',gap:5,justifyItems:'center',fontSize:12}}><span>{day.count}</span><div style={{height:Math.max(3,day.count/Math.max(20,...week.map(d=>d.count))*70),width:'65%',background:i===6?'#237e70':'#9bcfc2',borderRadius:5}}/><span>{day.label}</span></div>)}</Week>
       </Hero>
-      <Metrics><Card><div>Sequência atual</div><strong style={{fontSize:26}}>{streak} dias</strong></Card><Card><div>Total de EVs</div><strong style={{fontSize:26}}>{stats.total_evs}</strong></Card></Metrics>
 
       <Grid>
         <Card>
@@ -771,25 +723,9 @@ const Dashboard = () => {
           </EscalaSection>
         </Card>
 
-        <RecentEVs>
-          <CardTitle>EVs Recentes</CardTitle>
-          {recentEVs.length === 0 ? (
-            <div style={{ textAlign: 'center', color: '#6a6a6a', padding: '20px' }}>
-              Nenhum EV registrado ainda
-            </div>
-          ) : (
-            recentEVs.map(ev => (
-              <EVItem key={ev.id}>
-                <EVInfo>
-                  <EVScore>EV {ev.score}</EVScore>
-                  <EVDate>{formatDate(ev.created_at)}</EVDate>
-                  {ev.notes && <EVNotes>{ev.notes}</EVNotes>}
-                </EVInfo>
-              </EVItem>
-            ))
-          )}
-        </RecentEVs>
+
       </Grid>
+      <div style={{display:'flex',justifyContent:'center',marginTop:16}}><ActionLink to="/sinaletica">Registrar sinalética</ActionLink></div>
       
       {/* Som de moeda quando registrar EV */}
       <SoundEffect 
