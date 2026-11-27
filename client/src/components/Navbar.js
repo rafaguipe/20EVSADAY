@@ -132,7 +132,10 @@ const Navbar = () => {
         <>
           <NavLinks>
             <NavLink to="/dashboard" active={isActive('/dashboard')}>
-              Hoje
+              Registro
+            </NavLink>
+            <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
+              Progresso
             </NavLink>
             {(isAdmin || leaderboardVisible) && (
               <NavLink to="/leaderboard" active={isActive('/leaderboard')}>
@@ -146,9 +149,7 @@ const Navbar = () => {
             )}
             
             
-            <NavLink to="/estatisticas" active={isActive('/estatisticas')}>
-              Progresso
-            </NavLink>
+            
             <NavLink to="/sinaletica" active={isActive('/sinaletica')}>
               🌀 Sinalética
             </NavLink>
@@ -186,6 +187,7 @@ const Navbar = () => {
               <NavLink to="/dashboard" active={isActive('/dashboard')} onClick={closeMobileMenu}>
                 Registro
               </NavLink>
+            <NavLink to="/estatisticas" active={isActive('/estatisticas')} onClick={closeMobileMenu}>Progresso</NavLink>
               {(isAdmin || leaderboardVisible) && (
                 <NavLink to="/leaderboard" active={isActive('/leaderboard')} onClick={closeMobileMenu}>
                   Ranking
@@ -198,9 +200,7 @@ const Navbar = () => {
               )}
               
               
-              <NavLink to="/estatisticas" active={isActive('/estatisticas')} onClick={closeMobileMenu}>
-                Estatísticas
-              </NavLink>
+              
               <NavLink to="/sinaletica" active={isActive('/sinaletica')} onClick={closeMobileMenu}>
                 🌀 Sinalética
               </NavLink>
@@ -217,7 +217,7 @@ const Navbar = () => {
               <LogoutBtn onClick={() => { closeMobileMenu(); handleLogout(); }}>Sair</LogoutBtn>
             </MobileMenuContent>
           </MobileMenu>
-          <BottomNav>{[['/dashboard','Hoje'],['/sinaletica','Sinalética'],['/estatisticas','Progresso'],['/profile','Perfil']].map(([path,label]) => <NavLink key={path} to={path} active={isActive(path)} onClick={closeMobileMenu}>{label}</NavLink>)}</BottomNav>
+          <BottomNav>{[['/dashboard','Registro'],['/estatisticas','Progresso'],['/sinaletica','Sinalética'],['/profile','Perfil']].map(([path,label]) => <NavLink key={path} to={path} active={isActive(path)} onClick={closeMobileMenu}>{label}</NavLink>)}</BottomNav>
         </>
       ) : (
         <AuthButtons>
