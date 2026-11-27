@@ -23,7 +23,7 @@ const avatars = [
 
 const Profile = () => {
   const { user, updateAvatar } = useAuth();
-  const { themeName, toggleTheme } = useTheme();
+  const { themeName, setThemeName } = useTheme();
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState({
     total_evs: 0,
@@ -736,24 +736,11 @@ const Profile = () => {
         <Card>
           <CardTitle>Ajustes</CardTitle>
           <div style={{ marginBottom: 16 }}>
-            <strong>Tema:</strong> {themeName === 'dark' ? 'Escuro' : 'Claro'}
-            <button
-              style={{
-                marginLeft: 16,
-                padding: '8px 20px',
-                borderRadius: 8,
-                border: 'none',
-                background: themeName === 'dark' ? '#4a6a8a' : '#d1d1d1',
-                color: themeName === 'dark' ? '#fff' : '#222',
-                fontFamily: 'Press Start 2P, monospace',
-                fontSize: 12,
-                cursor: 'pointer',
-                transition: 'background 0.2s',
-              }}
-              onClick={toggleTheme}
-            >
-              Alternar Tema
-            </button>
+            <label htmlFor="appearance"><strong>Aparência:</strong></label>
+            <select id="appearance" value={themeName} onChange={e => setThemeName(e.target.value)} style={{marginLeft:12,padding:10,maxWidth:'100%',font:'inherit'}}>
+              <option value="light">Moderno — claro</option>
+              <option value="dark">Clássico — pixel art</option>
+            </select>
           </div>
           <div style={{ marginBottom: 16 }}>
             <strong>Intervalo entre EVs:</strong>
