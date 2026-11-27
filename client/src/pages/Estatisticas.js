@@ -227,6 +227,8 @@ const Estatisticas = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [exportLoading, setExportLoading] = useState(false);
+  const [week,setWeek]=useState([]);
+  const [streak,setStreak]=useState(0);
   const [evData, setEvData] = useState([]);
 
   const loadStats = async () => {
@@ -253,7 +255,7 @@ const Estatisticas = () => {
       while (hasMore) {
         const { data: scoresPage, error: scoresError } = await supabase
           .from('evs')
-          .select('score')
+          .select('score, created_at')
           .eq('user_id', user.id)
           .order('id', { ascending: true })
           .range(from, from + pageSize - 1);
@@ -290,7 +292,11 @@ const Estatisticas = () => {
       const max_score = allScores.length > 0 ? Math.max(...allScores.map(ev => ev.score)) : 0;
       
       // Calcular dias consecutivos
-      const consecutiveDays = calculateConsecutiveDays(userEVs);
+      const consecutiveDays = calculateConsecutiveDays(allScores);
+      const counts = new Map();
+      allScores.forEach(ev => { const key = new Date(ev.created_at).toDateString(); counts.set(key,(counts.get(key)||0)+1); });
+      setWeek(Array.from({length:7},(_,i)=>{const d=new Date(); d.setDate(d.getDate()-6+i); return {label:d.toLocaleDateString('pt-BR',{weekday:'short'}),count:counts.get(d.toDateString())||0};}));
+      const cursor=new Date(); if(!counts.has(cursor.toDateString())) cursor.setDate(cursor.getDate()-1); let streak=0; while(counts.has(cursor.toDateString())){streak++;cursor.setDate(cursor.getDate()-1);} setStreak(streak);
 
       setUserStats({
         total_evs,
@@ -474,14 +480,14 @@ const Estatisticas = () => {
 
   return (
     <Container>
-      <Title>Estatísticas</Title>
+      <Title>Progresso</Title>
+      <StatsGrid><StatCard><StatValue>{streak}</StatValue><StatLabel>Sequência atual (dias)</StatLabel></StatCard><StatCard><StatValue>{userStats.total_evs}</StatValue><StatLabel>Total de EVs</StatLabel></StatCard></StatsGrid>
+      <section style={{background:'white',border:'1px solid #dce8e3',borderRadius:20,padding:20,marginBottom:20}}><h2 style={{fontSize:18}}>Últimos 7 dias</h2><div style={{display:'grid',gridTemplateColumns:'repeat(7,minmax(0,1fr))',gap:8,alignItems:'end',maxWidth:500,margin:'auto'}}>{week.map((day,i)=><div key={i} style={{display:'grid',gap:5,justifyItems:'center',fontSize:12}}><span>{day.count}</span><div style={{height:Math.max(3,day.count/Math.max(20,...week.map(d=>d.count))*90),width:'65%',background:i===6?'#237e70':'#9bcfc2',borderRadius:5}}/><span>{day.label}</span></div>)}</div></section>
+      <section style={{background:'white',border:'1px solid #dce8e3',borderRadius:20,padding:20,marginBottom:20}}><h2 style={{fontSize:18}}>EVs recentes</h2>{evData.length===0?<p>Nenhum EV registrado ainda.</p>:evData.slice(0,10).map((ev,i)=><div key={i} style={{padding:'12px 0',borderBottom:'1px solid #dce8e3',overflowWrap:'anywhere'}}><strong style={{color:'#237e70'}}>EV {ev.score}</strong> <small>{formatDate(ev.created_at)}</small>{ev.notes&&<p>{ev.notes}</p>}</div>)}</section>
       
       <SectionTitle>Minhas Estatísticas</SectionTitle>
       <StatsGrid>
-        <StatCard>
-          <StatValue>{userStats.total_evs}</StatValue>
-          <StatLabel>Total de EVs</StatLabel>
-        </StatCard>
+
         <StatCard>
           <StatValue>{userStats.total_points}</StatValue>
           <StatLabel>Total de Pontos</StatLabel>
@@ -496,7 +502,7 @@ const Estatisticas = () => {
         </StatCard>
         <StatCard>
           <StatValue>{userStats.consecutive_days}</StatValue>
-          <StatLabel>Dias Consecutivos</StatLabel>
+          <StatLabel>Maior sequência (dias)</StatLabel>
         </StatCard>
       </StatsGrid>
 
